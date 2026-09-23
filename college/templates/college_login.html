@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="container" style="margin-top: 150px;">
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="card shadow border-0">
+
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h4 class="mb-1">College Login</h4>
+                    <small>Login to access your college dashboard</small>
+                </div>
+
+                <div class="card-body p-4">
+
+                    <!-- Information -->
+                    <div class="alert alert-info">
+                        <strong>Note:</strong>
+                        Select your college and enter the college code to continue.
+                    </div>
+
+                    {% if messages %}
+                    {% for message in messages %}
+                    {% if message.tags == 'error' %}
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-success alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    {% endif %}
+
+
+                    <form method="POST" onsubmit="return validate()">
+                        {% csrf_token %}
+
+                        <!-- College Name -->
+                        <div class="mb-4">
+                            <label for="college_name" class="form-label fw-semibold">
+                                College Name
+                            </label>
+
+                            <select class="form-select form-select-lg" id="college_name" name="college_name" required>
+                                <option value="" selected disabled>
+                                    Select college
+                                </option>
+
+                                {% for college in colleges %}
+                                <option value="{{ college.id }}">
+                                    {{ college.college_name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- College Code -->
+                        <div class="mb-4">
+                            <label for="college_code" class="form-label fw-semibold">
+                                College Code
+                            </label>
+
+                            <input type="text" class="form-control form-control-lg" id="college_code"
+                                name="college_code" placeholder="Enter college code">
+                            
+                            <div id="college_code_error" class="mt-3"></div>
+                        </div>
+
+                        <!-- Login Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-box-arrow-in-right"></i>
+                                Login
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+                <div class="card-footer text-muted text-center">
+                    <small>
+                        Please select the correct college and enter the valid college code.
+                    </small>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+  function validate(){
+     const college_code=document.getElementById('college_code').value;
+     if (college_code.trim() === ""){
+        document.getElementById('college_code_error').innerHTML=`<strong class="text-danger">Please enter college code</strong>`;
+        return false;
+     }
+     return true;
+  }
+
+  document.getElementById('college_code').addEventListener('input',()=>{
+    document.getElementById('college_code_error').innerHTML=""
+  })
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,131 @@
+{% extends 'college_nav.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow-sm">
+        <div class="card-header text-white" style="background-color: #08403f;">
+            <h5 class="mb-0">
+                <i class="bi bi-person-workspace"></i>
+                Add Subject Teacher Combination
+            </h5>
+        </div>
+
+        <div class="card-body">
+
+            <!-- Messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="row">
+
+                    <!-- Course -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">
+                            Course <span class="text-danger">*</span>
+                        </label>
+
+                        <select name="course" id="course" class="form-select" required>
+                            <option value="">Select Course</option>
+
+                            {% for course in courses %}
+                                <option value="{{ course.course_name.id }}">
+                                    {{ course.course_name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+
+                    <!-- Semester -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">
+                            Semester <span class="text-danger">*</span>
+                        </label>
+
+                        <select name="semester" class="form-select" required>
+                            <option value="">Select Semester</option>
+
+                            {% for semester in semesters %}
+                                <option value="{{ semester.id }}">
+                                    {{ semester }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+
+                    <!-- Subject -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">
+                            Subject <span class="text-danger">*</span>
+                        </label>
+
+                        <select name="subject" id="subject" class="form-select" required>
+                            <option value="">Select Subject</option>
+                        </select>
+                    </div>
+
+
+                    <!-- Teacher -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">
+                            Teacher <span class="text-danger">*</span>
+                        </label>
+
+                        <select name="teacher" class="form-select" required>
+                            <option value="">Select Teacher</option>
+
+                            {% for teacher in teachers %}
+                                <option value="{{ teacher.id }}">
+                                    {{ teacher.teacher_name }} - {{ teacher.department.course_name.course_name }} Department 
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+
+
+                <!-- Buttons -->
+                <div class="d-flex justify-content-end gap-2 mt-3">
+
+                    <a href=""
+                       class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i>
+                        Back
+                    </a>
+
+                    <button type="reset" class="btn btn-warning">
+                        <i class="bi bi-arrow-clockwise"></i>
+                        Reset
+                    </button>
+
+                    <button type="submit" class="btn" style="background-color: #08403f;color: #ffff;">
+                        <i class="bi bi-plus-circle"></i>
+                        Add Combination
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+<script src="{% static 'college_js/add_subject_teacher.js' %}"></script>
+{% endblock %}
+

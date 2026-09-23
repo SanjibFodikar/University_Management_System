@@ -1,0 +1,893 @@
+
+{% extends 'admin_nav.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+<!-- ==========================================
+     PAGE HEADER
+=========================================== -->
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+
+    <div>
+
+        <h3 class="fw-bold mb-1">
+
+            <i class="bi bi-megaphone-fill text-primary me-2"></i>
+
+            Manage Notices
+
+        </h3>
+
+        <p class="text-muted mb-0">
+
+            View, manage and update all university notices.
+
+        </p>
+
+    </div>
+
+
+    <a href="{% url 'admin_add_notice' %}"
+       class="btn btn-primary">
+
+        <i class="bi bi-plus-circle me-1"></i>
+
+        Add Notice
+
+    </a>
+
+</div>
+
+
+
+<!-- ==========================================
+     MESSAGES
+=========================================== -->
+
+{% if messages %}
+
+    {% for message in messages %}
+
+        {% if message.tags == "success" %}
+
+            <div class="alert alert-success alert-dismissible fade show"
+                 role="alert">
+
+                <i class="bi bi-check-circle-fill me-2"></i>
+
+                {{ message }}
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert">
+                </button>
+
+            </div>
+
+        {% elif message.tags == "error" %}
+
+            <div class="alert alert-danger alert-dismissible fade show"
+                 role="alert">
+
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+                {{ message }}
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert">
+                </button>
+
+            </div>
+
+        {% endif %}
+
+    {% endfor %}
+
+{% endif %}
+
+
+
+<!-- ==========================================
+     FILTER / SEARCH CARD
+=========================================== -->
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-header bg-primary text-white py-3">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-funnel me-2"></i>
+
+            Filter Notices
+
+        </h5>
+
+    </div>
+
+
+    <div class="card-body">
+
+        <div class="row g-3">
+
+
+            <!-- Search -->
+
+            <div class="col-md-6">
+
+                <label class="form-label fw-semibold">
+
+                    Search Notice
+
+                </label>
+
+                <div class="input-group">
+
+                    <span class="input-group-text">
+
+                        <i class="bi bi-search"></i>
+
+                    </span>
+
+                    <input type="text"
+                           id="noticeSearch"
+                           class="form-control"
+                           placeholder="Search by title or description...">
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Status -->
+
+            <div class="col-md-4">
+
+                <label class="form-label fw-semibold">
+
+                    Status
+
+                </label>
+
+                <select id="statusFilter"
+                        class="form-select">
+
+                    <option value="">
+                        All Status
+                    </option>
+
+                    <option value="active">
+                        Active
+                    </option>
+
+                    <option value="inactive">
+                        Inactive
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- Reset -->
+
+            <div class="col-md-2 d-flex align-items-end">
+
+                <button type="button"
+                        id="resetFilter"
+                        class="btn btn-secondary w-100">
+
+                    <i class="bi bi-arrow-counterclockwise me-1"></i>
+
+                    Reset
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ==========================================
+     NOTICE TABLE
+=========================================== -->
+
+<div class="card border-0 shadow-sm">
+
+    <div class="card-header bg-white py-3">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <h5 class="mb-0 fw-bold">
+
+                <i class="bi bi-table text-primary me-2"></i>
+
+                Notice List
+
+            </h5>
+
+
+            <span class="badge bg-primary">
+
+                Total:
+                <span id="totalNotice">
+                    {{ notices|length }}
+                </span>
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="card-body p-0">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle mb-0"
+                   id="noticeTable">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th class="text-center">
+                            #
+                        </th>
+
+                        <th>
+                            Notice
+                        </th>
+
+                        <th>
+                            Description
+                        </th>
+
+                        <th class="text-center">
+                            Notice Date
+                        </th>
+
+                        <th class="text-center">
+                            Status
+                        </th>
+
+                        <th class="text-center">
+                            Created
+                        </th>
+
+                        <th class="text-center">
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+
+                <tbody id="noticeTableBody">
+
+                    {% for notice in notices %}
+
+                    <tr class="notice-row"
+                        data-status="{% if notice.is_active %}active{% else %}inactive{% endif %}">
+
+
+                        <!-- Serial -->
+
+                        <td class="text-center fw-semibold">
+
+                            {{ forloop.counter }}
+
+                        </td>
+
+
+
+                        <!-- Title -->
+
+                        <td>
+
+                            <div class="d-flex align-items-center">
+
+                                <div class="notice-icon me-2">
+
+                                    <i class="bi bi-megaphone"></i>
+
+                                </div>
+
+
+                                <div>
+
+                                    <div class="fw-semibold notice-title">
+
+                                        {{ notice.title }}
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+
+                        <!-- Description -->
+
+                        <td>
+
+                            <span class="text-muted notice-description">
+
+                                {{ notice.description|truncatechars:100 }}
+
+                            </span>
+
+                        </td>
+
+
+
+                        <!-- Notice Date -->
+
+                        <td class="text-center">
+
+                            <span class="badge bg-light text-dark border">
+
+                                <i class="bi bi-calendar3 me-1"></i>
+
+                                {{ notice.notice_date|date:"d M Y" }}
+
+                            </span>
+
+                        </td>
+
+
+
+                        <!-- Status -->
+
+                        <td class="text-center">
+
+                            {% if notice.is_active %}
+
+                                <span class="badge bg-success">
+
+                                    <i class="bi bi-check-circle me-1"></i>
+
+                                    Active
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-danger">
+
+                                    <i class="bi bi-x-circle me-1"></i>
+
+                                    Inactive
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+
+                        <!-- Created -->
+
+                        <td class="text-center">
+
+                            <small class="text-muted">
+
+                                {{ notice.created_at|date:"d M Y, h:i A" }}
+
+                            </small>
+
+                        </td>
+
+
+
+                        <!-- Action -->
+
+                        <td class="text-center">
+
+                            <div class="btn-group">
+
+                                <!-- View -->
+
+                                <a href="{% url 'admin_view_notice' id=notice.id %}"
+                                   class="btn btn-sm btn-outline-info"
+                                   title="View Notice">
+
+                                    <i class="bi bi-eye"></i>
+                                     View
+                                </a>
+
+
+
+                                <!-- Edit -->
+
+                                <a href="{% url 'admin_edit_notice' id=notice.id %}"
+                                   class="btn btn-sm btn-outline-primary"
+                                   title="Edit Notice">
+
+                                    <i class="bi bi-pencil-square"></i>
+                                    Edit
+                                </a>
+
+
+
+                                <!-- Delete -->
+
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-danger delete-notice"
+                                        data-id="{{ notice.id }}"
+                                        data-name="{{ notice.title }}"
+                                        title="Delete Notice">
+
+                                    <i class="bi bi-trash"></i>
+                                    Delete
+                                </button>
+
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="7"
+                            class="text-center py-5">
+
+                            <div class="text-muted">
+
+                                <i class="bi bi-megaphone display-5 d-block mb-3"></i>
+
+                                <h5>
+                                    No Notices Found
+                                </h5>
+
+                                <p class="mb-0">
+
+                                    No notices have been added yet.
+
+                                </p>
+
+
+                                <a href="{% url 'admin_add_notice' %}"
+                                   class="btn btn-primary mt-3">
+
+                                    <i class="bi bi-plus-circle me-1"></i>
+
+                                    Add First Notice
+
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+</div>
+
+
+
+<!-- ==========================================
+     DELETE MODAL
+=========================================== -->
+
+<div class="modal fade"
+     id="deleteNoticeModal"
+     tabindex="-1"
+     aria-hidden="true">
+
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content border-0 shadow">
+
+
+            <!-- Header -->
+
+            <div class="modal-header bg-danger text-white">
+
+                <h5 class="modal-title">
+
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+
+                    Delete Notice
+
+                </h5>
+
+
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+
+
+            <!-- Body -->
+
+            <div class="modal-body text-center p-4">
+
+                <i class="bi bi-trash3 text-danger display-4"></i>
+
+
+                <h5 class="mt-3">
+
+                    Are you sure?
+
+                </h5>
+
+
+                <p class="text-muted mb-0">
+
+                    You are about to delete:
+
+                </p>
+
+
+                <strong id="deleteNoticeName"
+                        class="text-danger">
+
+                </strong>
+
+
+                <p class="text-muted mt-2 mb-0">
+
+                    This action cannot be undone.
+
+                </p>
+
+            </div>
+
+
+
+            <!-- Footer -->
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                    Cancel
+
+                </button>
+
+
+                <a href="#"
+                   id="confirmDeleteBtn"
+                   class="btn btn-danger">
+
+                    <i class="bi bi-trash me-1"></i>
+
+                    Delete
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ==========================================
+     PAGE CSS
+=========================================== -->
+
+<style>
+
+    .card {
+
+        border-radius: 12px;
+
+    }
+
+
+    .card-header {
+
+        border-radius: 12px 12px 0 0 !important;
+
+    }
+
+
+    .notice-icon {
+
+        width: 40px;
+        height: 40px;
+
+        border-radius: 8px;
+
+        background: #e8f1ff;
+
+        color: #0d6efd;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        font-size: 18px;
+
+        flex-shrink: 0;
+
+    }
+
+
+    #noticeTable thead th {
+
+        font-size: 13px;
+
+        font-weight: 600;
+
+        color: #495057;
+
+        white-space: nowrap;
+
+    }
+
+
+    #noticeTable tbody td {
+
+        font-size: 14px;
+
+    }
+
+
+    #noticeTable tbody tr {
+
+        transition: 0.2s;
+
+    }
+
+
+    #noticeTable tbody tr:hover {
+
+        background-color: #f8faff;
+
+    }
+
+
+    .badge {
+
+        font-weight: 500;
+
+    }
+
+
+    .btn {
+
+        border-radius: 6px;
+
+    }
+
+
+    @media (max-width: 768px) {
+
+        #noticeTable {
+
+            min-width: 1100px;
+
+        }
+
+    }
+
+</style>
+
+
+
+<!-- ==========================================
+     PAGE JAVASCRIPT
+=========================================== -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+
+    const searchInput =
+        document.getElementById("noticeSearch");
+
+    const statusFilter =
+        document.getElementById("statusFilter");
+
+    const resetFilter =
+        document.getElementById("resetFilter");
+
+    const rows =
+        document.querySelectorAll(".notice-row");
+
+    const totalNotice =
+        document.getElementById("totalNotice");
+
+
+    function filterNotices() {
+
+        const searchValue =
+            searchInput.value.toLowerCase().trim();
+
+        const statusValue =
+            statusFilter.value;
+
+        let visibleCount = 0;
+
+
+        rows.forEach(function (row) {
+
+            const title =
+                row.querySelector(".notice-title")
+                   .textContent
+                   .toLowerCase();
+
+            const description =
+                row.querySelector(".notice-description")
+                   .textContent
+                   .toLowerCase();
+
+            const rowStatus =
+                row.dataset.status;
+
+
+            const searchMatch =
+                title.includes(searchValue) ||
+                description.includes(searchValue);
+
+
+            const statusMatch =
+                statusValue === "" ||
+                rowStatus === statusValue;
+
+
+            if (searchMatch && statusMatch) {
+
+                row.style.display = "";
+
+                visibleCount++;
+
+            } else {
+
+                row.style.display = "none";
+
+            }
+
+        });
+
+
+        totalNotice.textContent = visibleCount;
+
+    }
+
+
+
+    searchInput.addEventListener(
+        "input",
+        filterNotices
+    );
+
+
+    statusFilter.addEventListener(
+        "change",
+        filterNotices
+    );
+
+
+
+    resetFilter.addEventListener(
+        "click",
+        function () {
+
+            searchInput.value = "";
+
+            statusFilter.value = "";
+
+            filterNotices();
+
+        }
+    );
+
+
+
+    // ==========================================
+    // DELETE MODAL
+    // ==========================================
+
+    const deleteButtons =
+        document.querySelectorAll(".delete-notice");
+
+    const deleteModalElement =
+        document.getElementById("deleteNoticeModal");
+
+    const deleteNoticeName =
+        document.getElementById("deleteNoticeName");
+
+    const confirmDeleteBtn =
+        document.getElementById("confirmDeleteBtn");
+
+
+    deleteButtons.forEach(function (button) {
+
+        button.addEventListener(
+            "click",
+            function () {
+
+                const noticeId =
+                    this.dataset.id;
+
+                const noticeName =
+                    this.dataset.name;
+
+
+                deleteNoticeName.textContent =
+                    noticeName;
+
+
+                confirmDeleteBtn.href =
+                    "{% url 'admin_delete_notice' 0 %}"
+                    .replace(
+                        "/0/",
+                        "/" + noticeId + "/"
+                    );
+
+
+                const modal =
+                    new bootstrap.Modal(
+                        deleteModalElement
+                    );
+
+
+                modal.show();
+
+            }
+        );
+
+    });
+
+});
+
+</script>
+
+
+{% endblock %}
+

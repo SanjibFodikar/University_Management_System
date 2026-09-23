@@ -1,0 +1,342 @@
+{% extends 'admin_nav.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow-sm border-0">
+
+        <!-- ================= HEADER ================= -->
+
+        <div class="card-header bg-primary text-white">
+
+            <h4 class="mb-0">
+                <i class="bi bi-clipboard-data"></i>
+                CA Marks
+            </h4>
+
+        </div>
+
+
+        <!-- ================= BODY ================= -->
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="row gy-3 dataRows">
+                    <!-- select college -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-semibold">
+                            <i class="bi bi-building"></i>
+                            College
+                        </label>
+
+                        <select name="college" id="college" class="form-select" required>
+
+                            <option value="">
+                                Select College
+                            </option>
+
+                            {% for college in colleges %}
+
+                            <option value="{{college.id}}">
+                                {{college.college_name}}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- ================= COLLEGE COURSE ================= -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-semibold">
+                            <i class="bi bi-book"></i>
+                            College Course
+                        </label>
+
+                        <select name="course" id="course" class="form-select" required>
+
+                            <option value="">
+                                Select College Course
+                            </option>
+
+                            {% for course in courses %}
+
+                            <option value="{{ course.id }}">
+
+                                {{ course.course_name.course_name }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- ================= SEMESTER ================= -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-semibold">
+                            <i class="bi bi-calendar3"></i>
+                            Semester
+                        </label>
+
+                        <select name="semester" id="semester" class="form-select" required>
+
+                            <option value="">
+                                Select Semester
+                            </option>
+
+                            {% for semester in semesters %}
+
+                            <option value="{{ semester.id }}">
+
+                                {{ semester }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- ================= CA TYPE ================= -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-semibold">
+                            <i class="bi bi-clipboard-check"></i>
+                            CA Type
+                        </label>
+
+                        <select name="ca_type" id="ca_type" class="form-select" required>
+
+                            <option value="">
+                                Select CA Type
+                            </option>
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+
+
+        <!-- ================= STUDENT INFORMATION ================= -->
+
+        <div id="studentData" class="mt-4 " style="display: none;">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-light">
+
+                    <h5 class="mb-0 fw-semibold">
+                        <i class="bi bi-person-circle"></i>
+                        Student Information
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row gy-3 StudentsRow">
+
+                        <!-- Student Name -->
+                        <div class="col-md-4">
+
+                            <div class="text-muted small">
+                                Student Name
+                            </div>
+
+                            <div id="studentName" class="fw-semibold fs-5">
+                                -
+                            </div>
+
+                        </div>
+
+
+                        <!-- College Name -->
+                        <div class="col-md-4">
+
+                            <div class="text-muted small">
+                                College Name
+                            </div>
+
+                            <div id="collegeName" class="fw-semibold">
+                                -
+                            </div>
+
+                        </div>
+
+
+                        <!-- Roll Number -->
+                        <div class="col-md-4">
+
+                            <div class="text-muted small">
+                                Roll Number
+                            </div>
+
+                            <div id="rollNumber" class="fw-semibold">
+                                -
+                            </div>
+
+                        </div>
+
+
+                        <!-- CA Type -->
+                        <div class="col-md-4">
+
+                            <div class="text-muted small">
+                                CA Type
+                            </div>
+
+                            <div id="caType" class="fw-semibold">
+                                -
+                            </div>
+
+                        </div>
+
+
+                        <!-- Semester -->
+                        <div class="col-md-4">
+
+                            <div class="text-muted small">
+                                Semester
+                            </div>
+
+                            <div id="semesterName" class="fw-semibold">
+                                -
+                            </div>
+
+                        </div>
+
+
+                        <!-- Year -->
+                        <div class="col-md-4">
+
+                            <div class="text-muted small">
+                                Year
+                            </div>
+
+                            <div id="studentYear" class="fw-semibold">
+                                -
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= SUBJECT MARKS ================= -->
+
+            <div class="card border-0 shadow-sm mt-3">
+
+                <div class="card-header bg-light">
+
+                    <h5 class="mb-0 fw-semibold">
+                        <i class="bi bi-book"></i>
+                        Subject-wise Marks
+                    </h5>
+
+                </div>
+
+                <div class="card-body bg-light p-4">
+
+                    <div class="border rounded-3 bg-white shadow-sm overflow-hidden">
+
+                        <!-- Header -->
+                        <div class="row bg-primary text-white fw-semibold py-2 mx-0">
+                            <div class="col-8">
+                                <i class="bi bi-book me-2"></i>
+                                Subject
+                            </div>
+
+                            <div class="col-4 text-center">
+                                <i class="bi bi-award me-2"></i>
+                                Marks
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Data -->
+                        <div class="row mx-0">
+
+                            <div id="subjectName" class="col-md-8 col-12 p-0">
+                                <!-- Subjects will be added by JavaScript -->
+                            </div>
+
+                            <div id="subjectMarks" class="col-md-4 col-12 p-0">
+                                <!-- Marks will be added by JavaScript -->
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- ================= PREVIOUS / NEXT ================= -->
+
+            <div class="d-flex justify-content-between align-items-center mt-4">
+
+                <button type="button" id="previousBtn" class="btn btn-outline-primary">
+
+                    <i class="bi bi-arrow-left"></i>
+                    Previous
+
+                </button>
+
+
+                <div id="studentCounter" class="fw-semibold text-muted">
+
+                    Student 0 of 0
+
+                </div>
+
+
+                <button type="button" id="nextBtn" class="btn btn-primary">
+
+                    Next
+                    <i class="bi bi-arrow-right"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+</div>
+
+<script src="{% static 'admin_js/admin_visit_ca.js' %}"></script>
+
+{% endblock %}

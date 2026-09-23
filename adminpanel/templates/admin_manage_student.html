@@ -1,0 +1,140 @@
+{% extends 'admin_nav.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid mt-4">
+
+    <div class="card shadow">
+
+        <!-- Card Header -->
+        <div class="card-header">
+            <h4 class="mb-0">Manage Students</h4>
+        </div>
+
+        <div class="card-body">
+
+            <!-- First Row : College -->
+            <div class="row mb-3">
+
+                <div class="col-md-6 col-12">
+
+                    <label class="form-label">Select College</label>
+
+                    <select id="college" class="form-select">
+
+                        <option value="">Select College</option>
+
+                        {% for college in colleges %}
+                        <option value="{{ college.id }}">
+                            {{ college.college_name }}
+                        </option>
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-6 col-12">
+
+                    <label class="form-label">Select Course</label>
+
+                    <select id="course" class="form-select">
+
+                        <option value="">Select Course</option>
+
+                        {% for course in courses %}
+                        <option value="{{ course.id }}">
+                            {{ course.course_name }}
+                        </option>
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- Third Row : Semester -->
+            <div class="row mb-4">
+
+                <div class="col-md-6">
+
+                    <label class="form-label">Select Semester</label>
+
+                    <select id="semester" class="form-select"></select>
+
+                </div>
+                
+                 <div class="col-12 d-flex justify-content-end">
+
+                    <div class="input-group" style="max-width: 350px;">
+
+                        <input
+                            type="text"
+                            id="searchStudent"
+                            class="form-control"
+                            placeholder="Search student..."
+                        >
+
+                        <span class="input-group-text">
+                            <i class="bi bi-search"></i>
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Student Details -->
+            <div class="table-responsive overflow-auto">
+
+                <table class="table table-bordered table-hover align-middle">
+
+                    <thead class="table-dark">
+
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Student Name</th>
+                            <th>Email</th>
+                            <th>Mobile</th>
+                            <th>DOB</th>
+                            <th>College</th>
+                            <th>Course</th>
+                            <th>Semester</th>
+                            <th>Admission Date</th>
+                            <th>Course End Date</th>
+                            <th>Roll Number</th>
+                            <th>Registration Number</th>
+                            <th>College Verify</th>
+                            <th>University Verify</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="studentTable">
+
+                        
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- JavaScript -->
+<script src="{% static 'admin_js/admin_manage_student.js' %}"></script>
+
+{% endblock %}

@@ -1,0 +1,324 @@
+{% extends 'college_nav.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow-sm border-0">
+
+        <!-- Header -->
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Add CA1 Marks</h4>
+        </div>
+
+        <div class="card-body">
+
+
+            {% if messages %}
+            {% for message in messages %}
+
+            {% if message.tags == 'success' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            {% elif message.tags == 'error' %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endif %}
+
+            {% endfor %}
+            {% endif %}
+
+
+
+            <!-- ========================================= -->
+            <!-- COURSE / SEMESTER SELECTION FORM -->
+            <!-- ========================================= -->
+
+            <form method="POST" id="selectionForm">
+
+                {% csrf_token %}
+
+                <div class="row">
+
+                    <!-- Course -->
+                    <div class="col-md-4 mb-3">
+
+                        <label for="course" class="form-label fw-bold">
+                            Course
+                        </label>
+
+                        <select name="course" id="course" class="form-select" required>
+
+                            <option value="">
+                                Choose Course
+                            </option>
+
+                            {% for course in courses %}
+
+                            <option value="{{ course.id }}">
+                                {{ course.course_name }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Year Semester -->
+                    <div class="col-md-4 mb-3">
+
+                        <label for="year_semester" class="form-label fw-bold">
+                            Year Semester
+                        </label>
+
+                        <select name="year_semester" id="year_semester" class="form-select" required>
+
+                            <option value="">
+                                Choose Year Semester
+                            </option>
+
+                            {% for semester in semesters %}
+
+                            <option value="{{ semester.id }}">
+                                {{ semester.year }} - {{ semester.semester }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Fetch Button -->
+                <button type="submit" name="fetchDetails" value="1" class="btn btn-primary">
+                    Start Entering Marks
+                </button>
+
+            </form>
+
+
+            <!-- ========================================= -->
+            <!-- STUDENT MARKS SECTION -->
+            <!-- ========================================= -->
+
+            {% if students %}
+
+            <hr class="my-4">
+
+
+            <div class="card border">
+
+                <div class="card-body">
+
+
+                    <!-- Student Counter -->
+
+                    <h5 class="fw-bold mb-4">
+
+                        Student
+
+                        <span id="studentCount">
+                            0
+                        </span>
+
+                        of
+
+                        <span>
+                            {{ students|length }}
+                        </span>
+
+                    </h5>
+
+
+                    <!-- ========================================= -->
+                    <!-- ALL STUDENTS -->
+                    <!-- ========================================= -->
+
+                    {% for student in students %}
+
+                    <div class="studentrows" data-student-id="{{ student.id }}" style="display: none;">
+
+                        <div class="row">
+
+                            <!-- Left -->
+                            <div class="col-md-6">
+
+                                <p>
+                                    <strong>Name:</strong>
+                                    {{ student.name }}
+                                </p>
+
+                                <p>
+                                    <strong>Roll No:</strong>
+                                    {{ student.roll_number }}
+                                </p>
+
+                                <p>
+                                    <strong>Registration No:</strong>
+                                    {{ student.registration_number }}
+                                </p>
+
+                            </div>
+
+
+                            <!-- Right -->
+                            <div class="col-md-6">
+
+                                <p>
+                                    <strong>Course:</strong>
+                                    {{ student.college_course.course_name.course_name }}
+                                </p>
+
+                                <p>
+                                    <strong>Semester:</strong>
+                                    {{ student.semester }}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+
+                    <!-- ========================================= -->
+                    <!-- MARKS FORM -->
+                    <!-- ========================================= -->
+
+                    <form method="POST" action="" id="myform">
+
+                        {% csrf_token %}
+
+
+                        <!-- ========================================= -->
+                        <!-- SUBJECTS & MARKS -->
+                        <!-- ========================================= -->
+
+                        <div class="mb-4">
+
+                            <label class="form-label fw-bold">
+                                Subjects & Marks
+                            </label>
+
+
+                            {% for subject in subjects %}
+
+                            {% if subject.subject.subject_type == 'theory' %}
+
+                            <div class="row align-items-center mb-3">
+
+                                <!-- Subject Name -->
+                                <div class="col-md-8">
+
+                                    <label for="marks_{{ subject.id }}" class="form-label">
+
+                                        {{ subject.subject.subject_name }}
+
+                                    </label>
+
+
+                                    <!--
+                                        Subject Teacher Combination ID
+                                    -->
+
+                                    <input type="hidden" name="subject_teacher_{{ subject.id }}"
+                                        value="{{ subject.id }}">
+
+                                </div>
+
+
+                                <!-- Marks -->
+                                <div class="col-md-4">
+
+                                    <input type="number" name="marks_{{ subject.id }}" id="marks_{{ subject.id }}"
+                                        class="form-control marksinput" placeholder="Enter marks" min="0" max="100"
+                                        step="0.01" required oninput="number_validate(this.id)">
+
+                                    <div id="marks_{{ subject.id }}_error_box">
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            {% endif %}
+
+
+                            {% empty %}
+
+                            <div class="alert alert-warning">
+
+                                No subjects found.
+
+                            </div>
+
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- ========================================= -->
+                        <!-- CA TYPE -->
+                        <!-- ========================================= -->
+
+                        <div class="mb-4">
+
+                            <label for="ca_type" class="form-label fw-bold">
+                                CA Type
+                            </label>
+
+
+                            <select name="ca_type" id="ca_type" class="form-select" required>
+
+                                <option value="CA1" selected>
+                                    CA 1
+                                </option>
+                            </select>
+
+                        </div>
+
+
+                        <!-- ========================================= -->
+                        <!-- SAVE & NEXT -->
+                        <!-- ========================================= -->
+
+                        <button type="submit" name="saveMarks" value="1" class="btn btn-success" id="next">
+
+                            Save & Next Student
+
+                            <i class="bi bi-arrow-right"></i>
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="{% static 'college_js/add_ca_marks.js' %}"></script>
+
+{% endblock %}

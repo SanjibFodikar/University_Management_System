@@ -1,0 +1,199 @@
+{% extends 'admin_nav.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-7 col-lg-6">
+
+            <div class="card shadow border-0 rounded-4">
+
+                <!-- Header -->
+                <div class="card-header bg-primary text-white text-center py-3 rounded-top-4">
+
+                    <h4 class="mb-1">
+                        <i class="bi bi-pencil-square me-2"></i>
+                        Edit College
+                    </h4>
+
+                    <small>
+                        Update college basic information
+                    </small>
+
+                </div>
+
+
+                <!-- Body -->
+                <div class="card-body p-4">
+
+                    <!-- Messages -->
+                    {% if messages %}
+
+                        {% for message in messages %}
+
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                                 role="alert">
+
+                                {{ message }}
+
+                                <button type="button"
+                                        class="btn-close"
+                                        data-bs-dismiss="alert">
+                                </button>
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% endif %}
+
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+
+                        <!-- College Name -->
+                        <div class="mb-4">
+
+                            <label for="college_name"
+                                   class="form-label fw-semibold">
+
+                                <i class="bi bi-building text-primary me-1"></i>
+
+                                College Name
+
+                            </label>
+
+                            <input type="text"
+                                   id="college_name"
+                                   name="college_name"
+                                   class="form-control form-control-lg"
+                                   value="{{ college.college_name }}"
+                                   placeholder="Enter college name"
+                                   required>
+
+                            <div class="college_name_error"></div>
+
+                        </div>
+
+
+                        <!-- College Code -->
+                        <div class="mb-4">
+
+                            <label for="college_code"
+                                   class="form-label fw-semibold">
+
+                                <i class="bi bi-hash text-primary me-1"></i>
+
+                                College Code
+
+                            </label>
+
+                            <input type="text"
+                                   id="college_code"
+                                   name="college_code"
+                                   class="form-control form-control-lg"
+                                   value="{{ college.college_code }}"
+                                   placeholder="Enter college code"
+                                   required>
+
+                            <div class="college_code_error"></div>
+
+                        </div>
+
+
+                        <!-- College Type -->
+                        <div class="mb-4">
+
+                            <label for="college_type"
+                                   class="form-label fw-semibold">
+
+                                <i class="bi bi-bank text-primary me-1"></i>
+
+                                College Type
+
+                            </label>
+
+                            <select id="college_type"
+                                    name="college_type"
+                                    class="form-select form-select-lg"
+                                    required>
+
+                                <option value="" disabled>
+                                    Select College Type
+                                </option>
+
+                                <option value="PRIVATE"
+                                    {% if college.college_types == "PRIVATE" %}
+                                        selected
+                                    {% endif %}>
+                                    Private
+                                </option>
+
+                                <option value="GOVERNMENT"
+                                    {% if college.college_types == "GOVERNMENT" %}
+                                        selected
+                                    {% endif %}>
+                                    Government
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-between align-items-center gap-3">
+
+                            <a href="{% url 'admin_manage_college' %}"
+                               class="btn btn-outline-secondary btn-lg">
+
+                                <i class="bi bi-arrow-left me-1"></i>
+
+                                Back
+
+                            </a>
+
+
+                            <button type="submit"
+                                    class="btn btn-primary btn-lg">
+
+                                <i class="bi bi-check-circle me-1"></i>
+
+                                Update College
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+
+                <!-- Footer -->
+                <div class="card-footer bg-light text-muted text-center rounded-bottom-4">
+
+                    <small>
+
+                        <i class="bi bi-info-circle me-1"></i>
+
+                        Only college name, code and type can be edited by admin.
+
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

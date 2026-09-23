@@ -1,0 +1,580 @@
+/* =========================
+   GLOBAL
+========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #f4f8f7;
+    font-family: "Segoe UI", sans-serif;
+    color: #263238;
+}
+
+
+/* =========================
+   TOP NAVBAR
+========================= */
+
+.top-navbar {
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 70px;
+
+    background: #ffffff;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 25px;
+
+    z-index: 1000;
+
+    border-bottom: 1px solid #dce9e6;
+
+    box-shadow:
+        0 3px 15px rgba(0, 77, 64, 0.07);
+}
+
+
+/* =========================
+   NAVBAR LEFT
+========================= */
+
+.navbar-left {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+}
+
+
+/* =========================
+   LOGO
+========================= */
+
+.admin-logo {
+
+    text-decoration: none;
+
+    color: #263238;
+
+    font-size: 21px;
+
+    font-weight: 800;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.logo-icon {
+
+    width: 40px;
+    height: 40px;
+
+    border-radius: 10px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    color: white;
+
+    font-size: 20px;
+
+    background: linear-gradient(
+        135deg,
+        #00897b,
+        #00695c
+    );
+
+    box-shadow:
+        0 5px 15px rgba(0, 137, 123, 0.25);
+}
+
+
+/* =========================
+   MENU BUTTON
+========================= */
+
+.menu-btn {
+
+    border: none;
+
+    background: transparent;
+
+    font-size: 25px;
+
+    color: #37474f;
+
+    cursor: pointer;
+
+    display: none;
+}
+
+
+/* =========================
+   NAVBAR RIGHT
+========================= */
+
+.navbar-right {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 25px;
+}
+
+
+/* =========================
+   NOTIFICATION
+========================= */
+
+.notification {
+
+    position: relative;
+
+    font-size: 21px;
+
+    color: #455a64;
+
+    cursor: pointer;
+}
+
+
+.notification-badge {
+
+    position: absolute;
+
+    top: -8px;
+    right: -8px;
+
+    min-width: 17px;
+    height: 17px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #e53935;
+
+    color: white;
+
+    font-size: 10px;
+
+    font-weight: bold;
+}
+
+
+/* =========================
+   COLLEGE PROFILE
+========================= */
+
+.admin-profile {
+
+    display: flex;
+
+    align-items: center;
+
+    cursor: pointer;
+}
+
+
+.profile-icon {
+
+    width: 40px;
+    height: 40px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #e0f2f1;
+
+    color: #00897b;
+
+    font-size: 20px;
+}
+
+
+.profile-info {
+
+    display: flex;
+
+    flex-direction: column;
+
+    margin-left: 10px;
+}
+
+
+.profile-info strong {
+
+    font-size: 14px;
+}
+
+
+.profile-info small {
+
+    font-size: 11px;
+
+    color: #78909c;
+}
+
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar {
+
+    position: fixed;
+
+    top: 70px;
+    left: 0;
+
+    width: 255px;
+
+    height: calc(100vh - 70px);
+
+    background: linear-gradient(
+        180deg,
+        #073b3a,
+        #0b5250
+    );
+
+    padding: 20px 12px;
+
+    z-index: 999;
+
+    overflow-y: auto;
+}
+
+
+/* =========================
+   SIDEBAR LINK
+========================= */
+
+.sidebar-link {
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    text-decoration: none;
+
+    color: #b8d6d3;
+
+    padding: 13px 15px;
+
+    margin-bottom: 5px;
+
+    border-radius: 9px;
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+    transition: all 0.25s ease;
+}
+
+
+.sidebar-link span {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+}
+
+
+.sidebar-link i {
+
+    font-size: 17px;
+}
+
+
+/* =========================
+   HOVER
+========================= */
+
+.sidebar-link:hover {
+
+    background: rgba(255, 255, 255, 0.09);
+
+    color: white;
+
+    transform: translateX(3px);
+}
+
+
+/* =========================
+   ACTIVE
+========================= */
+
+.sidebar-link.active {
+
+    background: linear-gradient(
+        135deg,
+        #009688,
+        #00695c
+    );
+
+    color: white;
+
+    box-shadow:
+        0 5px 15px rgba(0, 150, 136, 0.25);
+}
+
+
+/* =========================
+   SIDEBAR DROPDOWN
+========================= */
+
+.sidebar-sublink {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    text-decoration: none;
+
+    color: #9fc7c3;
+
+    font-size: 13px;
+
+    padding: 10px 15px 10px 50px;
+
+    border-radius: 8px;
+
+    transition: all 0.25s ease;
+}
+
+
+.sidebar-sublink:hover {
+
+    color: white;
+
+    background: rgba(255, 255, 255, 0.07);
+
+    padding-left: 54px;
+}
+
+
+.sidebar-sublink i {
+
+    font-size: 15px;
+}
+
+
+/* =========================
+   DROPDOWN ARROW
+========================= */
+
+.dropdown-arrow {
+
+    transition: transform 0.3s ease;
+}
+
+
+.sidebar-link[aria-expanded="true"]
+.dropdown-arrow {
+
+    transform: rotate(180deg);
+}
+
+
+/* =========================
+   MENU BADGE
+========================= */
+
+.menu-badge {
+
+    background: #e53935;
+
+    color: white;
+
+    padding: 3px 8px;
+
+    border-radius: 20px;
+
+    font-size: 10px;
+}
+
+
+/* =========================
+   DIVIDER
+========================= */
+
+.menu-divider {
+
+    height: 1px;
+
+    background: rgba(255, 255, 255, 0.12);
+
+    margin: 18px 8px;
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+.logout-link {
+
+    color: #ff9b9b;
+}
+
+
+.logout-link:hover {
+
+    background: rgba(229, 57, 53, 0.13);
+
+    color: #ff7777;
+}
+
+
+/* =========================
+   MAIN CONTENT
+========================= */
+
+.main-content {
+
+    margin-left: 255px;
+
+    padding: 100px 30px 40px;
+
+    min-height: 100vh;
+}
+
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+.sidebar::-webkit-scrollbar {
+
+    width: 5px;
+}
+
+
+.sidebar::-webkit-scrollbar-track {
+
+    background: transparent;
+}
+
+
+.sidebar::-webkit-scrollbar-thumb {
+
+    background: rgba(255, 255, 255, 0.2);
+
+    border-radius: 10px;
+}
+
+
+/* =========================
+   TABLET / MOBILE
+========================= */
+
+@media (max-width: 991px) {
+
+    .menu-btn {
+
+        display: block;
+    }
+
+
+    .sidebar {
+
+        transform: translateX(-100%);
+
+        transition: transform 0.3s ease;
+    }
+
+
+    .sidebar.show {
+
+        transform: translateX(0);
+    }
+
+
+    .main-content {
+
+        margin-left: 0;
+
+        padding: 95px 20px 30px;
+    }
+
+}
+
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 575px) {
+
+    .top-navbar {
+
+        padding: 0 15px;
+    }
+
+
+    .admin-logo {
+
+        font-size: 18px;
+    }
+
+
+    .logo-icon {
+
+        width: 36px;
+        height: 36px;
+
+        font-size: 17px;
+    }
+
+
+    .profile-info {
+
+        display: none;
+    }
+
+
+    .navbar-right {
+
+        gap: 15px;
+    }
+
+
+    .sidebar {
+
+        width: 240px;
+    }
+
+}

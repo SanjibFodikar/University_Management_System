@@ -1,0 +1,416 @@
+{% extends 'student_navbar.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .upload-wrapper {
+        min-height: 85vh;
+        background: linear-gradient(135deg, #eef4ff, #f7f0ff);
+        padding: 50px 15px;
+    }
+
+    .upload-card {
+        border: none;
+        border-radius: 24px;
+        overflow: hidden;
+        background: #ffffff;
+        box-shadow: 0 15px 40px rgba(76, 81, 191, 0.15);
+    }
+
+    .upload-header {
+        background: linear-gradient(135deg, #4e73df, #7b2ff7);
+        color: white;
+        padding: 30px;
+        text-align: center;
+    }
+
+    .upload-header .main-icon {
+        width: 75px;
+        height: 75px;
+        margin: auto;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 38px;
+        margin-bottom: 15px;
+    }
+
+    .upload-header h3 {
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .upload-header p {
+        margin: 0;
+        opacity: 0.9;
+    }
+
+    .upload-body {
+        padding: 35px;
+    }
+
+    .upload-box {
+        border: 2px dashed #d5d9f2;
+        border-radius: 16px;
+        padding: 20px;
+        background: #fafbff;
+        transition: 0.3s;
+    }
+
+    .upload-box:hover {
+        border-color: #6f42c1;
+        background: #f6f2ff;
+    }
+
+    .upload-label {
+        font-weight: 600;
+        color: #343a40;
+        margin-bottom: 10px;
+    }
+
+    .upload-label i {
+        color: #6f42c1;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        border: 1px solid #dfe3f0;
+        padding: 11px;
+    }
+
+    .form-control:focus {
+        border-color: #6f42c1;
+        box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.12);
+    }
+
+    .upload-info {
+        color: #7b8190;
+        font-size: 13px;
+        margin-top: 8px;
+    }
+
+    .upload-btn {
+        border: none;
+        border-radius: 12px;
+        padding: 12px 28px;
+        color: white;
+        font-weight: 600;
+        background: linear-gradient(135deg, #4e73df, #7b2ff7);
+        box-shadow: 0 8px 20px rgba(111, 66, 193, 0.25);
+        transition: 0.3s;
+    }
+
+    .upload-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 25px rgba(111, 66, 193, 0.35);
+        color: white;
+    }
+
+    .section-icon {
+        font-size: 20px;
+        margin-right: 7px;
+    }
+
+    .preview-photo {
+        width: 120px;
+        height: 140px;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 3px solid #ffffff;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
+    }
+
+    .preview-signature {
+        max-width: 250px;
+        max-height: 100px;
+        object-fit: contain;
+        border-radius: 8px;
+        background: white;
+        padding: 8px;
+        border: 1px solid #e0e3ef;
+    }
+
+    .uploaded-text {
+        color: #198754;
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+    @media (max-width: 576px) {
+        .upload-body {
+            padding: 22px;
+        }
+
+        .upload-header {
+            padding: 25px 15px;
+        }
+    }
+</style>
+
+
+<div class="upload-wrapper">
+
+    <div class="container">
+
+        <div class="row justify-content-center">
+
+            <div class="col-lg-7 col-md-9">
+
+                <div class="upload-card">
+
+                    <!-- Header -->
+                    <div class="upload-header">
+
+                        <div class="main-icon">
+                            <i class="bi bi-person-vcard-fill"></i>
+                        </div>
+
+                        <h3>Upload Photo & Signature</h3>
+
+                        <p>
+                            Keep your student profile information updated
+                        </p>
+
+                    </div>
+
+
+                    <!-- Messages -->
+                    {% if messages %}
+
+                        {% for message in messages %}
+
+                            {% if message.tags == 'success' %}
+
+                                <div class="alert alert-success alert-dismissible fade show shadow-sm rounded-3 m-4 mb-0"
+                                     role="alert">
+
+                                    <i class="bi bi-check-circle-fill me-2"></i>
+                                    {{ message }}
+
+                                    <button type="button"
+                                            class="btn-close"
+                                            data-bs-dismiss="alert">
+                                    </button>
+
+                                </div>
+
+                            {% elif message.tags == 'error' %}
+
+                                <div class="alert alert-danger alert-dismissible fade show shadow-sm rounded-3 m-4 mb-0"
+                                     role="alert">
+
+                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                    {{ message }}
+
+                                    <button type="button"
+                                            class="btn-close"
+                                            data-bs-dismiss="alert">
+                                    </button>
+
+                                </div>
+
+                            {% else %}
+
+                                <div class="alert alert-info alert-dismissible fade show shadow-sm rounded-3 m-4 mb-0"
+                                     role="alert">
+
+                                    <i class="bi bi-info-circle-fill me-2"></i>
+                                    {{ message }}
+
+                                    <button type="button"
+                                            class="btn-close"
+                                            data-bs-dismiss="alert">
+                                    </button>
+
+                                </div>
+
+                            {% endif %}
+
+                        {% endfor %}
+
+                    {% endif %}
+
+
+                    <!-- Body -->
+                    <div class="upload-body">
+
+                        <form method="POST"
+                              action=""
+                              enctype="multipart/form-data">
+
+                            {% csrf_token %}
+
+
+                            <!-- ================= STUDENT PHOTO ================= -->
+
+                            <div class="mb-4">
+
+                                <label class="upload-label d-block">
+
+                                    <i class="bi bi-person-circle section-icon"></i>
+
+                                    Student Photo
+
+                                </label>
+
+
+                                <div class="upload-box">
+
+                                    <!-- Existing Photo Preview -->
+                                    {% if photo_signature and photo_signature.student_photo %}
+
+                                        <div class="text-center mb-3">
+
+                                            <img src="{{ photo_signature.student_photo.url }}"
+                                                 alt="Student Photo"
+                                                 class="preview-photo">
+
+                                            <div class="uploaded-text mt-2">
+
+                                                <i class="bi bi-check-circle-fill me-1"></i>
+
+                                                Photo already uploaded
+
+                                            </div>
+
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    <!-- Photo Input -->
+                                    <input type="file"
+                                           name="student_photo"
+                                           class="form-control"
+                                           accept=".jpg,.jpeg,.png">
+
+
+                                    <div class="upload-info">
+
+                                        <i class="bi bi-info-circle me-1"></i>
+
+                                        {% if photo_signature and photo_signature.student_photo %}
+
+                                            Select a new photo if you want to replace the existing photo.
+
+                                        {% else %}
+
+                                            Upload a clear JPG, JPEG or PNG photo.
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- ================= STUDENT SIGNATURE ================= -->
+
+                            <div class="mb-4">
+
+                                <label class="upload-label d-block">
+
+                                    <i class="bi bi-pen-fill section-icon"></i>
+
+                                    Student Signature
+
+                                </label>
+
+
+                                <div class="upload-box">
+
+                                    <!-- Existing Signature Preview -->
+                                    {% if photo_signature and photo_signature.student_signature %}
+
+                                        <div class="text-center mb-3">
+
+                                            <img src="{{ photo_signature.student_signature.url }}"
+                                                 alt="Student Signature"
+                                                 class="preview-signature">
+
+                                            <div class="uploaded-text mt-2">
+
+                                                <i class="bi bi-check-circle-fill me-1"></i>
+
+                                                Signature already uploaded
+
+                                            </div>
+
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    <!-- Signature Input -->
+                                    <input type="file"
+                                           name="student_signature"
+                                           class="form-control"
+                                           accept=".jpg,.jpeg,.png">
+
+
+                                    <div class="upload-info">
+
+                                        <i class="bi bi-info-circle me-1"></i>
+
+                                        {% if photo_signature and photo_signature.student_signature %}
+
+                                            Select a new signature if you want to replace the existing signature.
+
+                                        {% else %}
+
+                                            Upload a clear JPG, JPEG or PNG signature.
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- ================= SUBMIT BUTTON ================= -->
+
+                            <div class="text-center mt-4">
+
+                                <button type="submit"
+                                        class="upload-btn">
+
+                                    {% if photo_signature %}
+
+                                        <i class="bi bi-arrow-repeat me-2"></i>
+
+                                        Update Photo & Signature
+
+                                    {% else %}
+
+                                        <i class="bi bi-cloud-arrow-up-fill me-2"></i>
+
+                                        Upload Photo & Signature
+
+                                    {% endif %}
+
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

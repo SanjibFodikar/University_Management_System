@@ -1,0 +1,15 @@
+{% extends 'admin_nav.html' %}
+{% load static %}
+{% block content %}
+<div class="container-fluid">
+
+        <h2 class="fw-bold">
+            <span class="text-uppercase">Welcome, {{request.user.username}}</span>
+        </h2>
+
+        <p class="text-muted">
+            University administration dashboard
+        </p>
+
+</div>
+{% endblock %}

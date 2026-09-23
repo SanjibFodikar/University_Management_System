@@ -1,0 +1,238 @@
+
+{% extends 'college_nav.html' %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- Page Header -->
+    <div class="mb-4">
+
+        <h3 class="fw-bold mb-1">
+            <i class="bi bi-person-plus me-2"></i>
+            Add Teacher
+        </h3>
+
+        <p class="text-muted mb-0">
+            Add a new teacher to your college
+        </p>
+
+    </div>
+
+
+    <!-- Teacher Form -->
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-header bg-white">
+
+            <h5 class="fw-bold mb-0">
+                <i class="bi bi-person-badge me-2"></i>
+                Teacher Information
+            </h5>
+
+        </div>
+
+
+        <div class="card-body">
+
+            {% if messages %}
+            {% for message in messages %}
+
+            {% if message.tags == 'success' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            {% elif message.tags == 'error' %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            {% else %}
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+            {% endfor %}
+            {% endif %}
+
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="row g-3">
+
+
+                    <!-- Teacher Name -->
+                    <div class="col-md-6">
+
+                        <label for="teacher_name"
+                               class="form-label fw-semibold">
+                            Teacher Name
+                        </label>
+
+                        <input type="text"
+                               name="teacher_name"
+                               id="teacher_name"
+                               class="form-control"
+                               placeholder="Enter teacher name"
+                               required>
+
+                    </div>
+
+
+                    <!-- Email -->
+                    <div class="col-md-6">
+
+                        <label for="email"
+                               class="form-label fw-semibold">
+                            Email
+                        </label>
+
+                        <input type="email"
+                               name="email"
+                               id="email"
+                               class="form-control"
+                               placeholder="Enter teacher email"
+                               required>
+
+                    </div>
+
+
+                    <!-- Qualification -->
+                    <div class="col-md-6">
+
+                        <label for="teacher_qualification"
+                               class="form-label fw-semibold">
+                            Qualification
+                        </label>
+
+                        <input type="text"
+                               name="teacher_qualification"
+                               id="teacher_qualification"
+                               class="form-control"
+                               placeholder="e.g. MCA, M.Sc, PhD"
+                               required>
+
+                    </div>
+
+
+                    <!-- Phone -->
+                    <div class="col-md-6">
+
+                        <label for="phone"
+                               class="form-label fw-semibold">
+                            Phone Number
+                        </label>
+
+                        <input type="tel"
+                               name="phone"
+                               id="phone"
+                               class="form-control"
+                               placeholder="Enter phone number"
+                               maxlength="15"
+                               required>
+
+                    </div>
+
+
+                    <!-- Designation -->
+                    <div class="col-md-6">
+
+                        <label for="designation"
+                               class="form-label fw-semibold">
+                            Designation
+                        </label>
+
+                        <input type="text" name="designation" id="designation" class="form-control" required placeholder="Enter Your Designation">
+
+                    </div>
+
+
+                    <!-- Department / Course -->
+                    <div class="col-md-6">
+
+                        <label for="department"
+                               class="form-label fw-semibold">
+                            Department / Course
+                        </label>
+
+                        <select name="department"
+                                id="department"
+                                class="form-select"
+                                required>
+
+                            <option value="">
+                                Select Department / Course
+                            </option>
+
+                            {% for department in departments %}
+
+                            <option value="{{ department.course_name.id }}">
+                                {{ department.course_name.course_name }} - {{ department.course_name.id }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Appointment Date -->
+                    <div class="col-md-6">
+
+                        <label for="appointment_date"
+                               class="form-label fw-semibold">
+                            Appointment Date
+                        </label>
+
+                        <input type="date"
+                               name="appointment_date"
+                               id="appointment_date"
+                               class="form-control"
+                               required>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- Buttons -->
+                <div class="mt-4 d-flex gap-2">
+
+                    <button type="submit"
+                            class="btn btn-primary">
+
+                        <i class="bi bi-person-plus me-2"></i>
+                        Add Teacher
+
+                    </button>
+
+
+                    <button type="reset"
+                            class="btn btn-outline-secondary">
+
+                        <i class="bi bi-arrow-counterclockwise me-2"></i>
+                        Reset
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+

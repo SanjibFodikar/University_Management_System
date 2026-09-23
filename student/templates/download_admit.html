@@ -1,0 +1,619 @@
+{% extends 'student_navbar.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <!-- Page Heading -->
+    <div class="text-center mb-4">
+        <h3 class="fw-bold">
+            <i class="bi bi-card-heading me-2"></i>
+            Download Admit Card
+        </h3>
+
+        <p class="text-muted mb-0">
+            Download or print your examination admit card
+        </p>
+    </div>
+
+
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                 role="alert">
+
+                {{ message }}
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert">
+                </button>
+
+            </div>
+
+        {% endfor %}
+    {% endif %}
+
+
+    {% if admit_card %}
+
+        <!-- ============================= -->
+        <!-- ADMIT CARD -->
+        <!-- ============================= -->
+
+        <div id="admitCard" class="admit-card">
+
+            <div class="admit-card-inner">
+
+                <!-- University Header -->
+                <div class="text-center border-bottom pb-3">
+
+                    <h2 class="fw-bold mb-1">
+                        MAULANA ABUL KALAM AZAD UNIVERSITY OF TECHNOLOGY
+                    </h2>
+
+                    <h5 class="mb-1">
+                        Examination Admit Card
+                    </h5>
+
+                    <p class="mb-0 text-muted">
+                        Academic Examination
+                    </p>
+
+                </div>
+
+
+                <!-- ============================= -->
+                <!-- STUDENT INFORMATION -->
+                <!-- ============================= -->
+
+                <div class="row details mt-4">
+
+                    <!-- Student Details -->
+                    <div class="col-8">
+
+                        <table class="table table-borderless mb-0">
+
+                            <tr>
+                                <th width="40%">
+                                    Student Name
+                                </th>
+
+                                <td>
+                                    : {{ student.name }}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>
+                                    Roll Number
+                                </th>
+
+                                <td>
+                                    : {{ student.roll_number }}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>
+                                    Registration Number
+                                </th>
+
+                                <td>
+                                    : {{ student.registration_number }}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>
+                                    College
+                                </th>
+
+                                <td>
+                                    : {{ admit_card.college }}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>
+                                    Course
+                                </th>
+
+                                <td>
+                                    : {{ admit_card.course }}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>
+                                    Semester
+                                </th>
+
+                                <td>
+                                    : {{ admit_card.semester }}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>
+                                    Year
+                                </th>
+
+                                <td>
+                                    : {{ admit_card.created_at|date:"Y" }}
+                                </td>
+                            </tr>
+
+                        </table>
+
+                    </div>
+
+
+                    <!-- ============================= -->
+                    <!-- PHOTO & SIGNATURE -->
+                    <!-- ============================= -->
+
+                    <div class="col-4 text-center">
+
+                        {% if photo_signature.student_photo %}
+
+                            <!-- Student Photo -->
+                            <div class="mb-2">
+
+                                <img src="{{ photo_signature.student_photo.url }}"
+                                     alt="Student Photo"
+                                     class="student-photo">
+
+                            </div>
+
+
+                            <!-- Student Signature -->
+                            {% if photo_signature.student_signature %}
+
+                                <div>
+
+                                    <img src="{{ photo_signature.student_signature.url }}"
+                                         alt="Student Signature"
+                                         class="student-signature">
+
+                                </div>
+
+                            {% endif %}
+
+                        {% else %}
+
+                            <div class="photo-placeholder">
+                                Photo
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- ============================= -->
+                <!-- EXAMINATION SCHEDULE -->
+                <!-- ============================= -->
+
+                <div class="mt-4">
+
+                    <h5 class="fw-bold text-center mb-3">
+                        Examination Schedule
+                    </h5>
+
+                    <table class="table table-bordered align-middle exam-table">
+
+                        <thead class="table-light">
+
+                            <tr>
+
+                                <th>Sl No.</th>
+
+                                <th>Subject Code</th>
+
+                                <th>Subject Name</th>
+
+                                <th>Exam Date</th>
+
+                                <th>Exam Time</th>
+
+                                <th>Invigilator Signature</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for subject in admit_card.subject_date_time %}
+
+                                <tr>
+
+                                    <td>
+                                        {{ forloop.counter }}
+                                    </td>
+
+                                    <td>
+                                        {{ subject.subject_code }}
+                                    </td>
+
+                                    <td>
+                                        {{ subject.subject_name }}
+                                    </td>
+
+                                    <td>
+                                        {{ subject.exam_date|slice:"8:10" }}-{{ subject.exam_date|slice:"5:7" }}-{{ subject.exam_date|slice:"0:4" }}
+                                    </td>
+
+                                    <td>
+                                        {{ subject.exam_time }}
+                                    </td>
+
+                                    <td style="height: 55px;">
+                                    </td>
+
+                                </tr>
+
+                            {% empty %}
+
+                                <tr>
+
+                                    <td colspan="6"
+                                        class="text-center text-muted">
+
+                                        No examination schedule found.
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <!-- ============================= -->
+                <!-- SIGNATURE SECTION -->
+                <!-- ============================= -->
+
+                <div class="row mt-5">
+
+                    <div class="col-6 text-center">
+
+                        <div style="height: 50px;"></div>
+
+                        <hr class="mx-auto"
+                            style="width: 180px;">
+
+                        <small>
+                            Student Signature
+                        </small>
+
+                    </div>
+
+
+                    <div class="col-6 text-center">
+
+                        <div style="height: 50px;"></div>
+
+                        <hr class="mx-auto"
+                            style="width: 180px;">
+
+                        <small>
+                            Authorized Signature
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ============================= -->
+                <!-- IMPORTANT INSTRUCTIONS -->
+                <!-- ============================= -->
+
+                <div class="mt-4 border-top pt-3">
+
+                    <h6 class="fw-bold">
+                        Important Instructions
+                    </h6>
+
+                    <ol class="small text-muted mb-0">
+
+                        <li>
+                            Students must carry this admit card during the examination.
+                        </li>
+
+                        <li>
+                            Students must reach the examination centre before the reporting time.
+                        </li>
+
+                        <li>
+                            Electronic devices are not allowed inside the examination hall.
+                        </li>
+
+                        <li>
+                            Students must follow all examination rules and instructions.
+                        </li>
+
+                    </ol>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ============================= -->
+        <!-- BUTTONS -->
+        <!-- ============================= -->
+
+        <div class="text-center mt-4">
+
+            <button type="button"
+                    class="btn btn-primary me-2"
+                    onclick="printAdmitCard()">
+
+                <i class="bi bi-printer-fill me-2"></i>
+
+                Print Admit Card
+
+            </button>
+
+
+            <button type="button"
+                    class="btn btn-success"
+                    onclick="downloadAdmitCard()">
+
+                <i class="bi bi-download me-2"></i>
+
+                Download Admit Card
+
+            </button>
+
+        </div>
+
+
+    {% else %}
+
+        <div class="alert alert-warning text-center">
+
+            <i class="bi bi-exclamation-circle me-2"></i>
+
+            Admit card is not available yet.
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- HTML2PDF LIBRARY -->
+<!-- ================================================= -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+
+<script>
+
+function downloadAdmitCard() {
+
+    const element = document.getElementById("admitCard");
+
+    if (!element) {
+        alert("Admit card not found.");
+        return;
+    }
+
+    const options = {
+
+        margin: 0,
+
+        filename: "Admit_Card.pdf",
+
+        image: {
+            type: "jpeg",
+            quality: 1
+        },
+
+        html2canvas: {
+            scale: 2,
+            useCORS: true,
+            allowTaint: false,
+            backgroundColor: "#ffffff"
+        },
+
+        jsPDF: {
+            unit: "mm",
+            format: "a4",
+            orientation: "portrait"
+        }
+
+    };
+
+
+    html2pdf()
+        .set(options)
+        .from(element)
+        .save();
+
+}
+
+
+function printAdmitCard() {
+
+    window.print();
+
+}
+
+</script>
+
+
+<!-- ================================================= -->
+<!-- STYLE -->
+<!-- ================================================= -->
+
+<style>
+
+.admit-card {
+
+    width: 100%;
+    max-width: 1100px;
+    margin: auto;
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.10);
+}
+
+
+.admit-card-inner {
+    padding: 30px;
+}
+
+
+/* Student Photo */
+
+.student-photo {
+    width: 130px;
+    height: 160px;
+    object-fit: cover;
+    border: 1px solid #999;
+}
+
+
+/* Student Signature */
+
+.student-signature {
+
+    width: 150px;
+
+    height: 60px;
+
+    object-fit: contain;
+
+}
+
+
+/* Photo Placeholder */
+
+.photo-placeholder {
+    width: 130px;
+    height: 160px;
+    border: 1px solid #999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    color: #777;
+
+}
+
+
+/* Exam Table */
+
+.exam-table {
+
+    width: 100%;
+
+}
+
+
+.exam-table th,
+.exam-table td {
+
+    text-align: center;
+
+    vertical-align: middle;
+
+}
+@media (max-width: 800px) {
+    #admitCard{
+        overflow-x: scroll;
+    }
+    .admit-card-inner {
+      padding: 10px;
+       width: 1000px;
+    }
+
+}
+
+/* Print */
+
+@media print {
+
+    @page {
+
+        size: A4 portrait;
+
+        margin: 10mm;
+
+    }
+
+
+    body * {
+
+        visibility: hidden;
+
+    }
+
+
+    #admitCard,
+    #admitCard * {
+
+        visibility: visible;
+
+    }
+
+
+    #admitCard {
+
+        position: absolute;
+
+        left: 0;
+
+        top: 0;
+
+        width: 100%;
+
+        max-width: none;
+
+        border: 1px solid #000;
+
+        box-shadow: none;
+
+    }
+
+
+    .admit-card-inner {
+
+        padding: 15px;
+
+    }
+
+
+    .btn,
+    button {
+
+        display: none !important;
+
+    }
+
+}
+
+</style>
+
+{% endblock %}
+

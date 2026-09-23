@@ -1,0 +1,535 @@
+{% extends 'college_nav.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <!-- =========================
+         PAGE HEADER
+    ========================== -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-book text-success me-2"></i>
+                Manage Courses
+            </h2>
+
+            <p class="text-muted mb-0">
+                Manage all available courses.
+            </p>
+
+        </div>
+
+
+        <a href="{% url 'college_add_course' %}"
+           class="btn btn-success">
+
+            <i class="bi bi-plus-circle me-1"></i>
+            Add New Course
+
+        </a>
+
+    </div>
+
+
+    <!-- =========================
+         DJANGO MESSAGES
+    ========================== -->
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                 role="alert">
+
+                {% if message.tags == "success" %}
+
+                    <i class="bi bi-check-circle-fill me-2"></i>
+
+                {% elif message.tags == "error" %}
+
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+                {% endif %}
+
+                {{ message }}
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert">
+                </button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <!-- =========================
+         SEARCH BAR
+    ========================== -->
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+
+        <div class="card-body p-3">
+
+            <form method="GET">
+
+                <div class="input-group">
+
+                    <!-- Search Icon -->
+                    <span class="input-group-text bg-white border-end-0">
+
+                        <i class="bi bi-search text-success"></i>
+
+                    </span>
+
+
+                    <!-- Search Input -->
+                    <input type="text"
+                           name="search"
+                           class="form-control border-start-0"
+                           placeholder="Search by course name..."
+                           value="{{ request.GET.search }}"
+                           id="search"
+                           style="outline: none;">
+
+                        <a href="{% url 'college_manage_course' %}"
+                           class="btn btn-outline-secondary">
+
+                            <i class="bi bi-x-circle me-1"></i>
+                            Clear
+
+                        </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         COURSE TABLE CARD
+    ========================== -->
+    <div class="card shadow border-0 rounded-4">
+
+        <!-- Card Header -->
+        <div class="card-header text-white py-3"
+             style="background: linear-gradient(180deg, #073b3a, #0b5250);">
+
+            <h5 class="mb-0">
+
+                <i class="bi bi-list-ul me-2"></i>
+                Course List
+
+            </h5>
+
+        </div>
+
+
+        <!-- Table -->
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover table-bordered text-center align-middle mb-0">
+
+                    <!-- Table Header -->
+                    <thead class="table-light">
+
+                        <tr>
+
+                            <th class="ps-4">#</th>
+
+                            <th>
+                                <i class="bi bi-book me-1"></i>
+                                Course Name
+                            </th>
+
+                            <th>
+                                <i class="bi bi-clock me-1"></i>
+                                Duration
+                            </th>
+
+                            <th>
+                                <i class="bi bi-toggle-on me-1"></i>
+                                Status
+                            </th>
+
+                            <th>
+                                <i class="bi bi-calendar-date me-1"></i>
+                                Created At
+                            </th>
+
+                            <th class="text-center pe-4">
+                                <i class="bi bi-gear me-1"></i>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <!-- Table Body -->
+                    <tbody>
+
+                        {% for course in courses %}
+
+                            <tr class="courseRows">
+
+                                <!-- Serial Number -->
+                                <td class="ps-4 fw-semibold">
+
+                                    {{ forloop.counter }}
+
+                                </td>
+
+
+                                <!-- Course Name -->
+                                <td>
+
+                                    <div class="fw-semibold">
+
+                                        <i class="bi bi-book me-2 text-success"></i>
+
+                                        {{ course.course_name }}
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- Duration -->
+                                <td>
+
+                                    <span class="badge bg-info text-dark px-3 py-2">
+
+                                        <i class="bi bi-clock me-1"></i>
+
+                                        {{ course.course_name.course_duration }}
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- Status -->
+                                <td>
+
+                                    {% if course.is_active %}
+
+                                        <span class="badge bg-success px-3 py-2">
+
+                                            <i class="bi bi-check-circle me-1"></i>
+
+                                            Active
+
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="badge bg-danger px-3 py-2">
+
+                                            <i class="bi bi-x-circle me-1"></i>
+
+                                            Inactive
+
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- Created Date -->
+                                <td>
+
+                                    <i class="bi bi-calendar-date me-1 text-muted"></i>
+
+                                    {{ course.created_at|date:"d M Y" }}
+
+                                </td>
+
+
+                                <!-- Actions -->
+                                <td class="text-center pe-4">
+
+                                    <!-- Edit -->
+                                    <a href="{% url 'college_edit_course' id=course.id %}"
+                                       class="btn btn-sm btn-outline-success"
+                                       title="Edit Course">
+
+                                        <i class="bi bi-pencil-square"></i>
+                                         Edit
+                                    </a>
+
+
+                                    <!-- Delete -->
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-danger"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#deleteModal{{ course.id }}"
+                                            title="Delete Course">
+
+                                        <i class="bi bi-trash"></i>
+                                         Delete
+                                    </button>
+
+                                </td>
+
+                            </tr>
+
+
+                            <!-- =========================
+                                 DELETE MODAL
+                            ========================== -->
+                            <div class="modal fade"
+                                 id="deleteModal{{ course.id }}"
+                                 tabindex="-1">
+
+                                <div class="modal-dialog modal-dialog-centered">
+
+                                    <div class="modal-content border-0 rounded-4">
+
+                                        <!-- Modal Header -->
+                                        <div class="modal-header text-white"
+                                             style="background: #dc3545;">
+
+                                            <h5 class="modal-title">
+
+                                                <i class="bi bi-trash me-2"></i>
+
+                                                Delete Course
+
+                                            </h5>
+
+
+                                            <button type="button"
+                                                    class="btn-close btn-close-white"
+                                                    data-bs-dismiss="modal">
+                                            </button>
+
+                                        </div>
+
+
+                                        <!-- Modal Body -->
+                                        <div class="modal-body p-4">
+
+                                            <div class="text-center">
+
+                                                <i class="bi bi-exclamation-triangle-fill
+                                                          text-danger fs-1 mb-3 d-block">
+                                                </i>
+
+                                                <h5>
+                                                    Are you sure?
+                                                </h5>
+
+                                                <p class="text-muted mb-0">
+
+                                                    You are about to delete
+
+                                                    <strong class="text-danger">
+
+                                                        {{ course.course_name }}
+
+                                                    </strong>
+
+                                                    course.
+
+                                                </p>
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <!-- Modal Footer -->
+                                        <div class="modal-footer justify-content-center">
+
+                                            <button type="button"
+                                                    class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">
+
+                                                <i class="bi bi-x-circle me-1"></i>
+
+                                                Cancel
+
+                                            </button>
+
+
+                                            <a href="{% url 'college_delete_course' id=course.id %}"
+                                               class="btn btn-danger">
+
+                                                <i class="bi bi-trash me-1"></i>
+
+                                                Yes, Delete
+
+                                            </a>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                        <!-- =========================
+                             EMPTY COURSE LIST
+                        ========================== -->
+                        {% empty %}
+
+                            <tr>
+
+                                <td colspan="6"
+                                    class="text-center py-5">
+
+                                    <i class="bi bi-book fs-1
+                                              text-muted d-block mb-3">
+                                    </i>
+
+                                    {% if request.GET.search %}
+
+                                        <h5 class="text-muted">
+                                            No Course Found
+                                        </h5>
+
+                                        <p class="text-muted mb-3">
+
+                                            No courses match
+
+                                            <strong>
+                                                "{{ request.GET.search }}"
+                                            </strong>
+
+                                        </p>
+
+                                        <a href="{% url 'college_manage_course' %}"
+                                           class="btn btn-outline-success">
+
+                                            <i class="bi bi-arrow-left me-1"></i>
+
+                                            Back to All Courses
+
+                                        </a>
+
+                                    {% else %}
+
+                                        <h5 class="text-muted">
+
+                                            No Courses Found
+
+                                        </h5>
+
+                                        <p class="text-muted mb-3">
+
+                                            You haven't added any courses yet.
+
+                                        </p>
+
+
+                                        <a href="{% url 'college_add_course' %}"
+                                           class="btn btn-success">
+
+                                            <i class="bi bi-plus-circle me-1"></i>
+
+                                            Add Your First Course
+
+                                        </a>
+
+                                    {% endif %}
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                        <tr id="emptyRow" style="display: none;">
+
+                                <td colspan="6"
+                                    class="text-center py-5">
+
+                                    <i class="bi bi-book fs-1
+                                              text-muted d-block mb-3">
+                                    </i>
+
+                                    {% if request.GET.search %}
+
+                                        <h5 class="text-muted">
+                                            No Course Found
+                                        </h5>
+
+                                        <p class="text-muted mb-3">
+
+                                            No courses match
+
+                                            <strong>
+                                                "{{ request.GET.search }}"
+                                            </strong>
+
+                                        </p>
+
+                                        <a href="{% url 'college_manage_course' %}"
+                                           class="btn btn-outline-success">
+
+                                            <i class="bi bi-arrow-left me-1"></i>
+
+                                            Back to All Courses
+
+                                        </a>
+
+                                    {% else %}
+
+                                        <h5 class="text-muted">
+
+                                            No Courses Found
+
+                                        </h5>
+
+                                        <p class="text-muted mb-3">
+
+                                            You haven't added any courses yet.
+
+                                        </p>
+
+
+                                        <a href="{% url 'college_add_course' %}"
+                                           class="btn btn-success">
+
+                                            <i class="bi bi-plus-circle me-1"></i>
+
+                                            Add Your First Course
+
+                                        </a>
+
+                                    {% endif %}
+
+                                </td>
+
+                            </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="{% static 'college_js/college_manage_course.js' %}"></script>
+{% endblock %}

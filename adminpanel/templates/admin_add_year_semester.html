@@ -1,0 +1,304 @@
+{% extends 'admin_nav.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <!-- =========================
+         PAGE HEADER
+    ========================== -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+
+                <i class="bi bi-calendar2-week text-primary me-2"></i>
+
+                Add Year & Semester
+
+            </h2>
+
+            <p class="text-muted mb-0">
+
+                Create a new academic year and semester.
+
+            </p>
+
+        </div>
+
+
+        <a href="{% url 'manage_year_semester' %}"
+           class="btn btn-outline-primary">
+
+            <i class="bi bi-list-ul me-1"></i>
+
+            Manage Year & Semester
+
+        </a>
+
+    </div>
+
+
+    <!-- =========================
+         MESSAGES
+    ========================== -->
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                 role="alert">
+
+
+                {% if message.tags == "success" %}
+                  <h6 class="text-success"><i class="bi bi-check-circle-fill me-2"></i> {{ message }}</h6>
+                    
+                {% elif message.tags == "error" %}
+                <h6 class="text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i> {{ message }}</h6>
+                    
+                {% endif %}
+
+
+                
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert">
+                </button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <!-- =========================
+         ADD YEAR & SEMESTER CARD
+    ========================== -->
+    <div class="row justify-content-center">
+
+        <div class="col-md-8 col-lg-6">
+
+            <div class="card shadow border-0 rounded-4">
+
+
+                <!-- CARD HEADER -->
+                <div class="card-header text-white py-3"
+                     style="background: linear-gradient(180deg, #0d6efd, #084298);">
+
+                    <h5 class="mb-0">
+
+                        <i class="bi bi-plus-circle me-2"></i>
+
+                        Add Academic Year & Semester
+
+                    </h5>
+
+                </div>
+
+
+                <!-- FORM -->
+                <form method="POST"
+                      action="">
+
+                    {% csrf_token %}
+
+
+                    <div class="card-body p-4">
+
+
+                        <!-- =========================
+                             YEAR
+                        ========================== -->
+                        <div class="mb-4">
+
+                            <label for="year"
+                                   class="form-label fw-semibold">
+
+                                <i class="bi bi-calendar3 text-primary me-1"></i>
+
+                                Academic Year
+
+                            </label>
+
+
+                            <select name="year"
+                                    id="year"
+                                    class="form-select form-select-lg"
+                                    required>
+
+                                <option value=""
+                                        selected
+                                        disabled>
+
+                                    Select Year
+
+                                </option>
+
+
+                                <option value="1st Year" {% if request.POST.year == '1st Year' %} selected {% endif %}>
+                                    1st Year
+                                </option>
+
+
+                                <option value="2nd Year" {% if request.POST.year == '2nd Year' %} selected {% endif %}>
+
+                                    2nd Year
+
+                                </option>
+
+
+                                <option value="3rd Year" {% if request.POST.year == '3rd Year' %} selected {% endif %}>
+
+                                    3rd Year
+
+                                </option>
+
+
+                                <option value="4th Year" {% if request.POST.year == '4th Year' %} selected {% endif %}>
+
+                                    4th Year
+
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- =========================
+                             SEMESTER
+                        ========================== -->
+                        <div class="mb-4">
+
+                            <label for="semester"
+                                   class="form-label fw-semibold">
+
+                                <i class="bi bi-layers text-primary me-1"></i>
+
+                                Semester
+
+                            </label>
+
+
+                            <select name="semester"
+                                    id="semester"
+                                    class="form-select form-select-lg"
+                                    required>
+
+                                <option value=""
+                                        selected
+                                        disabled>
+
+                                    Select Semester
+
+                                </option>
+
+
+                                <option value="1st Semester" {% if request.POST.semester == '1st Semester' %} selected {% endif %}>
+
+                                    1st Semester
+
+                                </option>
+
+
+                                <option value="2nd Semester" {% if request.POST.semester == '2nd Semester' %} selected {% endif %}>
+
+                                    2nd Semester
+
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- =========================
+                             STATUS
+                        ========================== -->
+                        <div class="mb-3">
+
+                            <label for="is_active"
+                                   class="form-label fw-semibold">
+
+                                <i class="bi bi-toggle-on text-primary me-1"></i>
+
+                                Status
+
+                            </label>
+
+
+                            <select name="is_active"
+                                    id="is_active"
+                                    class="form-select form-select-lg">
+
+                                <option value="True"
+                                        selected>
+
+                                    Active
+
+                                </option>
+
+
+                                <option value="False">
+
+                                    Inactive
+
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =========================
+                         CARD FOOTER
+                    ========================== -->
+                    <div class="card-footer bg-white border-0 p-4">
+
+
+                        <div class="d-flex justify-content-end gap-2">
+
+
+                            <!-- RESET -->
+                            <button type="reset"
+                                    class="btn btn-outline-secondary">
+
+                                <i class="bi bi-arrow-counterclockwise me-1"></i>
+
+                                Reset
+
+                            </button>
+
+
+                            <!-- SUBMIT -->
+                            <button type="submit"
+                                    class="btn btn-primary">
+
+                                <i class="bi bi-plus-circle me-1"></i>
+
+                                Add Year & Semester
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

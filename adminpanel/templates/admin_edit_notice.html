@@ -1,0 +1,525 @@
+
+{% extends 'admin_nav.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+<!-- ==========================================
+     PAGE HEADER
+=========================================== -->
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+
+    <div>
+
+        <h3 class="fw-bold mb-1">
+
+            <i class="bi bi-pencil-square text-primary me-2"></i>
+
+            Edit Notice
+
+        </h3>
+
+        <p class="text-muted mb-0">
+
+            Update the notice title, description and status.
+
+        </p>
+
+    </div>
+
+
+    <a href="{% url 'admin_manage_notice' %}"
+       class="btn btn-secondary">
+
+        <i class="bi bi-arrow-left me-1"></i>
+
+        Back to Notices
+
+    </a>
+
+</div>
+
+
+
+<!-- ==========================================
+     MESSAGES
+=========================================== -->
+
+{% if messages %}
+
+    {% for message in messages %}
+
+        {% if message.tags == "success" %}
+
+            <div class="alert alert-success alert-dismissible fade show"
+                 role="alert">
+
+                <i class="bi bi-check-circle-fill me-2"></i>
+
+                {{ message }}
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert">
+                </button>
+
+            </div>
+
+        {% elif message.tags == "error" %}
+
+            <div class="alert alert-danger alert-dismissible fade show"
+                 role="alert">
+
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+                {{ message }}
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert">
+                </button>
+
+            </div>
+
+        {% endif %}
+
+    {% endfor %}
+
+{% endif %}
+
+
+
+<!-- ==========================================
+     EDIT NOTICE CARD
+=========================================== -->
+
+<div class="row justify-content-center">
+
+    <div class="col-xl-8 col-lg-9 col-md-11">
+
+        <div class="card border-0 shadow-sm">
+
+
+            <!-- CARD HEADER -->
+
+            <div class="card-header text-white py-3" style="background-color: #10192c;">
+
+                <h5 class="mb-0">
+
+                    <i class="bi bi-file-earmark-text me-2"></i>
+
+                    Notice Information
+
+                </h5>
+
+            </div>
+
+
+
+            <!-- CARD BODY -->
+
+            <div class="card-body p-4">
+
+
+                <form method="POST"
+                      id="editNoticeForm">
+
+                    {% csrf_token %}
+
+
+
+                    <!-- ==================================
+                         NOTICE TITLE
+                    =================================== -->
+
+                    <div class="mb-4">
+
+                        <label for="title"
+                               class="form-label fw-semibold">
+
+                            Notice Title
+
+                            <span class="text-danger">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+
+                                <i class="bi bi-type-h1"></i>
+
+                            </span>
+
+
+                            <input type="text"
+                                   name="title"
+                                   id="title"
+                                   class="form-control"
+                                   value="{{ notice.title }}"
+                                   maxlength="200"
+                                   placeholder="Enter notice title"
+                                   required>
+
+                        </div>
+
+
+                        <div class="form-text">
+
+                            Maximum 200 characters.
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ==================================
+                         DESCRIPTION
+                    =================================== -->
+
+                    <div class="mb-4">
+
+                        <label for="description"
+                               class="form-label fw-semibold">
+
+                            Notice Description
+
+                            <span class="text-danger">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <textarea name="description"
+                                  id="description"
+                                  class="form-control"
+                                  rows="8"
+                                  placeholder="Enter notice details"
+                                  required>{{ notice.description }}</textarea>
+
+
+                        <div class="d-flex justify-content-between mt-1">
+
+                            <small class="form-text">
+
+                                Update the complete notice information.
+
+                            </small>
+
+
+                            <small class="text-muted">
+
+                                <span id="charCount">
+                                    {{ notice.description|length }}
+                                </span>
+
+                                characters
+
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ==================================
+                         STATUS
+                    =================================== -->
+
+                    <div class="mb-4">
+
+                        <label for="is_active"
+                               class="form-label fw-semibold">
+
+                            Notice Status
+
+                            <span class="text-danger">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <select name="is_active"
+                                id="is_active"
+                                class="form-select"
+                                required>
+
+                            {% if notice.is_active %}
+
+                                <option value="True" selected>
+
+                                    Active
+
+                                </option>
+
+                                <option value="False">
+
+                                    Inactive
+
+                                </option>
+
+                            {% else %}
+
+                                <option value="True">
+
+                                    Active
+
+                                </option>
+
+                                <option value="False" selected>
+
+                                    Inactive
+
+                                </option>
+
+                            {% endif %}
+
+                        </select>
+
+
+                        <div class="form-text">
+
+                            Active notices can be displayed to users.
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ==================================
+                         NOTICE DETAILS
+                    =================================== -->
+
+                    <div class="alert alert-light border">
+
+                        <div class="row g-3">
+
+                            <div class="col-md-6">
+
+                                <small class="text-muted d-block">
+
+                                    Notice Date
+
+                                </small>
+
+                                <strong>
+
+                                    {{ notice.notice_date|date:"d M Y" }}
+
+                                </strong>
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <small class="text-muted d-block">
+
+                                    Created At
+
+                                </small>
+
+                                <strong>
+
+                                    {{ notice.created_at|date:"d M Y, h:i A" }}
+
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ==================================
+                         BUTTONS
+                    =================================== -->
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+
+
+                        <a href="{% url 'admin_manage_notice' %}"
+                           class="btn btn-secondary">
+
+                            <i class="bi bi-x-circle me-1"></i>
+
+                            Cancel
+
+                        </a>
+
+
+                        <button type="submit"
+                                class="btn text-white" style="background-color: #16234e;">
+
+                            <i class="bi bi-check-circle me-1"></i>
+
+                            Update Notice
+
+                        </button>
+
+                    </div>
+
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+
+<!-- ==========================================
+     PAGE CSS
+=========================================== -->
+
+<style>
+
+    .card {
+
+        border-radius: 12px;
+
+    }
+
+
+    .card-header {
+
+        border-radius: 12px 12px 0 0 !important;
+
+    }
+
+
+    .form-label {
+
+        color: #343a40;
+
+    }
+
+
+    .form-control,
+    .form-select {
+
+        min-height: 45px;
+
+        border-radius: 8px;
+
+    }
+
+
+    textarea.form-control {
+
+        min-height: 200px;
+
+        resize: vertical;
+
+    }
+
+
+    .input-group-text {
+
+        background-color: #f8f9fa;
+
+    }
+
+
+    .form-control:focus,
+    .form-select:focus {
+
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+
+    }
+
+
+    .btn {
+
+        border-radius: 7px;
+
+        font-weight: 500;
+
+    }
+
+
+    .alert {
+
+        border-radius: 10px;
+
+    }
+
+
+    @media (max-width: 768px) {
+
+        .container-fluid {
+
+            padding-left: 15px !important;
+
+            padding-right: 15px !important;
+
+        }
+
+
+        .card-body {
+
+            padding: 20px !important;
+
+        }
+
+
+        .d-flex.justify-content-end {
+
+            flex-wrap: wrap;
+
+        }
+
+    }
+
+</style>
+
+
+
+<!-- ==========================================
+     PAGE JAVASCRIPT
+=========================================== -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const description =
+        document.getElementById("description");
+
+    const charCount =
+        document.getElementById("charCount");
+
+
+    description.addEventListener("input", function () {
+
+        charCount.textContent =
+            this.value.length;
+
+    });
+
+});
+
+</script>
+
+
+{% endblock %}
+

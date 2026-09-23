@@ -1,0 +1,615 @@
+
+body {
+    background: linear-gradient(
+        135deg,
+        #eef4ff 0%,
+        #f8fbff 45%,
+        #eef7ff 100%
+    );
+}
+
+
+/* ==========================================
+   MAIN NOTICE CARD
+========================================== */
+
+.notice-card {
+
+    background: rgba(255, 255, 255, 0.92);
+
+    border: 1px solid rgba(255, 255, 255, 0.8);
+
+    border-radius: 22px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 15px 45px rgba(30, 64, 175, 0.12),
+        0 5px 15px rgba(0, 0, 0, 0.05);
+
+    backdrop-filter: blur(12px);
+
+    transition: all 0.35s ease;
+
+}
+
+
+.notice-card:hover {
+
+    transform: translateY(-6px);
+
+    box-shadow:
+        0 22px 55px rgba(30, 64, 175, 0.18),
+        0 8px 20px rgba(0, 0, 0, 0.07);
+
+}
+
+
+/* ==========================================
+   NOTICE HEADER
+========================================== */
+
+.notice-header {
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 22px;
+
+    padding: 32px 35px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0d6efd,
+            #315bea 55%,
+            #6547e8
+        );
+
+    overflow: hidden;
+
+}
+
+
+/* Decorative circle */
+
+.notice-header::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 220px;
+    height: 220px;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,0.08);
+
+    right: -70px;
+    top: -100px;
+
+}
+
+
+.notice-header::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 150px;
+    height: 150px;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,0.06);
+
+    right: 80px;
+    bottom: -100px;
+
+}
+
+
+/* ==========================================
+   NOTICE ICON
+========================================== */
+
+.notice-icon {
+
+    position: relative;
+
+    z-index: 2;
+
+    width: 70px;
+    height: 70px;
+
+    min-width: 70px;
+
+    border-radius: 18px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: rgba(255,255,255,0.16);
+
+    border: 1px solid rgba(255,255,255,0.3);
+
+    box-shadow:
+        0 8px 20px rgba(0,0,0,0.12);
+
+    font-size: 30px;
+
+    backdrop-filter: blur(8px);
+
+}
+
+
+.notice-header > div:last-child {
+
+    position: relative;
+
+    z-index: 2;
+
+}
+
+
+.notice-header h3 {
+
+    color: #ffffff;
+
+    font-size: 25px;
+
+    letter-spacing: 0.2px;
+
+}
+
+
+/* ==========================================
+   NOTICE BODY
+========================================== */
+
+.notice-body {
+
+    padding: 35px;
+
+    background: rgba(255,255,255,0.96);
+
+}
+
+
+/* ==========================================
+   DATE BOX
+========================================== */
+
+.date-box {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+
+    padding: 17px 20px;
+
+    background: #f5f8ff;
+
+    border: 1px solid #e4ebff;
+
+    border-radius: 14px;
+
+    transition: all 0.25s ease;
+
+}
+
+
+.date-box:hover {
+
+    background: #edf3ff;
+
+    transform: translateX(3px);
+
+}
+
+
+.date-icon {
+
+    width: 48px;
+    height: 48px;
+
+    min-width: 48px;
+
+    border-radius: 12px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: linear-gradient(
+        135deg,
+        #0d6efd,
+        #5b5bea
+    );
+
+    color: white;
+
+    font-size: 20px;
+
+    box-shadow:
+        0 6px 15px rgba(13,110,253,0.22);
+
+}
+
+
+.date-box small {
+
+    font-size: 12px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+
+    font-weight: 600;
+
+}
+
+
+.date-box .fw-semibold {
+
+    color: #202938;
+
+    margin-top: 2px;
+
+}
+
+
+/* ==========================================
+   NOTICE DETAILS TITLE
+========================================== */
+
+.notice-body h5 {
+
+    color: #202938;
+
+    font-size: 18px;
+
+}
+
+
+/* ==========================================
+   DESCRIPTION
+========================================== */
+
+.description-box {
+
+    position: relative;
+
+    padding: 24px 25px;
+
+    background: #f8faff;
+
+    border: 1px solid #e8edfa;
+
+    border-radius: 14px;
+
+    color: #4b5563;
+
+    font-size: 16px;
+
+    line-height: 1.9;
+
+    white-space: pre-line;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.8);
+
+}
+
+
+/* Left accent */
+
+.description-box::before {
+
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+
+    top: 18px;
+
+    bottom: 18px;
+
+    width: 4px;
+
+    border-radius: 10px;
+
+    background: linear-gradient(
+        to bottom,
+        #0d6efd,
+        #6747e8
+    );
+
+}
+
+
+/* ==========================================
+   PUBLISHED DATE
+========================================== */
+
+.published-date {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 9px 14px;
+
+    border-radius: 30px;
+
+    background: #f4f6f9;
+
+    color: #6b7280;
+
+    font-size: 13px;
+
+    border: 1px solid #e8eaee;
+
+}
+
+
+.published-date i {
+
+    color: #0d6efd;
+
+}
+
+
+/* ==========================================
+   FOOTER
+========================================== */
+
+.notice-footer {
+
+    display: flex;
+
+    justify-content: flex-start;
+
+    padding: 22px 35px;
+
+    background: #fafbfe;
+
+    border-top: 1px solid #edf0f5;
+
+}
+
+
+/* ==========================================
+   BACK BUTTON
+========================================== */
+
+.notice-footer .btn {
+
+    border: none;
+
+    border-radius: 10px;
+
+    padding: 10px 20px;
+
+    font-weight: 600;
+
+    transition: all 0.25s ease;
+
+}
+
+
+.notice-footer .btn-secondary {
+
+    background: #eef1f6;
+
+    color: #374151;
+
+}
+
+
+.notice-footer .btn-secondary:hover {
+
+    background: #0d6efd;
+
+    color: white;
+
+    transform: translateX(-3px);
+
+    box-shadow:
+        0 6px 15px rgba(13,110,253,0.2);
+
+}
+
+
+/* ==========================================
+   PAGE HEADER
+========================================== */
+
+.container-fluid.py-5 > .container > .text-center h2 {
+
+    color: #172033;
+
+    font-size: 32px;
+
+    letter-spacing: -0.5px;
+
+}
+
+
+.container-fluid.py-5 > .container > .text-center h2 i {
+
+    filter:
+        drop-shadow(
+            0 4px 5px rgba(13,110,253,0.2)
+        );
+
+}
+
+
+.container-fluid.py-5 > .container > .text-center p {
+
+    font-size: 15px;
+
+    color: #6b7280 !important;
+
+}
+
+
+/* ==========================================
+   MOBILE RESPONSIVE
+========================================== */
+
+@media (max-width: 768px) {
+
+    .container-fluid.py-5 {
+
+        padding-top: 40px !important;
+
+    }
+
+
+    .notice-header {
+
+        padding: 25px;
+
+        gap: 16px;
+
+    }
+
+
+    .notice-icon {
+
+        width: 58px;
+        height: 58px;
+
+        min-width: 58px;
+
+        border-radius: 15px;
+
+        font-size: 24px;
+
+    }
+
+
+    .notice-header h3 {
+
+        font-size: 21px;
+
+    }
+
+
+    .notice-body {
+
+        padding: 25px;
+
+    }
+
+
+    .notice-footer {
+
+        padding: 18px 25px;
+
+    }
+
+}
+
+
+@media (max-width: 576px) {
+
+    .container-fluid.py-5 {
+
+        margin-top: 70px !important;
+
+    }
+
+
+    .container-fluid.py-5 > .container > .text-center h2 {
+
+        font-size: 25px;
+
+    }
+
+
+    .notice-card {
+
+        border-radius: 16px;
+
+    }
+
+
+    .notice-header {
+
+        padding: 22px;
+
+    }
+
+
+    .notice-icon {
+
+        width: 50px;
+        height: 50px;
+
+        min-width: 50px;
+
+        font-size: 21px;
+
+    }
+
+
+    .notice-header h3 {
+
+        font-size: 18px;
+
+        margin-bottom: 5px !important;
+
+    }
+
+
+    .notice-body {
+
+        padding: 20px;
+
+    }
+
+
+    .date-box {
+
+        padding: 14px;
+
+    }
+
+
+    .description-box {
+
+        padding: 20px;
+
+        font-size: 15px;
+
+        line-height: 1.8;
+
+    }
+
+
+    .notice-footer {
+
+        padding: 16px 20px;
+
+    }
+
+}
+

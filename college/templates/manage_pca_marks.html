@@ -1,0 +1,229 @@
+{% extends 'college_nav.html' %}
+
+{% load static %}
+
+{% block title %}
+    Manage PCA Marks
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h3 class="fw-bold mb-1">
+                Manage PCA Marks
+            </h3>
+
+            <p class="text-muted mb-0">
+                View and manage student practical continuous assessment marks.
+            </p>
+        </div>
+
+        <a href="{% url 'add_pca_marks' %}"
+           class="btn btn-primary">
+
+            <i class="bi bi-plus-circle me-1"></i>
+            Add PCA Marks
+
+        </a>
+
+    </div>
+
+
+    <!-- Filter Card -->
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-header bg-primary text-white">
+
+            <h5 class="mb-0">
+                <i class="bi bi-funnel me-2"></i>
+                Filter PCA Marks
+            </h5>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <form method="GET" id="filterForm">
+
+                <div class="row g-3">
+                  
+                    <!-- Course -->
+                    <div class="col-md-5">
+
+                        <label for="course"
+                               class="form-label fw-semibold">
+
+                            Course
+
+                        </label>
+
+
+                        <select name="course"
+                                id="course"
+                                class="form-select">
+
+                            <option value="">
+                                Select Course
+                            </option>
+
+
+                            {% for course in courseSemester %}
+
+                                <option value="{{ course.course_id }}">
+
+                                    {{ course.course__course_name__course_name }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Semester -->
+                    <div class="col-md-5">
+
+                        <label for="semester"
+                               class="form-label fw-semibold">
+
+                            Semester
+
+                        </label>
+
+
+                        <select name="semester"
+                                id="semester"
+                                class="form-select">
+
+                            <option value="">
+                                Select Semester
+                            </option>
+
+
+                            {% for semester in courseSemester %}
+
+                                <option value="{{ semester.semester_id }}">
+
+                                    {{ semester.semester__year }}
+                                    -
+                                    {{ semester.semester__semester }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- Django Messages -->
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                 role="alert">
+
+                {{ message }}
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert">
+
+                </button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+<div class="container-fluid">
+
+    <div class="row">
+
+        <div class="col-lg-4 col-12">
+
+            <div class="input-group">
+
+                <span class="input-group-text bg-white">
+                    <i class="bi bi-search"></i>
+                </span>
+
+                <input
+                    type="text"
+                    class="form-control"
+                    id="searchStudent"
+                    placeholder="Search student by entering roll number">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+    <!-- PCA Marks Container -->
+<div id="pcaMarksContainer" class="mt-4">
+
+</div>
+
+<div class="d-none justify-content-between align-items-center mt-4 mb-4" id="next-previous">
+
+    <button
+        type="button"
+        class="btn btn-outline-primary"
+        id="previousBtn"
+        onclick="previousStudent()">
+
+        <i class="bi bi-chevron-left me-1"></i>
+        Previous
+
+    </button>
+
+    <span class="fw-bold text-muted" id="studentCounter">
+        Student <span id="updatedStudent" class="text-dark"></span> of <span id="totalStudent" class="text-dark"></span>
+    </span>
+
+    <button
+        type="button"
+        class="btn btn-primary"
+        id="nextBtn"
+        onclick="nextStudent()">
+
+        Next
+        <i class="bi bi-chevron-right ms-1"></i>
+
+    </button>
+
+</div>
+
+
+</div>
+
+<form id="csrfForm">
+    {% csrf_token %}
+</form>
+
+<!-- JavaScript -->
+<script src="{% static 'college_js/manage_pca_marks.js' %}"></script>
+
+{% endblock %}

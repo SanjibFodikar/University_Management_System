@@ -1,0 +1,127 @@
+{% extends 'admin_nav.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+
+            <div class="card shadow border-0">
+
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h4 class="mb-1">Add New College</h4>
+                    <small>Register a new college in the system</small>
+                </div>
+
+                <div class="card-body p-4">
+
+                    <div class="alert alert-info">
+                        <strong>Note:</strong>
+                        Please enter the official name of the college.
+                        Other college details can be added later by the college authority.
+                    </div>
+
+                    {% if messages %}
+                    {% for message in messages %}
+
+                    {% if message.tags == 'success' %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>Success!</strong> {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+
+                    {% elif message.tags == 'error' %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Error!</strong> {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    {% endif %}
+
+                    {% endfor %}
+                    {% endif %}
+
+                    <form method="POST" onsubmit="return validate()">
+                        {% csrf_token %}
+
+                        <div class="mb-4">
+                            <label for="college_name" class="form-label fw-semibold">
+                                College Name
+                            </label>
+
+                            <input type="text" class="form-control form-control-lg" id="college_name"
+                                name="college_name" placeholder="Enter college name">
+
+                            <div class="mt-3" id="college_name_error"></div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="college_type" class="form-label fw-semibold">
+                                College Type
+                            </label>
+
+                            <select name="college_type" id="college_type" class="form-select form-select-lg" required>
+
+                                <option value="" selected disabled>
+                                    Select College Type
+                                </option>
+
+                                <option value="PRIVATE" {% if request.POST.college_type == 'PRIVATE' %}selected{% endif %}>
+                                    Private
+                                </option>
+
+                                <option value="GOVERNMENT" {% if request.POST.college_type == 'GOVERNMENT' %}selected{% endif %}>
+                                    Government
+                                </option>
+
+                            </select>
+
+                            <div class="mt-2 text-danger small" id="college_name_error"></div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-plus-circle"></i>
+                                Add College
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+                <div class="card-footer text-muted text-center">
+                    <small>
+                        Make sure the college name is correct before submitting.
+                    </small>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function validate() {
+        const college_name = document.getElementById('college_name').value;
+
+        if (college_name.trim() === "") {
+            document.getElementById('college_name_error').innerHTML = `
+                <strong class="text-danger">Please Enter College Name</strong>
+            `;
+            return false;
+        }
+
+        return true;
+    }
+
+    document.getElementById('college_name').addEventListener('input', () => {
+        document.getElementById('college_name_error').innerHTML = ""
+    })
+</script>
+
+{% endblock %}

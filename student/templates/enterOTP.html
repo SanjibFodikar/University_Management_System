@@ -1,0 +1,280 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid py-4" style="margin-top: 100px;">
+
+    <!-- PAGE HEADER -->
+    <div class="mb-4">
+
+        <h3 class="fw-bold mb-1 text-center">
+            <i class="bi bi-shield-check text-primary me-2"></i>
+            Enter OTP
+        </h3>
+
+        <p class="text-muted mb-0 text-center">
+            Enter the OTP sent to your registered email.
+        </p>
+
+    </div>
+
+
+    <!-- FORM -->
+    <div class="row justify-content-center">
+
+        <div class="col-xl-6 col-lg-7 col-md-9">
+
+            <div class="card border-0 shadow-sm">
+
+                <!-- CARD HEADER -->
+                <div class="card-header bg-primary text-white py-3">
+
+                    <h5 class="mb-0">
+                        <i class="bi bi-shield-lock-fill me-2"></i>
+                        2 Step Verification
+                    </h5>
+
+                </div>
+
+
+                <!-- CARD BODY -->
+                <div class="card-body p-4">
+
+                    <!-- MESSAGES -->
+                    {% if messages %}
+
+                        {% for message in messages %}
+
+                            <div class="alert
+                                {% if message.tags == 'success' %}
+                                    alert-success
+                                {% elif message.tags == 'error' %}
+                                    alert-danger
+                                {% else %}
+                                    alert-info
+                                {% endif %}
+                                alert-dismissible fade show"
+                                role="alert">
+
+                                {% if message.tags == 'success' %}
+
+                                    <i class="bi bi-check-circle-fill me-2"></i>
+
+                                {% elif message.tags == 'error' %}
+
+                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+                                {% else %}
+
+                                    <i class="bi bi-info-circle-fill me-2"></i>
+
+                                {% endif %}
+
+                                {{ message }}
+
+                                <button type="button"
+                                        class="btn-close"
+                                        data-bs-dismiss="alert">
+                                </button>
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% endif %}
+
+
+                    <!-- EMAIL INFO -->
+                    <div class="alert alert-info">
+
+                        <i class="bi bi-envelope-fill me-2"></i>
+
+                        OTP has been sent to your registered email address.
+
+                    </div>
+
+
+                    <!-- OTP FORM -->
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        <h5 id="timer" class="text-end"><span id="minute">00</span> : <span id="second">00</span></h5>
+    
+
+                        <!-- OTP INPUT -->
+                        <div class="mb-4">
+
+                            <label for="otp"
+                                   class="form-label fw-semibold">
+
+                                Enter OTP
+
+                                <span class="text-danger">*</span>
+
+                            </label>
+
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+
+                                    <i class="bi bi-key-fill"></i>
+
+                                </span>
+
+
+                                <input type="text"
+                                       name="otp"
+                                       id="otp"
+                                       class="form-control text-center fw-bold otp-input"
+                                       placeholder="Enter 6-digit OTP"
+                                       maxlength="6"
+                                       minlength="6"
+                                       inputmode="numeric"
+                                       autocomplete="one-time-code"
+                                       required>
+
+                            </div>
+
+
+                            <div class="form-text">
+
+                                Please enter the 6-digit OTP sent to your email.
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- BUTTONS -->
+                        <div class="d-flex justify-content-end gap-2">
+
+
+                            <!-- CANCEL -->
+                            <a href="{% url 'student_login' %}"
+                               class="btn btn-secondary">
+
+                                <i class="bi bi-arrow-left me-1"></i>
+
+                                Cancel
+
+                            </a>
+
+
+                            <!-- RESEND OTP -->
+                            <button type="submit"
+                                    name="resend"
+                                    value="resend"
+                                    id="resend"
+                                    class="btn btn-success"
+                                    formnovalidate>
+
+                                <i class="bi bi-arrow-repeat me-1"></i>
+
+                                Resend
+
+                            </button>
+
+
+                            <!-- VERIFY OTP -->
+                            <button type="submit"
+                                    name="verify"
+                                    value="verify"
+                                    class="btn btn-primary">
+
+                                <i class="bi bi-check-circle-fill me-1"></i>
+
+                                Verify OTP
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- CUSTOM CSS -->
+<style>
+
+    .card {
+        border-radius: 12px;
+    }
+
+
+    .card-header {
+        border-radius: 12px 12px 0 0 !important;
+    }
+
+
+    .form-control,
+    .input-group-text,
+    .btn {
+        border-radius: 8px;
+    }
+
+
+    .form-control {
+        min-height: 45px;
+    }
+
+
+    .input-group .form-control {
+        border-radius: 0;
+    }
+
+
+    .input-group .input-group-text {
+        border-radius: 8px 0 0 8px;
+    }
+
+
+    .otp-input {
+        letter-spacing: 8px;
+    }
+
+</style>
+{% if request.session.send_otp %}
+<script>
+    let minute=3
+    let second=59
+   
+    let countdown=setInterval(()=>{
+      counter()
+    },1000)
+
+    function counter(){
+        document.getElementById('minute').innerText='0'+minute
+        document.getElementById('second').innerText=second
+        second--
+        if (second==0) {
+            minute--
+            second=59
+        }
+        if (second<10) {
+            second='0'+second
+        }
+        if (minute == 0){
+            document.getElementById('minute').innerText='00'
+            document.getElementById('second').innerText='00'
+            clearInterval(countdown)
+            alert("Your time is expired")
+        }
+    }
+    counter()
+</script>
+{% endif %}
+{% endblock %}
+

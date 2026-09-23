@@ -1,0 +1,399 @@
+{% extends 'admin_nav.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- ==========================================
+         PAGE HEADER
+    =========================================== -->
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+
+        <div>
+            <h3 class="fw-bold mb-1">
+                <i class="bi bi-megaphone-fill text-primary me-2"></i>
+                Add Notice
+            </h3>
+
+            <p class="text-muted mb-0">
+                Create and publish a new notice for colleges, teachers and students.
+            </p>
+        </div>
+
+        <a href="{% url 'admin_manage_notice' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Notices
+        </a>
+
+    </div>
+
+
+    <!-- ==========================================
+         MESSAGES
+    =========================================== -->
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="alert 
+                {% if message.tags == 'success' %}
+                    alert-success
+                {% elif message.tags == 'error' %}
+                    alert-danger
+                {% else %}
+                    alert-info
+                {% endif %}
+                alert-dismissible fade show"
+                role="alert">
+
+                {% if message.tags == "success" %}
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                {% elif message.tags == "error" %}
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                {% else %}
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                {% endif %}
+
+                {{ message }}
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close">
+                </button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <!-- ==========================================
+         FORM CARD
+    =========================================== -->
+
+    <div class="row justify-content-center">
+
+        <div class="col-xl-8 col-lg-9 col-md-11">
+
+            <div class="card border-0 shadow-sm">
+
+                <!-- CARD HEADER -->
+
+                <div class="card-header bg-primary text-white py-3">
+
+                    <h5 class="mb-0">
+                        <i class="bi bi-file-earmark-plus me-2"></i>
+                        Notice Information
+                    </h5>
+
+                </div>
+
+
+                <!-- CARD BODY -->
+
+                <div class="card-body p-4">
+
+                    <form method="POST" id="noticeForm">
+
+                        {% csrf_token %}
+
+
+                        <!-- ==================================
+                             NOTICE TITLE
+                        =================================== -->
+
+                        <div class="mb-4">
+
+                            <label for="title"
+                                   class="form-label fw-semibold">
+
+                                Notice Title
+
+                                <span class="text-danger">*</span>
+
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+                                    <i class="bi bi-type-h1"></i>
+                                </span>
+
+                                <input type="text"
+                                       name="title"
+                                       id="title"
+                                       class="form-control"
+                                       placeholder="Enter notice title"
+                                       maxlength="200"
+                                       oninput="cancelFocus(this.id)"
+                                       required>
+
+                            </div>
+
+                            <div class="form-text">
+                                Maximum 200 characters.
+                            </div>
+
+                        </div>
+
+
+                        <!-- ==================================
+                             NOTICE DESCRIPTION
+                        =================================== -->
+
+                        <div class="mb-4">
+
+                            <label for="description"
+                                   class="form-label fw-semibold">
+
+                                Notice Description
+
+                                <span class="text-danger">*</span>
+
+                            </label>
+
+                            <textarea name="description"
+                                      id="description"
+                                      class="form-control"
+                                      rows="8"
+                                      placeholder="Write the complete notice details here..."
+                                      oninput="cancelFocus(this.id)"
+                                      required></textarea>
+
+                            <div class="d-flex justify-content-between mt-1">
+
+                                <small class="form-text">
+                                    Enter all important information related to this notice.
+                                </small>
+
+                                <small class="text-muted">
+                                    <span id="charCount">0</span>
+                                    characters
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ==================================
+                             NOTICE DATE
+                        =================================== -->
+
+                        <div class="mb-4">
+
+                            <label for="notice_date"
+                                   class="form-label fw-semibold">
+
+                                Notice Date
+
+                                <span class="text-danger">*</span>
+
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+                                    <i class="bi bi-calendar-event"></i>
+                                </span>
+
+                                <input type="date"
+                                       name="notice_date"
+                                       id="notice_date"
+                                       class="form-control"
+                                       oninput="cancelFocus(this.id)"
+                                       required>
+
+                            </div>
+
+                            <div class="form-text">
+                                Select the date of this notice.
+                            </div>
+
+                        </div>
+
+
+                        <!-- ==================================
+                             NOTICE STATUS
+                        =================================== -->
+
+                        <div class="mb-4">
+
+                            <label for="is_active"
+                                   class="form-label fw-semibold">
+
+                                Notice Status
+
+                                <span class="text-danger">*</span>
+
+                            </label>
+
+                            <select name="is_active"
+                                    id="is_active"
+                                    class="form-select"
+                                    required>
+
+                                <option value="True" selected>
+                                    Active
+                                </option>
+
+                                <option value="False">
+                                    Inactive
+                                </option>
+
+                            </select>
+
+                            <div class="form-text">
+                                Active notices can be displayed to users.
+                            </div>
+
+                        </div>
+
+
+                        <!-- ==================================
+                             INFORMATION ALERT
+                        =================================== -->
+
+                        <div class="alert alert-info border-0">
+
+                            <div class="d-flex">
+
+                                <i class="bi bi-info-circle-fill fs-5 me-2"></i>
+
+                                <div>
+
+                                    <strong>
+                                        Notice Information
+                                    </strong>
+
+                                    <p class="mb-0 mt-1">
+                                        Please make sure the notice title,
+                                        description and date are correct
+                                        before submitting.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ==================================
+                             BUTTONS
+                        =================================== -->
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+
+                            <button type="reset"
+                                    class="btn btn-outline-secondary">
+
+                                <i class="bi bi-arrow-counterclockwise me-1"></i>
+                                Reset
+
+                            </button>
+
+
+                            <button type="submit"
+                                    class="btn btn-primary">
+
+                                <i class="bi bi-plus-circle me-1"></i>
+                                Add Notice
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     PAGE CSS
+=========================================== -->
+
+<style>
+
+    .card {
+        border-radius: 12px;
+    }
+
+    .card-header {
+        border-radius: 12px 12px 0 0 !important;
+    }
+
+    .form-label {
+        color: #343a40;
+    }
+
+    .form-control,
+    .form-select {
+        min-height: 45px;
+        border-radius: 8px;
+    }
+
+    textarea.form-control {
+        min-height: 180px;
+        resize: vertical;
+    }
+
+    .input-group-text {
+        background-color: #f8f9fa;
+        border-radius: 8px 0 0 8px;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+    }
+
+    .btn {
+        border-radius: 7px;
+        font-weight: 500;
+    }
+
+    .alert {
+        border-radius: 10px;
+    }
+
+    @media (max-width: 768px) {
+
+        .container-fluid {
+            padding-left: 15px !important;
+            padding-right: 15px !important;
+        }
+
+        .card-body {
+            padding: 20px !important;
+        }
+
+        .d-flex.justify-content-end {
+            flex-wrap: wrap;
+        }
+
+        .d-flex.justify-content-end .btn {
+            flex: 1;
+        }
+
+    }
+
+</style>
+
+
+<script src="{% static 'admin_js/admin_add_notice.js' %}"></script>
+
+{% endblock %}

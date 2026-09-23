@@ -1,0 +1,531 @@
+{% extends 'admin_nav.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- ==========================================
+         PAGE HEADER
+    =========================================== -->
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h3 class="fw-bold mb-1">
+
+                <i class="bi bi-pencil-square text-primary me-2"></i>
+
+                Edit Subject
+
+            </h3>
+
+            <p class="text-muted mb-0">
+
+                Update subject information.
+
+            </p>
+
+        </div>
+
+
+        <!-- Back Button -->
+
+        <a href="{% url 'admin_manage_subject' %}"
+           class="btn btn-secondary">
+
+            <i class="bi bi-arrow-left me-1"></i>
+
+            Back
+
+        </a>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         EDIT SUBJECT CARD
+    =========================================== -->
+
+    <div class="card border-0 shadow-sm">
+
+        <!-- Card Header -->
+
+        <div class="card-header bg-primary text-white py-3">
+
+            <h5 class="mb-0">
+
+                <i class="bi bi-book-half me-2"></i>
+
+                Subject Information
+
+            </h5>
+
+        </div>
+
+
+
+        <!-- Card Body -->
+
+        <div class="card-body p-4">
+
+            {% if messages %}
+
+    {% for message in messages %}
+
+        <div class="alert 
+            {% if message.tags == 'success' %}
+                alert-success
+            {% elif message.tags == 'error' %}
+                alert-danger
+            {% elif message.tags == 'warning' %}
+                alert-warning
+            {% else %}
+                alert-info
+            {% endif %}
+            
+            alert-dismissible fade show shadow-sm"
+            role="alert">
+
+            {% if message.tags == 'success' %}
+                <i class="bi bi-check-circle-fill me-2"></i>
+
+            {% elif message.tags == 'error' %}
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+            {% elif message.tags == 'warning' %}
+                <i class="bi bi-exclamation-circle-fill me-2"></i>
+
+            {% else %}
+                <i class="bi bi-info-circle-fill me-2"></i>
+            {% endif %}
+
+            {{ message }}
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+
+    {% endfor %}
+
+{% endif %}
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+
+                <!-- ==========================================
+                     COURSE & YEAR / SEMESTER
+                =========================================== -->
+
+                <div class="row g-4 mb-4">
+
+
+                    <!-- Course -->
+
+                    <div class="col-md-6">
+
+                        <label for="course"
+                               class="form-label fw-semibold">
+
+                            Course
+
+                            <span class="text-danger">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <select name="course"
+                                id="course"
+                                class="form-select"
+                                required>
+
+                            <option value="">
+
+                                -- Select Course --
+
+                            </option>
+
+
+                            {% for course in courses %}
+
+                                <option value="{{ course.id }}"
+                                    {% if subject.course_id == course.id %}
+                                        selected
+                                    {% endif %}>
+
+                                    {{ course }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- Year / Semester -->
+
+                    <div class="col-md-6">
+
+                        <label for="year_semester"
+                               class="form-label fw-semibold">
+
+                            Year / Semester
+
+                            <span class="text-danger">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <select name="year_semester"
+                                id="year_semester"
+                                class="form-select"
+                                required>
+
+                            <option value="">
+
+                                -- Select Year / Semester --
+
+                            </option>
+
+
+                            {% for semester in year_semesters %}
+
+                                <option value="{{ semester.id }}"
+                                    {% if subject.year_semester_id == semester.id %}
+                                        selected
+                                    {% endif %}>
+
+                                    {{ semester }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ==========================================
+                     SUBJECT NAME
+                =========================================== -->
+
+                <div class="mb-4">
+
+                    <label for="subject_name"
+                           class="form-label fw-semibold">
+
+                        Subject Name
+
+                        <span class="text-danger">
+                            *
+                        </span>
+
+                    </label>
+
+
+                    <div class="input-group">
+
+                        <span class="input-group-text">
+
+                            <i class="bi bi-book"></i>
+
+                        </span>
+
+
+                        <input type="text"
+                               name="subject_name"
+                               id="subject_name"
+                               class="form-control"
+                               value="{{ subject.subject_name }}"
+                               maxlength="100"
+                               placeholder="Enter subject name"
+                               required>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ==========================================
+                     PAPER CODE
+                =========================================== -->
+
+                <div class="mb-4">
+
+                    <label for="paper_code"
+                           class="form-label fw-semibold">
+
+                        Paper Code
+
+                        <span class="text-danger">
+                            *
+                        </span>
+
+                    </label>
+
+
+                    <div class="input-group">
+
+                        <span class="input-group-text">
+
+                            <i class="bi bi-upc-scan"></i>
+
+                        </span>
+
+
+                        <input type="text"
+                               name="paper_code"
+                               id="paper_code"
+                               class="form-control text-uppercase"
+                               value="{{ subject.paper_code }}"
+                               maxlength="10"
+                               placeholder="Example: BCAC101"
+                               required>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ==========================================
+                     SUBJECT TYPE & PAPER CHOICE
+                =========================================== -->
+
+                <div class="row g-4 mb-4">
+
+
+                    <!-- Subject Type -->
+
+                    <div class="col-md-6">
+
+                        <label for="subject_type"
+                               class="form-label fw-semibold">
+
+                            Subject Type
+
+                            <span class="text-danger">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <select name="subject_type"
+                                id="subject_type"
+                                class="form-select"
+                                required>
+
+                            <option value="">
+
+                                -- Select Subject Type --
+
+                            </option>
+
+
+                            <option value="theory"
+                                {% if subject.subject_type == 'theory' %}
+                                    selected
+                                {% endif %}>
+
+                                Theory
+
+                            </option>
+
+
+                            <option value="lab"
+                                {% if subject.subject_type == 'lab' %}
+                                    selected
+                                {% endif %}>
+
+                                Lab
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- Paper Choice -->
+
+                    <div class="col-md-6">
+
+                        <label for="paper_choice"
+                               class="form-label fw-semibold">
+
+                            Paper Choice
+
+                            <span class="text-danger">
+                                *
+                            </span>
+
+                        </label>
+
+
+                        <select name="paper_choice"
+                                id="paper_choice"
+                                class="form-select"
+                                required>
+
+                            <option value="">
+
+                                -- Select Paper Choice --
+
+                            </option>
+
+
+                            <option value="major"
+                                {% if subject.paper_choice == 'major' %}
+                                    selected
+                                {% endif %}>
+
+                                Major
+
+                            </option>
+
+
+                            <option value="minor"
+                                {% if subject.paper_choice == 'minor' %}
+                                    selected
+                                {% endif %}>
+
+                                Minor
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ==========================================
+                     CREATED DATE
+                =========================================== -->
+
+                <div class="mb-4">
+
+                    <label class="form-label fw-semibold">
+
+                        Created Date
+
+                    </label>
+
+
+                    <input type="text"
+                           class="form-control bg-light"
+                           value="{{ subject.creation_date|date:'d M Y, h:i A' }}"
+                           readonly>
+
+                </div>
+
+
+
+                <!-- ==========================================
+                     BUTTONS
+                =========================================== -->
+
+                <div class="border-top pt-4">
+
+                    <div class="d-flex justify-content-end gap-2">
+
+
+                        <!-- Cancel -->
+
+                        <a href="{% url 'admin_manage_subject' %}"
+                           class="btn btn-secondary">
+
+                            <i class="bi bi-x-circle me-1"></i>
+
+                            Cancel
+
+                        </a>
+
+                        <!-- Update -->
+
+                        <button type="submit"
+                                class="btn btn-primary px-4">
+
+                            <i class="bi bi-check-circle me-1"></i>
+
+                            Update Subject
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     PAGE CSS
+=========================================== -->
+
+<style>
+
+    .form-label {
+        color: #343a40;
+    }
+
+    .form-control,
+    .form-select {
+        min-height: 45px;
+        border-radius: 8px;
+    }
+
+    .input-group-text {
+        background: #f8f9fa;
+        border-radius: 8px 0 0 8px;
+    }
+
+    .card {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .card-header {
+        border: none;
+    }
+
+    @media (max-width: 768px) {
+
+        .student-content {
+            padding: 15px !important;
+        }
+
+    }
+
+</style>
+
+{% endblock %}

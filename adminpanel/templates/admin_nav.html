@@ -1,0 +1,588 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>University Admin Dashboard</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <!-- admin nav css -->
+    <link rel="stylesheet" href="{% static 'admin_css/admin_nav.css' %}">
+
+    <!-- data table css start -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/3.0.0/css/dataTables.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/4.0.0/css/buttons.dataTables.min.css">
+    <!-- data table css start -->
+
+    <!-- data table cdn js start  -->
+    <script src="https://cdn.datatables.net/3.0.0/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/4.0.0/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/4.0.0/js/buttons.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+</head>
+
+<body>
+
+
+    <!-- =========================
+     TOP NAVBAR
+========================= -->
+
+    <nav class="top-navbar">
+
+        <div class="navbar-left">
+
+            <!-- Mobile Menu -->
+
+            <button class="menu-btn" id="menuBtn">
+                <i class="bi bi-list"></i>
+            </button>
+
+
+            <!-- Logo -->
+
+            <a href="#" class="admin-logo">
+
+                <span class="logo-icon">
+                    <i class="bi bi-mortarboard-fill"></i>
+                </span>
+
+                <span>
+                    University
+                </span>
+
+            </a>
+
+        </div>
+
+
+        <!-- Right Side -->
+
+        <div class="navbar-right">
+
+            <!-- Notification -->
+            <a href="{% url 'university_notification' %}">
+                <div class="notification">
+
+                    <i class="bi bi-bell"></i>
+
+                    <span class="notification-badge">
+                        {{ request.session.unread_count|default:0 }}
+                    </span>
+            </a>
+        </div>
+
+
+        <!-- Admin Profile -->
+
+        <div class="admin-profile">
+
+            <div class="profile-icon">
+                <i class="bi bi-person-fill"></i>
+            </div>
+
+            <div class="profile-info">
+
+                <strong>Admin</strong>
+
+                <small>Administrator</small>
+
+            </div>
+
+            <i class="bi bi-chevron-down ms-2"></i>
+
+        </div>
+
+        </div>
+
+    </nav>
+
+
+
+    <!-- =========================
+     SIDEBAR
+========================= -->
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="sidebar-menu">
+
+
+            <!-- Dashboard -->
+
+            <a href="#" class="sidebar-link active">
+
+                <span>
+                    <i class="bi bi-speedometer2"></i>
+                    Dashboard
+                </span>
+
+            </a>
+
+            <!-- Colleges Dropdown -->
+
+            <div class="sidebar-dropdown">
+
+                <a href="#" class="sidebar-link" data-bs-toggle="collapse" data-bs-target="#collegeMenu"
+                    aria-expanded="false">
+
+                    <span>
+                        <i class="bi bi-building"></i>
+                        Colleges
+                    </span>
+
+                    <i class="bi bi-chevron-down dropdown-arrow"></i>
+
+                </a>
+
+
+                <!-- Dropdown Menu -->
+
+                <div class="collapse" id="collegeMenu">
+
+                    <a href="{% url 'admin_add_college' %}" class="sidebar-sublink">
+
+                        <i class="bi bi-plus-circle"></i>
+
+                        Add College
+
+                    </a>
+
+
+                    <a href="{% url 'admin_manage_college' %}" class="sidebar-sublink">
+
+                        <i class="bi bi-buildings"></i>
+
+                        Manage Colleges
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            <!-- Students -->
+
+            <div class="sidebar-dropdown">
+
+                <a href="#" class="sidebar-link" data-bs-toggle="collapse" data-bs-target="#studentsMenu"
+                    aria-expanded="false">
+
+                    <span>
+                        <i class="bi bi-people"></i>
+                        Students
+                    </span>
+
+                    <i class="bi bi-chevron-down dropdown-arrow"></i>
+
+                </a>
+
+
+                <!-- Dropdown Menu -->
+
+                <div class="collapse" id="studentsMenu">
+
+                    <a href="{% url 'admin_manage_student' %}" class="sidebar-sublink">
+
+                        <i class="bi bi-people"></i>
+
+                        Manage Student
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            <!-- Subjects -->
+
+            <div class="sidebar-dropdown">
+
+                <a href="#" class="sidebar-link" data-bs-toggle="collapse" data-bs-target="#subjectMenu"
+                    aria-expanded="false">
+
+                    <span>
+                        <i class="bi bi-book"></i>
+                        Subjects
+                    </span>
+
+                    <i class="bi bi-chevron-down dropdown-arrow"></i>
+
+                </a>
+
+
+                <!-- Dropdown Menu -->
+
+                <div class="collapse" id="subjectMenu">
+
+                    <a href="{% url 'admin_create_subject' %}" class="sidebar-sublink">
+
+                        <i class="bi bi-book"></i>
+                        Create Subject
+
+                    </a>
+
+                </div>
+
+                <div class="collapse" id="subjectMenu">
+
+                    <a href="{% url 'admin_manage_subject' %}" class="sidebar-sublink">
+
+                        <i class="bi bi-book"></i>
+                        Manage Subject
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- Teachers -->
+
+            <a href="{% url 'admin_visit_teacher' %}" class="sidebar-link">
+
+                <span>
+                    <i class="bi bi-person-workspace"></i>
+                    Teachers
+                </span>
+
+                <i class="bi bi-chevron-right"></i>
+
+            </a>
+
+            <!-- Course -->
+
+            <div class="sidebar-dropdown">
+
+                <a href="#" class="sidebar-link" data-bs-toggle="collapse" data-bs-target="#courseMenu"
+                    aria-expanded="false">
+
+                    <span>
+                        <i class="bi bi-building"></i>
+                        Course
+                    </span>
+
+                    <i class="bi bi-chevron-down dropdown-arrow"></i>
+
+                </a>
+
+
+                <!-- Dropdown Menu -->
+
+                <div class="collapse" id="courseMenu">
+
+                    <a href="{% url 'admin_add_course' %}" class="sidebar-sublink">
+
+                        <i class="bi bi-plus-circle"></i>
+
+                        Add Course
+
+                    </a>
+
+
+                    <a href="{% url 'admin_manage_course' %}" class="sidebar-sublink">
+
+                        <i class="bi bi-buildings"></i>
+
+                        Manage Course
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            <!-- Year and semester -->
+
+            <div class="sidebar-dropdown">
+
+                <a href="#" class="sidebar-link" data-bs-toggle="collapse" data-bs-target="#semesterMenu"
+                    aria-expanded="false">
+
+                    <span>
+                        <i class="bi bi-building"></i>
+                        Year and Semester
+                    </span>
+
+                    <i class="bi bi-chevron-down dropdown-arrow"></i>
+
+                </a>
+
+
+                <!-- Dropdown Menu -->
+
+                <div class="collapse" id="semesterMenu">
+
+                    <a href="{% url 'admin_year_semester' %}" class="sidebar-sublink">
+
+                        <i class="bi bi-plus-circle"></i>
+
+                        Add Year and Semester
+
+                    </a>
+
+
+                    <a href="{% url 'manage_year_semester' %}" class="sidebar-sublink">
+
+                        <i class="bi bi-buildings"></i>
+
+                        Manage Year and Semester
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- CA Dropdown -->
+
+            <div class="sidebar-dropdown">
+
+                <a href="#" class="sidebar-link" data-bs-toggle="collapse" data-bs-target="#caMenu"
+                    aria-expanded="false">
+
+                    <span>
+                        <i class="bi bi-clipboard-data"></i>
+                        CA Marks
+                    </span>
+
+                    <i class="bi bi-chevron-down dropdown-arrow"></i>
+
+                </a>
+
+
+                <!-- Dropdown Menu -->
+
+                <div class="collapse" id="caMenu">
+
+                    <a href="{% url 'admin_visit_ca1' %}" class="sidebar-sublink">
+                        <i class="bi bi-clipboard-check"></i>
+                        Visit CA Marks
+                    </a>
+
+                </div>
+
+            </div>
+
+            <!-- PCA MARKS -->
+
+            <a href="{% url 'admin_visit_pca' %}" class="sidebar-link">
+
+                <span>
+                    <i class="bi bi-person-workspace"></i>
+                    PCA Marks
+                </span>
+
+                <i class="bi bi-chevron-right"></i>
+
+            </a>
+
+
+            <!-- Examination -->
+
+            <a href="#" class="sidebar-link">
+
+                <span>
+                    <i class="bi bi-pencil-square"></i>
+                    Examination
+                </span>
+
+                <i class="bi bi-chevron-right"></i>
+
+            </a>
+
+
+            <!-- ADMIT CARD Dropdown -->
+
+            <div class="sidebar-dropdown">
+
+                <a href="#" class="sidebar-link" data-bs-toggle="collapse" data-bs-target="#admitCardMenu"
+                    aria-expanded="false">
+
+                    <span>
+                        <i class="bi bi-person-vcard"></i>
+                        Admit Card
+                    </span>
+
+                    <i class="bi bi-chevron-down dropdown-arrow"></i>
+
+                </a>
+
+
+                <!-- Dropdown Menu -->
+
+                <div class="collapse" id="admitCardMenu">
+
+                    <a href="{% url 'generate_admit_card' %}" class="sidebar-sublink">
+                        <i class="bi bi-file-earmark-person"></i>
+                        Generate Admit Card
+                    </a>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- Results -->
+
+            <a href="#" class="sidebar-link">
+
+                <span>
+                    <i class="bi bi-bar-chart-fill"></i>
+                    Results
+                </span>
+
+                <i class="bi bi-chevron-right"></i>
+
+            </a>
+
+
+            <!-- Notices -->
+
+            <div class="sidebar-dropdown">
+
+                <a href="#" class="sidebar-link" data-bs-toggle="collapse" data-bs-target="#noticeMenu"
+                    aria-expanded="false">
+
+                    <span>
+                        <i class="bi bi-table"></i>
+                        Notices
+                    </span>
+
+                    <i class="bi bi-chevron-down dropdown-arrow"></i>
+
+                </a>
+
+                <div class="collapse" id="noticeMenu">
+
+                    <a href="{% url 'admin_add_notice' %}" class="sidebar-sublink">
+
+                        <i class="bi bi-plus-circle"></i>
+
+                        Add Notice
+
+                    </a>
+
+                </div>
+                <!-- Dropdown Menu -->
+
+                <div class="collapse" id="noticeMenu">
+
+                    <a href="{% url 'admin_manage_notice' %}" class="sidebar-sublink">
+
+                        <i class="bi bi-table"></i>
+
+                        Manage Notice
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- Applications -->
+
+            <a href="{% url 'university_notification' %}" class="sidebar-link">
+
+                <span>
+                    <i class="bi bi-file-earmark-text-fill"></i>
+                    Notification
+                </span>
+
+                <span class="menu-badge">
+                    {{ request.session.unread_count|default:0 }}
+                </span>
+
+            </a>
+
+            <div class="menu-divider"></div>
+            <!-- Settings -->
+
+            <a href="#" class="sidebar-link">
+
+                <span>
+                    <i class="bi bi-gear-fill"></i>
+                    Settings
+                </span>
+
+            </a>
+
+
+            <!-- Logout -->
+
+            <a href="{% url 'admin_logout' %}" class="sidebar-link logout-link">
+
+                <span>
+                    <i class="bi bi-box-arrow-right"></i>
+                    Logout
+                </span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =========================
+     MAIN CONTENT
+========================= -->
+
+    <main class="main-content">
+
+        {% block content %}
+
+
+
+        {% endblock %}
+
+    </main>
+
+
+
+    <script>
+
+        const menuBtn = document.getElementById("menuBtn");
+        const sidebar = document.getElementById("sidebar");
+
+        menuBtn.addEventListener("click", function () {
+
+            sidebar.classList.toggle("show");
+
+        });
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            new DataTable('#example', {
+                layout: {
+                    topStart: {
+                        buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5']
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,385 @@
+{% extends 'admin_nav.html' %}
+
+{% block content %}
+
+<div class="container py-5" style="margin-top: 0px;">
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+
+                <i class="bi bi-building text-primary me-2"></i>
+
+                College Details
+
+            </h2>
+
+            <p class="text-muted mb-0">
+                Complete information about the college
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <a href="{% url 'admin_manage_college' %}"
+               class="btn btn-outline-secondary me-2">
+
+                <i class="bi bi-arrow-left"></i>
+                Back
+
+            </a>
+
+
+            <a href=""
+               class="btn btn-primary">
+
+                <i class="bi bi-pencil-square"></i>
+                Edit College
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- College Header Card -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-body p-4">
+
+            <div class="row align-items-center">
+
+                <!-- Logo -->
+
+                <div class="col-md-2 text-center">
+
+                    {% if profile and profile.college_logo %}
+
+                        <img
+                            src="{{ profile.college_logo.url }}"
+                            alt="{{ college.college_name }}"
+                            class="rounded-circle shadow-sm"
+                            style="
+                                width: 120px;
+                                height: 120px;
+                                object-fit: cover;
+                            "
+                        >
+
+                    {% else %}
+
+                        <div
+                            class="bg-primary text-white rounded-circle mx-auto
+                                   d-flex align-items-center justify-content-center"
+                            style="
+                                width: 120px;
+                                height: 120px;
+                            "
+                        >
+
+                            <i class="bi bi-building fs-1"></i>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- College Name -->
+
+                <div class="col-md-7">
+
+                    <h2 class="fw-bold mb-2">
+
+                        {{ college.college_name }}
+
+                    </h2>
+
+                    <p class="mb-2">
+
+                        <span class="badge bg-dark">
+
+                            Code:
+                            {{ college.college_code }}
+
+                        </span>
+
+
+                        {% if college.college_types == "PRIVATE" %}
+
+                            <span class="badge bg-warning text-dark ms-2">
+                                Private College
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-success ms-2">
+                                Government College
+                            </span>
+
+                        {% endif %}
+
+                    </p>
+
+                    <small class="text-muted">
+
+                        <i class="bi bi-calendar3 me-1"></i>
+
+                        Added:
+                        {{ college.created_at|date:"d M Y, h:i A" }}
+
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+   
+    <!-- Contact Information -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-primary text-white rounded-top-4">
+
+            <h5 class="mb-0">
+
+                <i class="bi bi-person-lines-fill me-2"></i>
+
+                Contact Information
+
+            </h5>
+
+        </div>
+
+
+        <div class="card-body p-4">
+
+            <div class="row g-4">
+
+                <!-- Email -->
+
+                <div class="col-md-6">
+
+                    <label class="text-muted small">
+                        College Email
+                    </label>
+
+                    <div class="fw-semibold">
+
+                        <i class="bi bi-envelope text-primary me-2"></i>
+
+                        {{ college.college_profile.college_email|default:"Not Added" }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Phone -->
+
+                <div class="col-md-6">
+
+                    <label class="text-muted small">
+                        Phone Number
+                    </label>
+
+                    <div class="fw-semibold">
+
+                        <i class="bi bi-telephone text-primary me-2"></i>
+
+                        {{ college.college_profile.phone_number|default:"Not Added" }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Director -->
+
+                <div class="col-md-6">
+
+                    <label class="text-muted small">
+                        Director Name
+                    </label>
+
+                    <div class="fw-semibold">
+
+                        <i class="bi bi-person text-primary me-2"></i>
+
+                        {{ college.college_profile.director_name|default:"Not Added" }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Website -->
+
+                <div class="col-md-6">
+
+                    <label class="text-muted small">
+                        Website
+                    </label>
+
+                    <div class="fw-semibold">
+
+                        {% if college.college_profile.website %}
+
+                            <i class="bi bi-globe text-primary me-2"></i>
+
+                            <a href="{{ profile.website }}"
+                               target="_blank"
+                               class="text-decoration-none">
+
+                                {{ college.college_profile.website }}
+
+                            </a>
+
+                        {% else %}
+
+                            <span class="text-muted">
+                                Not Added
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Address Information -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-success text-white rounded-top-4">
+
+            <h5 class="mb-0">
+
+                <i class="bi bi-geo-alt-fill me-2"></i>
+
+                Address Information
+
+            </h5>
+
+        </div>
+
+
+        <div class="card-body p-4">
+
+            <div class="row g-4">
+
+                <!-- Address -->
+
+                <div class="col-md-12">
+
+                    <label class="text-muted small">
+                        Address
+                    </label>
+
+                    <div class="fw-semibold">
+
+                        {{ college.college_profile.address|default:"Not Added" }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- City -->
+
+                <div class="col-md-4">
+
+                    <label class="text-muted small">
+                        City
+                    </label>
+
+                    <div class="fw-semibold">
+
+                        {{ college.college_profile.city|default:"Not Added" }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- District -->
+
+                <div class="col-md-4">
+
+                    <label class="text-muted small">
+                        District
+                    </label>
+
+                    <div class="fw-semibold">
+
+                        {{ college.college_profile.district|default:"Not Added" }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- State -->
+
+                <div class="col-md-4">
+
+                    <label class="text-muted small">
+                        State
+                    </label>
+
+                    <div class="fw-semibold">
+
+                        {{ college.college_profile.state|default:"Not Added" }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Pincode -->
+
+                <div class="col-md-4">
+
+                    <label class="text-muted small">
+                        Pincode
+                    </label>
+
+                    <div class="fw-semibold">
+
+                        {{ college.college_profile.pincode|default:"Not Added" }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    
+</div>
+
+{% endblock %}

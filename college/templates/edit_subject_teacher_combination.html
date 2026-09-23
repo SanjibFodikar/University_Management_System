@@ -1,0 +1,228 @@
+{% extends 'college_nav.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+<!-- Page Header -->
+<div class="mb-4">
+    <h3 class="fw-bold mb-1">Edit Subject Teacher</h3>
+    <p class="text-muted mb-0">
+        Update subject and teacher combination
+    </p>
+</div>
+
+
+<!-- Messages -->
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+            {{ message }}
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+
+<div class="card shadow-sm border-0">
+
+    <div class="card-header bg-white py-3">
+        <h5 class="mb-0 fw-bold">
+            Subject Teacher Combination
+        </h5>
+    </div>
+
+
+    <div class="card-body">
+
+        <!-- Main Update Form -->
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="row g-4">
+
+
+                <!-- Course -->
+                <div class="col-md-6">
+
+                    <label class="form-label fw-semibold">
+                        Course
+                    </label>
+
+                    <select name="course" id="course"
+                            class="form-select"
+                            required>
+
+                        {% for course in courses %}
+
+                            <option value="{{ course.course_name.id }}"
+                                {% if combination.college_course.course_name.course_name.id == course.course_name.course_name.id %}
+                                    selected
+                                {% endif %}>
+
+                                {{ course.course_name.course_name }} 
+
+                            </option> 
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- Semester -->
+                <div class="col-md-6">
+
+                    <label for="semester"
+                           class="form-label fw-semibold">
+
+                        Semester
+
+                    </label>
+
+                    <select name="semester"
+                            id="semester"
+                            class="form-select"
+                            required>
+
+                        <option value="">
+                            Select Semester
+                        </option>
+
+                        {% for semester in semesters %}
+
+                            <option value="{{ semester.id }}"
+                                {% if combination.semester.id == semester.id %}
+                                    selected
+                                {% endif %}>
+
+                                {{ semester }}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- Subject -->
+                <div class="col-md-6">
+
+                    <label for="subject"
+                           class="form-label fw-semibold">
+
+                        Subject
+
+                    </label>
+
+                    <select name="subject"
+                            id="subject"
+                            class="form-select"
+                            required>
+
+                        <option value="">
+                            Select Subject
+                        </option>
+
+                        {% for subject in subjects %}
+
+                            <option value="{{ subject.id }}"
+                                {% if combination.subject.id == subject.id %}
+                                    selected
+                                {% endif %}>
+
+                                {{ subject.subject_name }}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- Teacher -->
+                <div class="col-md-6">
+
+                    <label for="teacher"
+                           class="form-label fw-semibold">
+
+                        Teacher
+
+                    </label>
+
+                    <select name="teacher"
+                            id="teacher"
+                            class="form-select"
+                            required>
+
+                        <option value="">
+                            Select Teacher
+                        </option>
+
+                        {% for teacher in teachers %}
+
+                            <option value="{{ teacher.id }}"
+                                {% if combination.teacher.id == teacher.id %}
+                                    selected
+                                {% endif %}>
+
+                                {{ teacher.teacher_name }}
+
+                                {% if teacher.designation %}
+                                    - {{ teacher.designation }}
+                                {% endif %}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-end gap-2 mt-4">
+
+                <a href="{% url 'manage_subject_teacher_combination' %}"
+                   class="btn btn-secondary">
+
+                    <i class="bi bi-arrow-left"></i>
+                    Cancel
+
+                </a>
+
+
+                <button type="submit"
+                        class="btn btn-primary">
+
+                    <i class="bi bi-check-circle"></i>
+                    Update Combination
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</div>
+
+<script src="{% static 'college_js/edit_subject_teacher.js' %}"></script>
+{% endblock %}

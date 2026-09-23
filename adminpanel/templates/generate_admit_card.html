@@ -1,0 +1,132 @@
+{% extends "admin_nav.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                <i class="bi bi-person-vcard"></i>
+                Generate Admit Card
+            </h5>
+        </div>
+
+        <div class="card-body">
+
+            <div id="successMessage" class="alert alert-success alert-dismissible fade show d-none mt-3" role="alert">
+           <span id="messageText"></span>
+          <button
+           type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close">
+        </button>
+        </div>
+            <form action="" id="Admit_Card_Form">
+
+                {% csrf_token %}
+
+                <div class="row g-3">
+
+                    <!-- College -->
+
+                    <div class="col-md-6">
+
+                        <label for="college" class="form-label">
+                            Select College
+                        </label>
+
+                        <select name="college" id="college" class="form-select" required>
+
+                            <option value="">
+                                Select College
+                            </option>
+
+                            {% for college in colleges %}
+
+                            <option value="{{ college.id }}">
+                                {{ college.college_name }} - {{ college.college_code }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Course -->
+
+                    <div class="col-md-6">
+
+                        <label for="course" class="form-label">
+                            Select Course
+                        </label>
+
+                        <select name="course" id="course" class="form-select" required>
+
+                            <option value="">
+                                Select Course
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Semester -->
+
+                    <div class="col-md-6">
+
+                        <label for="semester" class="form-label">
+                            Select Semester
+                        </label>
+
+                        <select name="semester" id="semester" class="form-select" required>
+
+                            <option value="">
+                                Select Semester
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div class="mt-4">
+
+                    <button type="submit" class="btn btn-primary" name="admit_btn" id="Generate_Admit_BTN">
+
+                        <i class="bi bi-person-vcard"></i>
+                        Generate Admit Card
+
+                    </button>
+
+                    <button type="reset" class="btn btn-secondary">
+
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                        Reset
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <form id="admitData" onsubmit="generateAdmitCard(event)" action="{% url 'put_data_admit_card' %}" class="mt-4">
+        {% csrf_token %}
+    </form>  
+
+</div>
+
+<script src="{% static 'admin_js/generate_admit_card.js' %}"></script>
+
+{% endblock %}

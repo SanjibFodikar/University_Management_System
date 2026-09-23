@@ -1,0 +1,366 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!-- image -->
+    <div class="container-fluid">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <img src="{% static 'image/university.png' %}" alt="university" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login / Quick Access Area -->
+
+    <div class="container-fluid">
+
+        <div class="container">
+
+            <div class="row g-4">
+
+                <!-- Members Area -->
+                <div class="col-12 col-md-6 col-lg-4">
+
+                    <div class="card h-100 shadow-sm p-4">
+
+                        <div class="d-flex align-items-center gap-3">
+
+                            <i class="bi bi-people-fill fs-2 text-primary"></i>
+
+                            <div>
+                                <h5 class="mb-1">
+                                    Members Area
+                                </h5>
+
+                                <a href="{% url 'membersarea' %}" class="text-decoration-none">
+                                    Click To Visit
+                                </a>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Letters & Notice -->
+                <div class="col-12 col-md-6 col-lg-4">
+
+                    <div class="card h-100 shadow-sm p-3">
+
+                        <div class="d-flex align-items-center gap-3">
+
+                            <i class="bi bi-megaphone-fill fs-2 text-primary"></i>
+
+                            <div>
+                                <h5 class="mb-1">
+                                    Letters & Notice
+                                </h5>
+
+                                <a href="#" class="text-decoration-none">
+                                    Click To Visit
+                                </a>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Application & Notice -->
+                <div class="col-12 col-md-6 col-lg-4">
+
+                    <div class="card h-100 shadow-sm p-3">
+
+                        <div class="d-flex align-items-center gap-3">
+
+                            <i class="bi bi-file-earmark-text-fill fs-2 text-primary"></i>
+
+                            <div>
+                                <h5 class="mb-1">
+                                    Application & Notice
+                                </h5>
+
+                                <a href="#" class="text-decoration-none">
+                                    Click To Visit
+                                </a>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- General and Latest Announcement -->
+
+    <!-- =========================
+     GENERAL & ANNOUNCEMENT
+========================= -->
+
+    <div class="container-fluid mt-5">
+
+        <div class="container">
+
+            <div class="row g-4">
+
+                <!-- =========================
+                 LEFT SECTION
+            ========================== -->
+
+                <div class="col-12 col-lg-8">
+
+                    <!-- =========================
+                     GENERAL
+                ========================== -->
+
+                    <div class="general_container">
+
+                        <div class="section-heading">
+
+                            <h4 class="section-title">
+                                <i class="bi bi-grid-fill"></i>
+                                General
+                            </h4>
+
+                            <div class="section-line"></div>
+
+                        </div>
+
+
+                        <div class="row g-4 mt-1">
+
+                            <!-- Transcript -->
+                            <div class="col-12 col-md-6 col-lg-4">
+
+                                <div class="general_box">
+
+                                    <div class="general_icon">
+                                        <i class="bi bi-file-earmark-text-fill"></i>
+                                    </div>
+
+                                    <h6>
+                                        TRANSCRIPT/DUPLICATE
+                                        <br>
+                                        GRADE CARD
+                                    </h6>
+
+                                    <a href="#" class="apply-btn">
+                                        <i class="bi bi-arrow-right-circle-fill"></i>
+                                        Apply Now
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- New Syllabus -->
+                            <div class="col-12 col-md-6 col-lg-4">
+
+                                <div class="general_box">
+
+                                    <div class="general_icon">
+                                        <i class="bi bi-book-fill"></i>
+                                    </div>
+
+                                    <h6>
+                                        NEW SYLLABUS
+                                    </h6>
+
+                                    <a href="#" class="apply-btn">
+                                        <i class="bi bi-arrow-right-circle-fill"></i>
+                                        Apply Now
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Teacher Appointment -->
+                            <div class="col-12 col-md-6 col-lg-4">
+
+                                <div class="general_box">
+
+                                    <div class="general_icon">
+                                        <i class="bi bi-person-badge-fill"></i>
+                                    </div>
+
+                                    <h6>
+                                        TEACHER APPOINTMENT
+                                    </h6>
+
+                                    <a href="#" class="apply-btn">
+                                        <i class="bi bi-arrow-right-circle-fill"></i>
+                                        Apply Now
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Certificate -->
+                            <div class="col-12 col-md-6 col-lg-4">
+
+                                <div class="general_box">
+
+                                    <div class="general_icon">
+                                        <i class="bi bi-award-fill"></i>
+                                    </div>
+
+                                    <h6>
+                                        CERTIFICATE OF COURSE
+                                    </h6>
+
+                                    <a href="#" class="apply-btn">
+                                        <i class="bi bi-arrow-right-circle-fill"></i>
+                                        Apply Now
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =========================
+                     PRE EXAM ACTIVITIES
+                ========================== -->
+
+                    <div class="general_container mt-5">
+
+                        <div class="section-heading">
+
+                            <h4 class="section-title">
+                                <i class="bi bi-pencil-square"></i>
+                                PRE EXAM ACTIVITIES
+                            </h4>
+
+                            <div class="section-line"></div>
+
+                        </div>
+
+
+                        <div class="row g-4 mt-1">
+
+                            <!-- Admit Card -->
+                            <div class="col-12 col-md-6 col-lg-4">
+
+                                <div class="general_box">
+
+                                    <div class="general_icon">
+                                        <i class="bi bi-card-heading"></i>
+                                    </div>
+
+                                    <h6>
+                                        ADMIT CARD
+                                    </h6>
+
+                                    <a href="#" class="apply-btn">
+                                        <i class="bi bi-arrow-right-circle-fill"></i>
+                                        Apply Now
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Examination Routine -->
+                            <div class="col-12 col-md-6 col-lg-4">
+
+                                <div class="general_box">
+
+                                    <div class="general_icon">
+                                        <i class="bi bi-calendar3"></i>
+                                    </div>
+
+                                    <h6>
+                                        EXAMINATION ROUTINE
+                                    </h6>
+
+                                    <a href="#" class="apply-btn">
+                                        <i class="bi bi-arrow-right-circle-fill"></i>
+                                        Apply Now
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================
+                 LATEST ANNOUNCEMENT
+            ========================== -->
+
+                <div class="col-12 col-lg-4">
+
+                    <div class="announcement_container">
+
+                        <div class="section-heading">
+
+                            <h4 class="section-title">
+                                <i class="bi bi-megaphone-fill"></i>
+                                Latest Announcement
+                            </h4>
+
+                            <div class="section-line announcement-line"></div>
+
+                        </div>
+
+
+                        <!-- Announcement Item -->
+                       {% for notice in notices %}
+                        <div class="announcement_item">
+                          
+                            <div class="announcement_icon">
+                                <i class="bi bi-bell-fill"></i>
+                            </div>
+
+                            <div>
+                                <small class="text-muted">
+                                    {{notice.notice_date}}
+                                </small>
+
+                                <a href="{% url 'visitNotice' id=notice.id %}" class="mb-0">
+                                    {{notice.title}}
+                                </a>
+                            </div>
+
+                        </div>
+                        {% endfor %}
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}

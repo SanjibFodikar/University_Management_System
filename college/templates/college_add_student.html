@@ -1,0 +1,155 @@
+{% extends 'college_nav.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header">
+            <h4 class="mb-0">Add Student</h4>
+        </div>
+
+        <div class="card-body">
+
+            {% if messages %}
+            {% for message in messages %}
+
+            {% if message.tags == 'success' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            {% elif message.tags == 'error' %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            {% else %}
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+            {% endfor %}
+            {% endif %}
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <!-- Student Name -->
+                <div class="mb-3">
+                    <label class="form-label">Student Name</label>
+
+                    <input type="text" name="name" class="form-control" placeholder="Enter student name" required>
+                </div>
+
+
+                <!-- Email -->
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+
+                    <input type="email" name="email" class="form-control" placeholder="Enter student email" required>
+                </div>
+
+
+                <!-- Mobile -->
+                <div class="mb-3">
+                    <label class="form-label">Mobile Number</label>
+
+                    <input type="tel" name="mobile" class="form-control" placeholder="Enter mobile number"
+                        maxlength="10" required>
+                </div>
+
+
+                <!-- Date of Birth -->
+                <div class="mb-3">
+                    <label class="form-label">Date of Birth</label>
+
+                    <input type="date" name="dob" class="form-control" required>
+                </div>
+
+
+                <!-- Course -->
+                <div class="mb-3">
+                    <label class="form-label">Course</label>
+
+                    <select name="college_course" class="form-select" required>
+
+                        <option value="">Select Course</option>
+
+                        {% for course in courses %}
+
+                        <option value="{{ course.id }}">
+                            {{ course.course_name.course_name }}
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+                </div>
+
+
+                <!-- Semester -->
+                <div class="mb-3">
+                    <label class="form-label">Semester</label>
+
+                    <select name="semester" class="form-select">
+
+                        <option value="">Select Semester</option>
+
+                        {% for semester in semesters %}
+
+                        <option value="{{ semester.id }}">
+                            {{ semester.year }} -
+                            {{ semester.semester }}
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+                </div>
+
+
+                <!-- Admission Date -->
+                <div class="mb-3">
+                    <label class="form-label">Admission Date</label>
+
+                    <input type="date" name="admission_date" class="form-control" required>
+                </div>
+
+
+                <!-- Course End Date -->
+                <div class="mb-3">
+                    <label class="form-label">Course End Date</label>
+
+                    <input type="date" name="course_end_date" class="form-control" required>
+                </div>
+
+
+                <!-- Submit -->
+                <div class="mt-4">
+
+                    <button type="submit" class="btn btn-primary">
+                        Add Student
+                    </button>
+
+                    <a href="" class="btn btn-secondary">
+                        Cancel
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

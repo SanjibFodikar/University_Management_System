@@ -1,0 +1,156 @@
+{% extends 'college_nav.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- Page Header -->
+    <div class="mb-4">
+
+        <h3 class="fw-bold mb-1">
+            <i class="bi bi-book me-2"></i>
+            My Subjects
+        </h3>
+
+        <p class="text-muted mb-0">
+            View subjects assigned to your college
+        </p>
+
+    </div>
+
+
+    <!-- Course & Semester Filter -->
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <div class="row g-3">
+
+                <!-- Course -->
+                <div class="col-md-6">
+
+                    <label for="course" class="form-label fw-semibold">
+                        Course
+                    </label>
+
+                    <select id="course" name="course" class="form-select">
+
+                        <option value="">Select Course</option>
+                        {% for course in courses %}
+                        <option value="{{course.course_name.id}}">
+                            {{course.course_name.course_name}}
+                        </option>
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- Semester -->
+                <div class="col-md-6">
+
+                    <label for="semester" class="form-label fw-semibold">
+                        Semester
+                    </label>
+
+                    <select id="semester"
+                            name="semester"
+                            class="form-select">
+
+                        <option value="">
+                            Select Semester
+                        </option>
+                        {% for semester_year in semester_years %}
+                        <option value="{{semester_year.id}}">
+                            {{semester_year.year}} - {{semester_year.semester}}
+                        </option>
+                        {% endfor %}
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+<div class="card border-0 shadow-sm">
+
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+
+    <h5 class="fw-bold mb-0">
+        <i class="bi bi-journal-bookmark me-2"></i>
+        Subject List
+    </h5>
+
+    <button type="button" id="downloadBtn" class="btn btn-success">
+        <i class="bi bi-download me-2"></i>
+        Download
+    </button>
+
+</div>
+
+
+    <div class="card-body p-0">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle mb-0">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th class="text-center">
+                            #
+                        </th>
+
+                        <th>
+                            Subject Name
+                        </th>
+
+                        <th>
+                            Paper Code
+                        </th>
+
+                        <th>
+                            Subject Type
+                        </th>
+
+                        <th>
+                            Paper Choice
+                        </th>
+
+                        <th>
+                            Course
+                        </th>
+
+                        <th>
+                           Year / Semester
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="tableBody">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+<script src="{% static 'college_js/college_visit_subject.js' %}"></script>
+
+{% endblock %}
+

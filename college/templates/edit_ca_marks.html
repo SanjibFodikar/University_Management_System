@@ -1,0 +1,359 @@
+{% extends 'college_nav.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow-sm border-0">
+
+        <!-- ================= HEADER ================= -->
+
+        <div class="card-header bg-primary text-white">
+
+            <h4 class="mb-0">
+
+                <i class="bi bi-pencil-square"></i>
+                Edit CA Marks
+
+            </h4>
+
+        </div>
+
+
+        <div class="card-body">
+
+
+            <!-- ================= MESSAGES ================= -->
+
+            {% if messages %}
+
+                {% for message in messages %}
+
+                    {% if message.tags == 'success' %}
+
+                        <div class="alert alert-success alert-dismissible fade show"
+                             role="alert">
+
+                            {{ message }}
+
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="alert">
+                            </button>
+
+                        </div>
+
+
+                    {% elif message.tags == 'error' %}
+
+                        <div class="alert alert-danger alert-dismissible fade show"
+                             role="alert">
+
+                            {{ message }}
+
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="alert">
+                            </button>
+
+                        </div>
+
+                    {% endif %}
+
+                {% endfor %}
+
+            {% endif %}
+
+
+
+            {% if students %}
+
+                <hr class="my-4">
+
+
+                <!-- ================================================= -->
+                <!-- GROUP STUDENTS -->
+                <!-- ================================================= -->
+
+                {% regroup students by college_data_id as student_groups %}
+
+
+                {% for group in student_groups %}
+
+                    {% with student=group.list.0 %}
+
+
+                    <!-- ================= STUDENT CARD ================= -->
+
+                    <div class="card border mb-4">
+
+                        <div class="card-body">
+
+
+                            <!-- ================= STUDENT DETAILS ================= -->
+
+                            <div class="row">
+
+
+                                <!-- LEFT SIDE -->
+
+                                <div class="col-md-6">
+
+                                    <p class="mb-2">
+
+                                        <strong>Name:</strong>
+
+                                        {{ student.college_data.name }}
+
+                                    </p>
+
+
+                                    <p class="mb-2">
+
+                                        <strong>Roll No:</strong>
+
+                                        {{ student.college_data.roll_number }}
+
+                                    </p>
+
+
+                                    <p class="mb-2">
+
+                                        <strong>Registration No:</strong>
+
+                                        {{ student.college_data.registration_number }}
+
+                                    </p>
+
+                                </div>
+
+
+
+                                <!-- RIGHT SIDE -->
+
+                                <div class="col-md-6">
+
+                                    <p class="mb-2">
+
+                                        <strong>Course:</strong>
+
+                                        {{ student.college_data.college_course.course_name.course_name }}
+
+                                    </p>
+
+
+                                    <p class="mb-2">
+
+                                        <strong>Semester:</strong>
+
+                                        {{ student.college_data.semester }}
+
+                                    </p>
+
+
+                                    <p class="mb-2">
+
+                                        <strong>CA Type:</strong>
+
+                                        {{ student.ca_type }}
+
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <hr>
+
+
+
+                            <!-- ================= SUBJECTS ================= -->
+
+                            <h6 class="fw-bold mb-3">
+
+                                <i class="bi bi-book"></i>
+
+                                Subjects & Marks
+
+                            </h6>
+
+
+
+                            {% for mark in group.list %}
+
+
+                                <div class="row align-items-center mb-3">
+
+
+                                    <!-- ================= SUBJECT ================= -->
+
+                                    <div class="col-md-8">
+
+                                        <label class="form-label fw-semibold">
+
+                                            {{ mark.subject_teacher.subject.subject_name }}
+
+                                        </label>
+
+                                    </div>
+
+
+
+                                    <!-- ================= MARKS ================= -->
+
+                                    <div class="col-md-4">
+
+
+                                        <!--
+                                            Hidden ID
+
+                                            This input belongs to the form
+                                            even though the form is outside
+                                            the student cards.
+                                        -->
+
+                                        <input type="hidden"
+
+                                               name="marks_id[]"
+
+                                               value="{{ mark.id }}"
+
+                                               form="updateMarksForm">
+
+
+
+                                        <!--
+                                            Marks Input
+
+                                            form="updateMarksForm"
+                                            connects this input with the
+                                            form below.
+                                        -->
+
+                                        <input type="number"
+
+                                               class="form-control marksinput"
+
+                                               name="marks[]"
+
+                                               value="{{ mark.marks }}"
+
+                                               min="0"
+
+                                               max="25"
+
+                                               step="0.01"
+
+                                               form="updateMarksForm">
+
+                                    </div>
+
+                                </div>
+
+
+                            {% empty %}
+
+
+                                <div class="alert alert-warning">
+
+                                    <i class="bi bi-exclamation-triangle"></i>
+
+                                    No subjects found.
+
+                                </div>
+
+
+                            {% endfor %}
+
+
+                        </div>
+
+                    </div>
+
+
+                    {% endwith %}
+
+                {% endfor %}
+
+
+
+                <!-- ================================================= -->
+                <!-- UPDATE / CANCEL BUTTONS -->
+                <!-- ================================================= -->
+
+                <div class="d-flex gap-2 mt-4 mb-4">
+
+
+                    <!-- UPDATE ALL -->
+
+                    <button type="submit"
+
+                            form="updateMarksForm"
+
+                            class="btn btn-success">
+
+                        <i class="bi bi-check-lg"></i>
+
+                        Update All Marks
+
+                    </button>
+
+
+
+                    <!-- CANCEL -->
+
+                    <a href=""
+
+                       class="btn btn-danger">
+
+                        <i class="bi bi-x-lg"></i>
+
+                        Cancel
+
+                    </a>
+
+                    <a href="{% url 'manage_ca_marks' %}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i>
+                        Back
+                    </a>
+
+                </div>
+
+
+            {% else %}
+
+
+                <!-- ================= NO DATA ================= -->
+
+                <div class="alert alert-warning mt-3">
+
+                    <i class="bi bi-exclamation-triangle"></i>
+
+                    No CA marks found.
+
+                </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+    </div>
+
+</div>
+
+<form method="POST"
+
+      action=""
+
+      id="updateMarksForm">
+
+    {% csrf_token %}
+
+</form>
+
+
+{% endblock %}

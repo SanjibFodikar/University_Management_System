@@ -1,0 +1,308 @@
+
+{% extends 'college_nav.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid mt-4">
+
+    <div class="card shadow">
+
+        <!-- Header -->
+        <div class="card-header">
+            <h4 class="mb-0">Edit Student</h4>
+        </div>
+
+        <div class="card-body">
+
+            <!-- Messages -->
+            {% if messages %}
+                {% for message in messages %}
+
+                    {% if message.tags == 'success' %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="alert">
+                            </button>
+                        </div>
+
+                    {% elif message.tags == 'error' %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="alert">
+                            </button>
+                        </div>
+
+                    {% else %}
+                        <div class="alert alert-info alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="alert">
+                            </button>
+                        </div>
+                    {% endif %}
+
+                {% endfor %}
+            {% endif %}
+
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="row g-3">
+
+                    <!-- Student Name -->
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Student Name
+                        </label>
+
+                        <input type="text"
+                               name="student_name"
+                               class="form-control"
+                               value="{{ student.name }}"
+                               required>
+
+                    </div>
+
+
+                    <!-- Email -->
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Email
+                        </label>
+
+                        <input type="email"
+                               name="email"
+                               class="form-control"
+                               value="{{ student.user.email }}"
+                               required>
+
+                    </div>
+
+
+                    <!-- Mobile -->
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Mobile
+                        </label>
+
+                        <input type="text"
+                               name="mobile"
+                               class="form-control"
+                               value="{{ student.mobile }}"
+                               maxlength="10"
+                               required>
+
+                    </div>
+
+
+                    <!-- DOB -->
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Date of Birth
+                        </label>
+
+                        <input type="date"
+                               name="dob"
+                               class="form-control"
+                               value="{{ student.dob|date:'Y-m-d' }}"
+                               required>
+
+                    </div>
+
+
+                    <!-- Course -->
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Course
+                        </label>
+
+                        <select name="college_course"
+                                class="form-select"
+                                required>
+
+                            <option value="">
+                                Select Course
+                            </option>
+
+                            {% for course in courses %}
+
+                                <option value="{{ course.id }}"
+                                    {% if student.college_course.id == course.id %}
+                                        selected 
+                                    {% endif %}>
+
+                                    {{ course.course_name.course_name }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Semester -->
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Semester
+                        </label>
+
+                        <select name="semester"
+                                class="form-select">
+
+                            <option value="">
+                                Select Semester
+                            </option>
+
+                            {% for semester in semesters %}
+
+                                <option value="{{ semester.id }}"
+                                    {% if student.semester.id == semester.id %}
+                                        selected
+                                    {% endif %}>
+
+                                    {{ semester.year }} -
+                                    {{ semester.semester }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Admission Date -->
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Admission Date
+                        </label>
+
+                        <input type="date"
+                               name="admission_date"
+                               class="form-control"
+                               value="{{ student.admission_date|date:'Y-m-d' }}"
+                               required>
+
+                    </div>
+
+
+                    <!-- Course End Date -->
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Course End Date
+                        </label>
+
+                        <input type="date"
+                               name="course_end_date"
+                               class="form-control"
+                               value="{{ student.course_end_date|date:'Y-m-d' }}"
+                               required>
+
+                    </div>
+
+
+                    <!-- Active Status -->
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Student Status
+                        </label>
+
+                        <select name="is_active"
+                                class="form-select">
+
+                            <option value="True"
+                                {% if student.is_active %}
+                                    selected
+                                {% endif %}>
+                                Active
+                            </option>
+
+                            <option value="False"
+                                {% if not student.is_active %}
+                                    selected
+                                {% endif %}>
+                                Inactive
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- College Verification -->
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            College Verification
+                        </label>
+
+                        <select name="college_verify"
+                                class="form-select">
+
+                            <option value="True"
+                                {% if student.college_verify %}
+                                    selected
+                                {% endif %}>
+                                Verified
+                            </option>
+
+                            <option value="False"
+                                {% if not student.college_verify %}
+                                    selected
+                                {% endif %}>
+                                Pending
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Buttons -->
+                <div class="mt-4 d-flex gap-2">
+
+                    <button type="submit"
+                            class="btn btn-primary">
+                        <i class="bi bi-check-lg"></i>
+                        Update Student
+                    </button>
+
+                    <a href="{% url 'college_manage_student' %}"
+                       class="btn btn-secondary">
+                        Cancel
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+

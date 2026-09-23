@@ -1,0 +1,459 @@
+{% extends 'admin_nav.html' %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h3 class="fw-bold mb-1">
+                Notifications
+            </h3>
+
+            <p class="text-muted mb-0">
+                Manage all college notifications
+            </p>
+        </div>
+
+        {% if messages %}
+        {% for message in messages %}
+
+        {% if message.tags == "success" %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+            </button>
+        </div>
+
+        {% elif message.tags == "error" %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ message }}
+
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+            </button>
+        </div>
+        {% endif %}
+
+        {% endfor %}
+        {% endif %}
+
+        <!-- Header Actions -->
+        <div class="d-flex align-items-center gap-2">
+
+            <!-- Unread Count -->
+            <span class="badge bg-primary fs-6">
+                {{ unread_count|default:0 }} Unread
+            </span>
+
+
+            <!-- Delete Dropdown -->
+            <div class="dropdown">
+
+                <button class="btn btn-outline-danger dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+
+                    <i class="bi bi-trash"></i>
+                    Delete
+
+                </button>
+
+
+                <ul class="dropdown-menu dropdown-menu-end">
+
+                    <!-- Delete All -->
+                    <li>
+
+                        <form method="POST" action="{% url 'delete_all_notification' %}">
+
+                            {% csrf_token %}
+
+                            <input type="hidden" name="delete_type" value="all">
+
+                            <button type="submit" class="dropdown-item text-danger"
+                                onclick="return confirm('Are you sure you want to delete all notifications?')">
+
+                                <i class="bi bi-trash me-2"></i>
+                                Delete All
+
+                            </button>
+
+                        </form>
+
+                    </li>
+
+
+                    <!-- Delete Read -->
+                    <li>
+
+                        <form method="POST" action="{% url 'delete_read_message_all' %}">
+
+                            {% csrf_token %}
+
+                            <input type="hidden" name="delete_type" value="read">
+
+                            <button type="submit" class="dropdown-item"
+                                onclick="return confirm('Are you sure you want to delete all read notifications?')">
+
+                                <i class="bi bi-check2-all me-2"></i>
+                                Delete Read
+
+                            </button>
+
+                        </form>
+
+                    </li>
+
+
+                    <!-- Delete Unread -->
+                    <li>
+
+                        <form method="POST" action="{% url 'delete_unread_message_all' %}">
+
+                            {% csrf_token %}
+
+                            <input type="hidden" name="delete_type" value="unread">
+
+                            <button type="submit" class="dropdown-item"
+                                onclick="return confirm('Are you sure you want to delete all unread notifications?')">
+
+                                <i class="bi bi-envelope me-2"></i>
+                                Delete Unread
+
+                            </button>
+
+                        </form>
+
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    {% if college_notifications %}
+
+    {% for college, notifications in college_notifications.items %}
+
+    <!-- College Section -->
+    <div class="card shadow-sm border-0 mb-4">
+
+
+        <!-- College Header -->
+        <div class="card-header bg-white py-3">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h5 class="mb-0 fw-bold">
+                        {{ college.college_name }}
+                    </h5>
+
+                    <small class="text-muted">
+                        {{ notifications|length }} Notifications
+                    </small>
+
+                </div>
+
+
+                <!-- Mark All As Read -->
+                <form method="POST" action="{% url 'mark_all_as_read' %}">
+
+                    {% csrf_token %}
+
+                    <button type="submit" class="btn btn-sm btn-outline-primary">
+
+                        <i class="bi bi-check2-all"></i>
+
+                        Mark All as Read
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Notifications -->
+        <div class="card-body p-0">
+
+            {% for notification in notifications %}
+
+            <div class="notification-item
+                            {% if not notification.is_read %}
+                                bg-light
+                            {% endif %}
+                            border-bottom p-3">
+
+
+                <div class="row align-items-center">
+
+
+                    <!-- Icon -->
+                    <div class="col-auto">
+
+                        {% if notification.notification_type == 'student_added' %}
+
+                        <div class="rounded-circle bg-primary text-white
+                                                    d-flex align-items-center justify-content-center"
+                            style="width:45px;height:45px;">
+
+                            <i class="bi bi-person-plus fs-5"></i>
+
+                        </div>
+
+
+                        {% elif notification.notification_type == 'teacher_added' %}
+
+                        <div class="rounded-circle bg-success text-white
+                                                    d-flex align-items-center justify-content-center"
+                            style="width:45px;height:45px;">
+
+                            <i class="bi bi-person-badge fs-5"></i>
+
+                        </div>
+
+
+                        {% else %}
+
+                        <div class="rounded-circle bg-secondary text-white
+                                                    d-flex align-items-center justify-content-center"
+                            style="width:45px;height:45px;">
+
+                            <i class="bi bi-bell fs-5"></i>
+
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+
+                    <!-- Notification Details -->
+                    <div class="col">
+
+                        <!-- New Badge -->
+                        <div class="d-flex align-items-center gap-2">
+
+                            {% if not notification.is_read %}
+
+                            <span class="badge bg-primary">
+                                New
+                            </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+
+                        <!-- Message -->
+                        <h6 class="fw-semibold mt-1 mb-1">
+
+                            {{ notification.message }}
+
+                        </h6>
+
+
+
+                        <!-- Student Details -->
+                        {% if notification.student %}
+
+                        <div class="small text-muted">
+
+                            <span>
+
+                                <strong>
+                                    Student:
+                                </strong>
+
+                                {{ notification.student.name }}
+
+                            </span>
+
+
+                            <span class="mx-2">
+                                |
+                            </span>
+
+
+                            <span>
+
+                                <strong>
+                                    Course:
+                                </strong>
+
+                                {{ notification.student.college_course.course_name.course_name }}
+
+                            </span>
+
+
+                            <span class="mx-2">
+                                |
+                            </span>
+
+
+                            <span>
+
+                                <strong>
+                                    Semester:
+                                </strong>
+
+                                {{ notification.student.semester }}
+
+                            </span>
+
+                        </div>
+
+                        {% endif %}
+
+
+
+                        <!-- Teacher Details -->
+                        {% if notification.teacher %}
+
+                        <div class="small text-muted">
+
+                            <strong>
+                                Teacher:
+                            </strong>
+
+                            {{ notification.teacher.teacher_name }}
+
+
+                            <span class="mx-2">
+                                |
+                            </span>
+
+
+                            <strong>
+                                Designation:
+                            </strong>
+
+                            {{ notification.teacher.designation }}
+
+                        </div>
+
+                        {% endif %}
+
+
+
+                        <!-- Created Time -->
+                        <small class="text-muted">
+
+                            {{ notification.created_at|timesince }} ago
+
+                        </small>
+
+                    </div>
+
+
+
+                    <!-- Action Buttons -->
+                    <div class="col-auto">
+
+                        <div class="d-flex align-items-center gap-2">
+
+
+                            <!-- Mark as Read -->
+                            {% if not notification.is_read %}
+
+                            <form method="POST" action="{% url 'mark_as_read' id=notification.id %}">
+
+                                {% csrf_token %}
+
+                                <button type="submit" class="btn btn-sm btn-outline-success">
+
+                                    <i class="bi bi-check2"></i>
+
+                                    Mark as Read
+
+                                </button>
+
+                            </form>
+
+
+                            {% else %}
+
+                            <span class="badge bg-success-subtle text-success">
+
+                                <i class="bi bi-check2"></i>
+
+                                Read
+
+                            </span>
+
+                            {% endif %}
+
+
+
+                            <!-- Delete Notification -->
+                            <form method="POST" action="{% url 'delete_perticular_notification' id=notification.id %}">
+
+                                {% csrf_token %}
+
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Notification"
+                                    onclick="return confirm('Are you sure you want to delete this notification?')">
+
+                                    <i class="bi bi-trash"></i>
+                                    Delete
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+
+
+    {% else %}
+
+    <!-- Empty State -->
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body text-center py-5">
+
+            <i class="bi bi-bell-slash display-4 text-muted"></i>
+
+            <h5 class="mt-3">
+                No Notifications
+            </h5>
+
+            <p class="text-muted mb-0">
+                You don't have any notifications yet.
+            </p>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,175 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/notice.css' %}">
+<div class="container-fluid py-5" style="margin-top: 100px;">
+
+    <div class="container">
+
+        <!-- ==============================
+             PAGE HEADER
+        =============================== -->
+
+        <div class="text-center mb-5">
+
+            <h2 class="fw-bold">
+
+                <i class="bi bi-megaphone-fill text-primary me-2"></i>
+
+                University Notice
+
+            </h2>
+
+            <p class="text-muted">
+
+                Notice details and important announcement
+
+            </p>
+
+        </div>
+
+
+        <!-- ==============================
+             NOTICE CARD
+        =============================== -->
+
+        <div class="row justify-content-center">
+
+            <div class="col-lg-9 col-md-10 col-12">
+
+                <div class="notice-card">
+
+
+                    <!-- Notice Header -->
+
+                    <div class="notice-header">
+
+                        <div class="notice-icon">
+
+                            <i class="bi bi-megaphone-fill"></i>
+
+                        </div>
+
+
+                        <div class="flex-grow-1">
+
+                            <h3 class="fw-bold mb-2">
+
+                                {{ notice.title }}
+
+                            </h3>
+
+                            <div class="text-muted">
+
+                                <i class="bi bi-calendar3 me-1"></i>
+
+                                {{ notice.notice_date|date:"d M Y" }}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Notice Body -->
+
+                    <div class="notice-body">
+
+
+                        <!-- Notice Date -->
+
+                        <div class="date-box mb-4">
+
+                            <div class="date-icon">
+
+                                <i class="bi bi-calendar-event"></i>
+
+                            </div>
+
+                            <div>
+
+                                <small class="text-muted">
+
+                                    Notice Date
+
+                                </small>
+
+                                <div class="fw-semibold">
+
+                                    {{ notice.notice_date|date:"d M Y" }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- Description -->
+
+                        <h5 class="fw-bold mb-3">
+
+                            <i class="bi bi-file-text-fill text-primary me-2"></i>
+
+                            Notice Details
+
+                        </h5>
+
+
+                        <div class="description-box">
+
+                            {{ notice.description }}
+
+                        </div>
+
+
+
+                        <!-- Created Date -->
+
+                        <div class="published-date mt-4">
+
+                            <i class="bi bi-clock me-2"></i>
+
+                            Published on:
+
+                            {{ notice.created_at|date:"d M Y, h:i A" }}
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Footer -->
+
+                    <div class="notice-footer">
+
+                        <a href="{% url 'home' %}"
+                           class="btn btn-secondary">
+
+                            <i class="bi bi-arrow-left me-1"></i>
+
+                            Back to Home
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{% endblock %}
+
