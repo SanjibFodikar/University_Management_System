@@ -1,0 +1,130 @@
+{% extends 'college_nav.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow-sm border-0">
+
+        <!-- Header -->
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Add Examination Marks</h4>
+        </div>
+
+        <div class="card-body">
+
+
+            {% if messages %}
+            {% for message in messages %}
+
+            {% if message.tags == 'success' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+
+                <button type="button" class="btn-close" data-bs-dismiss="alert">
+                </button>
+            </div>
+
+            {% elif message.tags == 'error' %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ message }}
+
+                <button type="button" class="btn-close" data-bs-dismiss="alert">
+                </button>
+            </div>
+            {% endif %}
+
+            {% endfor %}
+            {% endif %}
+
+
+            <!-- ========================================= -->
+            <!-- COURSE / SEMESTER SELECTION FORM -->
+            <!-- ========================================= -->
+
+            <form method="POST" id="selectionForm">
+
+                {% csrf_token %}
+
+                <div class="row">
+
+                    <!-- Course -->
+                    <div class="col-md-4 mb-3">
+
+                        <label for="course" class="form-label fw-bold">
+                            Course
+                        </label>
+
+                        <select name="course" id="course" class="form-select" required>
+
+                            <option value="">
+                                Choose Course
+                            </option>
+
+                            {% for course in course_semester %}
+
+                            <option value="{{ course.college_course.course_name.id }}">
+                                {{ course.college_course.course_name.course_name }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Year Semester -->
+                    <div class="col-md-4 mb-3">
+
+                        <label for="year_semester" class="form-label fw-bold">
+
+                            Year Semester
+
+                        </label>
+
+                        <select name="year_semester" id="year_semester" class="form-select" required>
+
+                            <option value="">
+                                Choose Year Semester
+                            </option>
+
+                            {% for semester in course_semester %}
+
+                            <option value="{{ semester.semester.id }}">
+                                {{ semester.semester.year }} - {{ semester.semester.semester }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Fetch Button -->
+                <button type="submit" name="fetchDetails" value="1" id="fetchBtn" class="btn btn-primary">
+
+                    Start Entering Examination Marks
+
+                </button>
+
+            </form>
+
+
+            <!-- AJAX DATA WILL COME HERE -->
+           <div id="examMarksContainer"></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="{% static 'college_js/add_examination_marks.js' %}"></script>
+
+{% endblock %}

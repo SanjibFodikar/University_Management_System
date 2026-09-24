@@ -111,3 +111,11 @@ class PCA_Marks(models.Model):
     def __str__(self):
         return f"{self.course} - {self.semester}"
     
+
+class UniversityExamMarks(models.Model):
+    student=models.ForeignKey(AddStudent,on_delete=models.CASCADE)
+    subjects_marks=models.JSONField()
+
+    def __str__(self):
+        return f"{self.student.name} - {self.student.roll_number}"
+    

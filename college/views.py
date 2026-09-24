@@ -1075,3 +1075,94 @@ def edit_pca_marks(request):
     return JsonResponse({
         "status": "success"
     })
+
+def add_examination_marks(request):
+    college_id = request.session.get('college_id')
+    # i am getting course and semester from here of a college
+    course_semester=AddStudent.objects.select_related('college_course','semester').filter(college_course__college_id=college_id)
+    return render(request,"add_examination_marks.html",{
+        'course_semester':course_semester
+    })
+
+def fetch_details_for_exam_marks(request,course_id,semester_id):
+    college_id = request.session.get('college_id')
+    print(course_id,semester_id)
+    try:
+        marks_provided_student=UniversityExamMarks.objects.select_related('student','subjects_marks').filter(
+            student__college_course__college_id=college_id,
+            student__college_course__course_name_id=course_id,
+            student__semester_id=semester_id,
+            student__is_active=True
+        )
+        students=AddStudent.objects.select_related('college_course','semester').filter(
+            college_course__college_id=college_id,
+            college_course__course_name_id=course_id,
+            semester_id=semester_id,
+            is_active=True
+        ).exclude(
+            id__in=marks_provided_student.values_list('student_id', flat=True)
+        ).values(
+            'id','name','college_course_id','college_course__course_name__course_name',
+            'semester__year','semester__semester','roll_number','registration_number'
+        )
+        subjects=addSubject.objects.select_related('course','year_semester').filter(course_id=course_id,year_semester_id=semester_id)
+        print(subjects)
+        return JsonResponse({
+            'students':list(students),
+            'subjects':list(subjects.values())
+        })
+    except Exception as e:
+        print(e)
+
+import json
+def save_university_exam_marks(request):
+    if request.method=="POST":
+        try:
+          data=json.loads(request.body)
+          student_id=data.get('student_id')
+          subject_marks=data.get('subjects')
+          UniversityExamMarks.objects.create(
+              student_id=student_id,
+              subjects_marks=subject_marks
+          )
+          return JsonResponse({
+              'message':'Marks enter successfully'
+          },status=201)
+        except Exception as e:
+            return JsonResponse({
+                'message':'Problem occurse , try again'
+            },status=401)
+
+
+from django.views.decorators.csrf import csrf_exempt
+@csrf_exempt
+def manage_examination_marks(request):
+    college_id = request.session.get('college_id')
+    # i am getting course and semester from here of a college
+    course_semester=AddStudent.objects.select_related('college_course','semester').filter(college_course__college_id=college_id)
+    if request.method=="POST":
+        data=json.loads(request.body)
+        print(data,"yes")
+        course_id=data.get('course')
+        semester_id=data.get('semester')
+        students = UniversityExamMarks.objects.select_related(
+            'student'
+        ).filter(
+            student__college_course__college_id=college_id,
+            student__college_course__course_name_id=course_id,
+            student__semester_id=semester_id,
+            student__is_active=True
+        ).values(
+            'student__name',
+            'student__college_course__course_name__course_name',
+            'student__semester__year',
+            'student__semester__semester',
+            'student__roll_number',
+            'student__registration_number',
+            'subjects_marks'
+        )
+        return JsonResponse(list(students),safe=False)
+        
+    return render(request,"manage_examination_marks.html",{
+        'course_semester':course_semester
+    })
