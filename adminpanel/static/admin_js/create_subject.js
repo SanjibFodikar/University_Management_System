@@ -1,29 +1,29 @@
 
 const addSubjectBtn =
-        document.getElementById("addSubjectBtn");
+    document.getElementById("addSubjectBtn");
 const subjectContainer =
-        document.getElementById("subjectContainer");
+    document.getElementById("subjectContainer");
 
 /* ADD NEW SUBJECT */
 
 addSubjectBtn.addEventListener("click", function () {
 
-        const subjectRows =
-            document.querySelectorAll(".subject-row");
+    const subjectRows =
+        document.querySelectorAll(".subject-row");
 
-        const newNumber =
-            subjectRows.length + 1;
-
-
-        const newRow =
-            document.createElement("div");
+    const newNumber =
+        subjectRows.length + 1;
 
 
-        newRow.className =
-            "subject-row border rounded-3 p-3 mb-3 bg-light";
+    const newRow =
+        document.createElement("div");
 
 
-        newRow.innerHTML = `
+    newRow.className =
+        "subject-row border rounded-3 p-3 mb-3 bg-light";
+
+
+    newRow.innerHTML = `
 
             <div class="row g-3 align-items-end">
 
@@ -169,119 +169,119 @@ addSubjectBtn.addEventListener("click", function () {
         `;
 
 
-        subjectContainer.appendChild(newRow);
+    subjectContainer.appendChild(newRow);
 
 
-        updateSubjectNumbers();
+    updateSubjectNumbers();
+
+});
+
+
+/* =====================================================
+   REMOVE SUBJECT
+====================================================== */
+
+subjectContainer.addEventListener("click", function (event) {
+
+    const removeButton =
+        event.target.closest(".remove-subject");
+
+
+    if (!removeButton) {
+        return;
+    }
+
+
+    const row =
+        removeButton.closest(".subject-row");
+
+
+    row.remove();
+
+
+    updateSubjectNumbers();
+
+}
+);
+
+
+/* =====================================================
+   UPDATE SERIAL NUMBERS
+====================================================== */
+
+function updateSubjectNumbers() {
+
+    const rows =
+        document.querySelectorAll(".subject-row");
+
+
+    rows.forEach(function (row, index) {
+
+        const number =
+            row.querySelector(".subject-number");
+
+
+        number.textContent =
+            index + 1;
 
     });
 
 
-    /* =====================================================
-       REMOVE SUBJECT
-    ====================================================== */
+    /*
+    If only one row exists,
+    disable remove button.
+    */
 
-    subjectContainer.addEventListener("click",function (event) {
-
-            const removeButton =
-                event.target.closest(".remove-subject");
-
-
-            if (!removeButton) {
-                return;
-            }
+    const removeButtons =
+        document.querySelectorAll(".remove-subject");
 
 
-            const row =
-                removeButton.closest(".subject-row");
+    if (removeButtons.length === 1) {
+
+        removeButtons[0].disabled = true;
+
+    } else {
+
+        removeButtons.forEach(function (button) {
+
+            button.disabled = false;
+
+        });
+
+    }
+
+}
 
 
-            row.remove();
+/* RESET FORM */
+
+document.querySelector("form").addEventListener(
+    "reset",
+    function () {
+
+        setTimeout(function () {
+
+            const rows =
+                document.querySelectorAll(".subject-row");
+
+
+            /*
+            Keep only first row
+            */
+
+            rows.forEach(function (row, index) {
+
+                if (index > 0) {
+                    row.remove();
+                }
+
+            });
 
 
             updateSubjectNumbers();
 
-        }
-    );
-
-
-    /* =====================================================
-       UPDATE SERIAL NUMBERS
-    ====================================================== */
-
-    function updateSubjectNumbers() {
-
-        const rows =
-            document.querySelectorAll(".subject-row");
-
-
-        rows.forEach(function (row, index) {
-
-            const number =
-                row.querySelector(".subject-number");
-
-
-            number.textContent =
-                index + 1;
-
-        });
-
-
-        /*
-        If only one row exists,
-        disable remove button.
-        */
-
-        const removeButtons =
-            document.querySelectorAll(".remove-subject");
-
-
-        if (removeButtons.length === 1) {
-
-            removeButtons[0].disabled = true;
-
-        } else {
-
-            removeButtons.forEach(function (button) {
-
-                button.disabled = false;
-
-            });
-
-        }
+        }, 0);
 
     }
-
-
-    /* RESET FORM */
-
-    document.querySelector("form").addEventListener(
-        "reset",
-        function () {
-
-            setTimeout(function () {
-
-                const rows =
-                    document.querySelectorAll(".subject-row");
-
-
-                /*
-                Keep only first row
-                */
-
-                rows.forEach(function (row, index) {
-
-                    if (index > 0) {
-                        row.remove();
-                    }
-
-                });
-
-
-                updateSubjectNumbers();
-
-            }, 0);
-
-        }
-    );
+);
 

@@ -52,5 +52,7 @@ urlpatterns = [
     path('put_data_admit_card/',views.put_data_admit_card,name="put_data_admit_card"),
     path('update_admit_card/',views.update_admit_card,name="update_admit_card"),
     path('admin_visit_teacher/',views.admin_visit_teacher,name="admin_visit_teacher"),
-    path('getTeacher/<int:college_id>/',views.getTeacher,name="getTeacher")
+    path('getTeacher/<int:college_id>/',views.getTeacher,name="getTeacher"),
+    path('admin_visit_writing_exam_result/',views.admin_visit_writing_exam_result,name="admin_visit_writing_exam_result"),
+    path('get_course_semester/<int:id>/',views.get_course_semester)
 ]

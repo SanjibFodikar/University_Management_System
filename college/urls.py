@@ -39,5 +39,6 @@ urlpatterns = [
     path('add_examination_marks/',views.add_examination_marks,name="add_examination_marks"),
     path('fetch_details_for_exam_marks/<int:course_id>/<int:semester_id>/',views.fetch_details_for_exam_marks,name="fetch_details_for_exam_marks"),
     path('save_university_exam_marks/',views.save_university_exam_marks,name="save_university_exam_marks"),
-    path('manage_examination_marks/',views.manage_examination_marks,name="manage_examination_marks")
+    path('manage_examination_marks/',views.manage_examination_marks,name="manage_examination_marks"),
+    path('edit_examination_marks/',views.edit_examination_marks,name="edit_examination_marks")
 ]

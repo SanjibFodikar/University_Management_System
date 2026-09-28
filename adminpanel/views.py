@@ -844,3 +844,45 @@ def getTeacher(request,college_id):
     )
     print(teachers)
     return JsonResponse(list(teachers),safe=False)
+
+from django.views.decorators.csrf import csrf_exempt
+@csrf_exempt
+def admin_visit_writing_exam_result(request):
+    colleges=admin_add_college.objects.all()
+    if request.method == 'POST':
+        try:
+            data=json.loads(request.body)
+            college_id=data.get('college')
+            course_id=data.get('course')
+            semester_id=data.get('semester')
+            student_marks=UniversityExamMarks.objects.select_related('student','student__college_course','student__semester').filter(
+                student__college_course__college_id=college_id,
+                student__college_course__course_name_id=course_id,
+                student__semester_id=semester_id
+            ).values(
+                'student__name',
+                'student__roll_number',
+                'student__registration_number',
+                'student__college_course__course_name_id',
+                'student__college_course__course_name__course_name',
+                'student__semester_id',
+                'student__semester__semester',
+                'student__semester__year',
+                'subjects_marks'
+            )
+            return JsonResponse(list(student_marks),safe=False)
+        except Exception as e:
+            print(e)
+    return render(request,"admin_writing_exam_result.html",{
+        'colleges':colleges
+    })
+
+def get_course_semester(request,id):
+    course_semester=AddStudent.objects.select_related('college_course','semester').filter(college_course__college_id=id).values(
+        'college_course__course_name_id',
+        'college_course__course_name__course_name',
+        'semester_id',
+        'semester__semester',
+        'semester__year'
+    ).distinct()
+    return JsonResponse(list(course_semester),safe=False)

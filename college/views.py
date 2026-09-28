@@ -1105,12 +1105,18 @@ def fetch_details_for_exam_marks(request,course_id,semester_id):
             'id','name','college_course_id','college_course__course_name__course_name',
             'semester__year','semester__semester','roll_number','registration_number'
         )
-        subjects=addSubject.objects.select_related('course','year_semester').filter(course_id=course_id,year_semester_id=semester_id)
-        print(subjects)
-        return JsonResponse({
+        if students:
+           subjects=addSubject.objects.select_related('course','year_semester').filter(course_id=course_id,year_semester_id=semester_id)
+           print(subjects)
+           return JsonResponse({
             'students':list(students),
-            'subjects':list(subjects.values())
-        })
+            'subjects':list(subjects.values()),
+           },status=200)
+
+        return JsonResponse({
+            'message':'no students are available to enter marks'
+        },status=400)
+        
     except Exception as e:
         print(e)
 
@@ -1153,6 +1159,8 @@ def manage_examination_marks(request):
             student__semester_id=semester_id,
             student__is_active=True
         ).values(
+            'id',
+            'student_id',
             'student__name',
             'student__college_course__course_name__course_name',
             'student__semester__year',
@@ -1166,3 +1174,38 @@ def manage_examination_marks(request):
     return render(request,"manage_examination_marks.html",{
         'course_semester':course_semester
     })
+
+@csrf_exempt
+def edit_examination_marks(request):
+
+    if request.method == "POST":
+
+        data = json.loads(request.body)
+        student_id = data.get('student_id')
+        subjects_marks = data.get('subjects_marks')
+        student_exam_data = UniversityExamMarks.objects.filter(student_id=student_id).first()
+
+        if not student_exam_data:
+            return JsonResponse({
+                "success": False,
+                "message": "Examination marks not found"
+            }, status=404)
+
+        existing_subjects = student_exam_data.subjects_marks
+        for subject in existing_subjects:
+            subject_id = str(subject['subject_id'])
+            for updated_subject in subjects_marks:
+                updated_subject_id = str(updated_subject['id'])
+                if subject_id == updated_subject_id:
+                    subject['marks'] = updated_subject['marks']
+        student_exam_data.subjects_marks = existing_subjects
+        student_exam_data.save()
+        return JsonResponse({
+            "success": True,
+            "message": "Marks updated successfully"
+        })
+
+    return JsonResponse({
+        "success": False,
+        "message": "Invalid request"
+    }, status=405)

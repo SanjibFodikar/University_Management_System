@@ -1,0 +1,142 @@
+{% extends 'admin_nav.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow-sm border-0">
+
+        <!-- Header -->
+        <div class="card-header bg-primary text-white">
+
+            <h4 class="mb-0">
+                <i class="bi bi-clipboard-check me-2"></i>
+                Writing Examination Results
+            </h4>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <!-- ========================================= -->
+            <!-- COLLEGE / COURSE / SEMESTER SELECTION -->
+            <!-- ========================================= -->
+
+            <div class="row">
+
+                <!-- College -->
+                <div class="col-md-4 mb-3">
+
+                    <label for="college" class="form-label fw-bold">
+
+                        College
+
+                    </label>
+
+                    <select id="college" class="form-select" required>
+
+                        <option value="">
+                            Choose College
+                        </option>
+
+                        {% for college in colleges %}
+
+                        <option value="{{ college.id }}">
+
+                            {{ college.college_name }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- Course -->
+                <div class="col-md-4 mb-3">
+
+                    <label for="course" class="form-label fw-bold">
+
+                        Course
+
+                    </label>
+
+                    <select id="course" class="form-select" required>
+
+                        <option value="">Choose Course</option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Semester -->
+                <div class="col-md-4 mb-3">
+
+                    <label for="semester" class="form-label fw-bold">
+
+                        Semester
+
+                    </label>
+
+                    <select id="semester" class="form-select" required>
+
+                        <option value="">
+                            Choose Semester
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- Search Button -->
+            <div class="row mb-4">
+
+                <div class="col-md-4 ms-auto">
+
+                    <button type="button" id="fetchResultBtn" class="btn btn-primary w-100">
+
+                        <i class="bi bi-search me-1"></i>
+
+                        View Writing Results
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ========================================= -->
+            <!-- STUDENT RESULT -->
+            <!-- ========================================= -->
+
+            <form action="" id="studentForm"></form>
+
+            <div id="resultContainer"></div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script src="{% static 'admin_js/admin_writing_exam.js' %}">
+</script>
+
+{% endblock %}

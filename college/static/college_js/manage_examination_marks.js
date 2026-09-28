@@ -71,11 +71,6 @@ function showInHTml(data) {
         let theoryHTML = "";
         let labHTML = "";
 
-
-        // ==============================
-        // SUBJECTS
-        // ==============================
-
         student.subjects_marks.forEach(subject => {
 
             let row = `
@@ -90,7 +85,7 @@ function showInHTml(data) {
                     </td>
 
                     <td class="text-center">
-                        ${subject.marks}
+                       <input type="text" class="marksinput subject_marks_${subject.subject_id}" data-subject-id="${subject.subject_id}" name="subject_marks_${subject.subject_id}" value="${subject.marks}" style="border: none;" readonly>
                     </td>
 
                 </tr>
@@ -116,7 +111,7 @@ function showInHTml(data) {
 
         let html = `
 
-            <div class="card allStudent shadow-sm border-0 mt-4" style="display: none;">
+            <div class="card allStudent shadow-sm border-0 mt-4" data-student-id="${student.student_id}" style="display: none;">
 
                 <!-- Student Header -->
 
@@ -284,11 +279,8 @@ function showInHTml(data) {
                                         Subject Name
                                     </th>
 
-                                    <th width="15%"
-                                        class="text-center">
-
+                                    <th width="15%" class="text-center">
                                         Marks
-
                                     </th>
 
                                 </tr>
@@ -322,7 +314,7 @@ function showInHTml(data) {
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-3">
 
                 <!-- Left Side -->
-                <div>
+                <div class="d-flex gap-2">
 
                     <button type="button"
                         class="btn btn-warning btn-sm"
@@ -333,6 +325,27 @@ function showInHTml(data) {
                         Edit Marks
 
                     </button>
+
+                    <button type="button"
+                        class="btn btn-danger btn-sm cancel"
+                        onclick="cancelMarks(${index})" style="display:none">
+
+                        <i class="bi bi-x-lg me-1"></i>
+
+                        Cancel
+
+                    </button>
+
+                    <button type="button"
+                        class="btn btn-primary btn-sm submit"
+                        onclick="submitMarks(${index})" style="display:none">
+
+                        <i class="bi bi-check-lg me-1"></i>
+
+                        Submit
+
+                    </button>
+
 
                 </div>
 
@@ -373,34 +386,122 @@ function showInHTml(data) {
 
         container.innerHTML += html;
     });
-   
-   showStudent()
+
+    showStudent()
 }
 
-let index=0
-let allStudent=[]
+let index = 0
+let allStudent = []
 function showStudent() {
-   allStudent = document.querySelectorAll('.allStudent')
-   allStudent[index].style.display="block";
+    allStudent = document.querySelectorAll('.allStudent')
+    allStudent[index].style.display = "block";
 }
 
 function nextStudent() {
     index++
-    if (allStudent.length-1<index) {
+    if (allStudent.length - 1 < index) {
         alert("No Students Are Left")
         index--
         return
     }
-    allStudent[index-1].style.display="none";
-    allStudent[index].style.display="block";
+    allStudent[index - 1].style.display = "none";
+    allStudent[index].style.display = "block";
 }
 
 function previousStudent() {
-    allStudent[index].style.display="none";
+    allStudent[index].style.display = "none";
     index--
-    if (index<0) {
+    if (index < 0) {
         alert("No Students Are Left")
-        index=0
+        index = 0
     }
-    allStudent[index].style.display="block";
+    allStudent[index].style.display = "block";
 }
+
+const editMarks = (studentIndex) => {
+    let studentCard = allStudent[studentIndex];
+    studentCard.querySelector('.cancel').style.display = "block";
+    studentCard.querySelector('.submit').style.display = "block";
+    let marks = studentCard.querySelectorAll('.marksinput');
+
+    marks.forEach(input => {
+        input.removeAttribute("readonly");
+        input.style.border = "1px solid #ccc";
+    });
+}
+
+
+const cancelMarks = (studentIndex) => {
+    let studentCard = allStudent[studentIndex];
+    studentCard.querySelector('.cancel').style.display = "none";
+    studentCard.querySelector('.submit').style.display = "none";
+    let marks = studentCard.querySelectorAll('.marksinput');
+
+    marks.forEach(input => {
+        input.setAttribute("readonly", true);
+        input.style.border = "none";
+    });
+}
+
+
+const submitMarks = async (studentIndex) => {
+    let studentCard = allStudent[studentIndex];
+    let student_id = studentCard.dataset.studentId;
+    let marksInputs = studentCard.querySelectorAll('.marksinput');
+
+    let subjects_marks = [];
+    marksInputs.forEach(input => {
+
+        let subjectClass = [...input.classList].find(
+            cls => cls.startsWith("subject_marks_")
+        );
+
+        // subject_marks_5 -> 5
+        let subjectId = subjectClass.replace("subject_marks_", "");
+        console.log(subjectId)
+        subjects_marks.push({
+            'id': subjectId,
+            'marks': input.value
+        })
+
+    });
+
+    console.log("Student ID:", student_id);
+    console.log("Subjects Marks:", subjects_marks);
+
+    let response = await fetch('/college/edit_examination_marks/', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            student_id: student_id,
+            subjects_marks: subjects_marks
+        })
+    });
+    let data = await response.json();
+    if (data.success == true) {
+        Toastify({
+            text: data.message,
+            duration: 2000,
+            gravity: "top",
+            position: "right",
+            style: {
+                background: "green",
+                color: "white"
+            }
+        }).showToast();
+    }else{
+        Toastify({
+            text: data.message,
+            duration: 2000,
+            gravity: "top",
+            position: "right",
+            style: {
+                background: "red",
+                color: "white"
+            }
+        }).showToast();
+    }
+
+};

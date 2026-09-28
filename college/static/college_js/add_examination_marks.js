@@ -38,7 +38,7 @@ document.getElementById('fetchBtn').addEventListener('click', async (e) => {
     try {
         let response = await fetch(`/college/fetch_details_for_exam_marks/${course}/${semester}/`)
         let data = await response.json()
-        visitSubjectStudent(data)
+        visitSubjectStudent(data, response)
     } catch (error) {
         console.log(error)
     }
@@ -60,10 +60,32 @@ function getCSRFToken() {
 }
 
 let examData = null;
-function visitSubjectStudent(data) {
-    examData = data;
+function visitSubjectStudent(data, response) {
 
+    examData = data;
+    console.log(examData)
     let container = document.getElementById("examMarksContainer");
+
+    if (response.status == 400) {
+        container.innerHTML = `
+    <div style="
+        background: black;
+        border: 1px solid #dee2e6;
+        border-radius: 12px;
+        padding: 30px;
+        text-align: center;
+        color:white;
+        font-size: 18px;
+        font-weight: 500;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    ">
+        📋 No Students Are Available To Enter Marks
+    </div>
+`;
+
+        container.style.marginTop = '10px';
+        return
+    }
 
     if (!container) {
         console.error("examMarksContainer not found");
@@ -471,7 +493,7 @@ const save_next = async (e) => {
 
     let valid = true;
 
-    let allMarksInputs =document.querySelectorAll(".marksinput");
+    let allMarksInputs = document.querySelectorAll(".marksinput");
 
     allMarksInputs.forEach((input) => {
         let errorBox = document.getElementById(input.id + "_error_box");
@@ -479,7 +501,7 @@ const save_next = async (e) => {
         errorBox.innerHTML = "";
 
         if (input.value.trim() === "") {
-            errorBox.innerHTML ="Please enter examination marks.";
+            errorBox.innerHTML = "Please enter examination marks.";
             valid = false;
             return;
         }
@@ -487,14 +509,14 @@ const save_next = async (e) => {
         // Number
         let marks = parseFloat(input.value);
         if (isNaN(marks)) {
-            errorBox.innerHTML ="Please enter a valid number.";
+            errorBox.innerHTML = "Please enter a valid number.";
             valid = false;
             return;
         }
 
         // Range
         if (marks < 0 || marks > 70) {
-            errorBox.innerHTML ="Marks must be between 0 and 70.";
+            errorBox.innerHTML = "Marks must be between 0 and 70.";
             valid = false;
             return;
         }
@@ -539,10 +561,10 @@ const save_next = async (e) => {
 
         subjects.push({
             subject_id: subject.id,
-            subject_name:subject.subject_name,
-            subject_code:subject.paper_code,
-            subject_type:subject.subject_type,
-            marks:marksInput.value
+            subject_name: subject.subject_name,
+            subject_code: subject.paper_code,
+            subject_type: subject.subject_type,
+            marks: marksInput.value
 
         });
 
@@ -561,15 +583,15 @@ const save_next = async (e) => {
     console.log(sendData);
     try {
 
-        let response = await fetch("/college/save_university_exam_marks/",{
-                method: "POST",
-                headers: {
-                    "Content-Type":"application/json",
-                    "X-CSRFToken":getCSRFToken()
-                },
+        let response = await fetch("/college/save_university_exam_marks/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCSRFToken()
+            },
 
-                body:JSON.stringify(sendData)
-            }
+            body: JSON.stringify(sendData)
+        }
         );
 
 
@@ -616,7 +638,7 @@ const save_next = async (e) => {
                 // Clear all marks
                 allMarksInputs.forEach((input) => {
                     input.value = "";
-                    let errorBox = document.getElementById(input.id +"_error_box");
+                    let errorBox = document.getElementById(input.id + "_error_box");
                     if (errorBox) {
                         errorBox.innerHTML = "";
                     }
@@ -629,7 +651,7 @@ const save_next = async (e) => {
             else {
 
                 Toastify({
-                    text:"All students' marks have been saved.",
+                    text: "All students' marks have been saved.",
                     duration: 3000,
                     gravity: "top",
                     position: "right",
@@ -643,7 +665,7 @@ const save_next = async (e) => {
 
         else {
             Toastify({
-                text:result.message ||"Failed to save marks.",
+                text: result.message || "Failed to save marks.",
                 duration: 2000,
                 gravity: "top",
                 position: "right",
