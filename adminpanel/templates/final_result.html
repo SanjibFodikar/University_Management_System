@@ -1,0 +1,687 @@
+{% extends 'admin_nav.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+
+    <!-- ================= FILTER CARD ================= -->
+    <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-header bg-white">
+            <h5 class="mb-0">Final Result</h5>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <!-- College -->
+                <div class="mb-3 col-lg-4">
+                    <label for="college" class="form-label">
+                        Select College
+                    </label>
+
+                    <select name="college" id="college" class="form-select">
+
+                        <option value="">
+                            -- Select College --
+                        </option>
+
+                        {% for college in colleges %}
+                        <option value="{{ college.id }}">
+                            {{ college.college_name }}
+                        </option>
+                        {% endfor %}
+
+                    </select>
+                </div>
+
+
+                <!-- Course -->
+                <div class="mb-3 col-lg-4">
+                    <label for="course" class="form-label">
+                        Select Course
+                    </label>
+
+                    <select name="course" id="course" class="form-select">
+
+                        <option value="">
+                            -- Select Course --
+                        </option>
+
+                    </select>
+                </div>
+
+
+                <!-- Semester -->
+                <div class="mb-3 col-lg-4">
+                    <label for="semester" class="form-label">
+                        Select Semester
+                    </label>
+
+                    <select name="semester" id="semester" class="form-select">
+
+                        <option value="">
+                            -- Select Semester --
+                        </option>
+
+                    </select>
+                </div>
+
+            </div>
+
+
+            <!-- Load Result Button -->
+            <div class="text-end">
+
+                <button type="button" id="load_result" class="btn btn-primary px-4">
+
+                    <i class="bi bi-search me-1"></i>
+                    Load Result
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= HIDDEN FORM ================= -->
+
+    <form action="" id="formContainer"></form>
+
+    <div class="search-button mb-2" style="max-width: 600px;">
+        <input type="search" id="search" placeholder="Search student" class="form-control">
+    </div>
+
+    <!-- ================= RESULT CONTAINER ================= -->
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-white">
+
+            <h5 class="mb-0">
+                Student Final Result
+            </h5>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <!--
+                Student card + marks table
+                will be inserted here using JavaScript
+            -->
+
+            <div id="student_result_container">
+
+                <div class="text-muted text-center py-5">
+
+                    <i class="bi bi-file-earmark-text fs-1 d-block mb-2"></i>
+
+                    Please select College, Course and Semester
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= CUSTOM CSS ================= -->
+
+<style>
+    /* ==============================
+       RESULT CONTAINER
+    ============================== */
+
+    #student_result_container {
+        width: 100%;
+    }
+
+
+    /* ==============================
+       STUDENT CARD
+    ============================== */
+
+    .student-result-card {
+        background: #ffffff;
+
+        border: none;
+
+        border-radius: 20px;
+
+        margin-bottom: 30px;
+
+        overflow: hidden;
+
+        box-shadow:
+            0 10px 30px rgba(60, 72, 88, 0.10);
+
+        transition: 0.3s ease;
+    }
+
+    .student-result-card:hover {
+        transform: translateY(-3px);
+
+        box-shadow:
+            0 15px 35px rgba(60, 72, 88, 0.15);
+    }
+
+
+    /* ==============================
+       STUDENT INFORMATION
+    ============================== */
+
+    .student-info {
+        padding: 25px;
+
+        background: linear-gradient(135deg,
+                #eef4ff 0%,
+                #f7f0ff 100%);
+
+        border-bottom: 1px solid #e7e9f5;
+    }
+
+
+    /* ==============================
+       STUDENT TITLE
+    ============================== */
+
+    .student-title {
+        display: flex;
+
+        align-items: center;
+
+        gap: 15px;
+
+        margin-bottom: 24px;
+    }
+
+
+    /* Student Avatar */
+
+    .student-avatar {
+        width: 56px;
+
+        height: 56px;
+
+        min-width: 56px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        border-radius: 16px;
+
+        background: linear-gradient(135deg,
+                #4f46e5,
+                #7c3aed);
+
+        color: #ffffff;
+
+        font-size: 21px;
+
+        font-weight: 800;
+
+        box-shadow:
+            0 8px 18px rgba(79, 70, 229, 0.25);
+    }
+
+
+    /* Student Name */
+
+    .student-title h5 {
+        margin: 0;
+
+        color: #252b42;
+
+        font-size: 20px;
+
+        font-weight: 800;
+
+        letter-spacing: 0.2px;
+    }
+
+
+    /* Subtitle */
+
+    .student-title small {
+        display: block;
+
+        margin-top: 4px;
+
+        color: #737b91;
+
+        font-size: 13px;
+
+        font-weight: 600;
+    }
+
+
+    /* ==============================
+       STUDENT DETAIL BOX
+    ============================== */
+
+    .student-detail {
+        height: 100%;
+
+        padding: 14px 16px;
+
+        background: rgba(255, 255, 255, 0.85);
+
+        border: 1px solid #e3e6f2;
+
+        border-radius: 12px;
+
+        transition: 0.25s ease;
+    }
+
+
+    .student-detail:hover {
+        background: #ffffff;
+
+        border-color: #b9b5ff;
+
+        transform: translateY(-2px);
+
+        box-shadow:
+            0 5px 15px rgba(79, 70, 229, 0.08);
+    }
+
+
+    /* Detail Label */
+
+    .student-detail label {
+        display: block;
+
+        margin-bottom: 5px;
+
+        color: #697386;
+
+        font-size: 11px;
+
+        font-weight: 700;
+
+        text-transform: uppercase;
+
+        letter-spacing: 0.5px;
+    }
+
+
+    /* Detail Value */
+
+    .student-detail strong {
+        display: block;
+
+        color: #252b42;
+
+        font-size: 14px;
+
+        font-weight: 700;
+
+        word-break: break-word;
+    }
+
+
+    /* ==============================
+       MARKS SECTION
+    ============================== */
+
+    .marks-section {
+        padding: 22px;
+
+        background: #ffffff;
+    }
+
+
+    /* ==============================
+       TABLE CONTAINER
+    ============================== */
+
+    .marks-section .table-responsive {
+        overflow-x: auto;
+
+        border-radius: 14px;
+
+        border: 1px solid #e8eaf2;
+    }
+
+
+    /* ==============================
+       MARKS TABLE
+    ============================== */
+
+    .marks-table {
+        min-width: 700px;
+
+        margin-bottom: 0 !important;
+
+        font-size: 14px;
+    }
+
+
+    /* ==============================
+       TABLE HEADER
+    ============================== */
+
+    .marks-table thead th {
+        padding: 14px 12px;
+
+        background: linear-gradient(135deg,
+                #4f46e5,
+                #6366f1) !important;
+
+        color: #ffffff;
+
+        border: none !important;
+
+        font-size: 13px;
+
+        font-weight: 700;
+
+        white-space: nowrap;
+
+        vertical-align: middle;
+    }
+
+
+    /* First Header */
+
+    .marks-table thead th:first-child {
+        border-radius: 10px 0 0 0;
+    }
+
+
+    /* Last Header */
+
+    .marks-table thead th:last-child {
+        border-radius: 0 10px 0 0;
+    }
+
+
+    /* ==============================
+       TABLE BODY
+    ============================== */
+
+    .marks-table tbody td {
+        padding: 14px 12px;
+
+        color: #3d4558;
+
+        border-color: #eef0f5;
+
+        vertical-align: middle;
+
+        font-weight: 600;
+    }
+
+
+    /* Alternate Rows */
+
+    .marks-table tbody tr:nth-child(even) {
+        background: #fafbff;
+    }
+
+
+    /* Hover Row */
+
+    .marks-table tbody tr:hover {
+        background: #f0f3ff;
+    }
+
+
+    /* ==============================
+       SL COLUMN
+    ============================== */
+
+    .marks-table tbody td:first-child {
+        color: #6366f1;
+
+        font-weight: 700;
+    }
+
+
+    /* ==============================
+       SUBJECT
+    ============================== */
+
+    .marks-table tbody td:nth-child(2) {
+        text-align: left;
+
+        color: #252b42;
+
+        font-weight: 700;
+    }
+
+
+    /* ==============================
+       SUBJECT TYPE
+    ============================== */
+
+    .marks-table tbody td:nth-child(3) {
+        text-transform: capitalize;
+
+        color: #555e73;
+
+        font-weight: 600;
+    }
+
+
+    /* ==============================
+       CA / PCA / WRITTEN
+    ============================== */
+
+    .marks-table tbody td:nth-child(4),
+    .marks-table tbody td:nth-child(5),
+    .marks-table tbody td:nth-child(6) {
+        color: #3d4558;
+
+        font-weight: 600;
+    }
+
+
+    /* ==============================
+       FINAL MARK
+    ============================== */
+
+    .final-mark {
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        min-width: 72px;
+
+        padding: 7px 13px;
+
+        border-radius: 20px;
+
+        background: linear-gradient(135deg,
+                #dcfce7,
+                #d1fae5);
+
+        color: #15803d;
+
+        border: 1px solid #bbf7d0;
+
+        font-size: 14px;
+
+        font-weight: 800;
+    }
+
+
+    /* ==============================
+       NO RESULT
+    ============================== */
+
+    .no-result {
+        padding: 65px 20px;
+
+        text-align: center;
+
+        background: linear-gradient(135deg,
+                #f7f8ff,
+                #faf7ff);
+
+        border-radius: 15px;
+
+        color: #7b8194;
+    }
+
+
+    .no-result i {
+        display: block;
+
+        margin-bottom: 12px;
+
+        color: #7c3aed;
+
+        font-size: 50px;
+    }
+
+
+    .no-result div {
+        font-size: 15px;
+
+        font-weight: 600;
+    }
+
+
+    /* ==============================
+       MOBILE
+    ============================== */
+
+    @media (max-width: 768px) {
+
+        .student-info {
+            padding: 20px;
+        }
+
+
+        .student-avatar {
+            width: 50px;
+
+            height: 50px;
+
+            min-width: 50px;
+
+            border-radius: 14px;
+
+            font-size: 19px;
+        }
+
+
+        .student-title h5 {
+            font-size: 18px;
+        }
+
+
+        .student-title small {
+            font-size: 12px;
+        }
+
+
+        .student-detail {
+            padding: 12px 14px;
+        }
+
+
+        .marks-section {
+            padding: 15px;
+        }
+
+
+        .marks-table {
+            font-size: 13px;
+        }
+
+
+        .marks-table thead th {
+            padding: 12px 10px;
+
+            font-size: 12px;
+        }
+
+
+        .marks-table tbody td {
+            padding: 12px 10px;
+        }
+
+    }
+
+
+    /* ==============================
+       SMALL MOBILE
+    ============================== */
+
+    @media (max-width: 576px) {
+
+        .student-result-card {
+            border-radius: 15px;
+        }
+
+
+        .student-info {
+            padding: 16px;
+        }
+
+
+        .student-title {
+            gap: 12px;
+
+            margin-bottom: 18px;
+        }
+
+
+        .student-avatar {
+            width: 46px;
+
+            height: 46px;
+
+            min-width: 46px;
+
+            border-radius: 13px;
+
+            font-size: 17px;
+        }
+
+
+        .student-title h5 {
+            font-size: 17px;
+        }
+
+
+        .marks-section {
+            padding: 12px;
+        }
+
+
+        .final-mark {
+            min-width: 65px;
+
+            padding: 6px 10px;
+
+            font-size: 13px;
+        }
+
+    }
+</style>
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script src="{% static 'admin_js/get_final_result.js' %}"></script>
+
+{% endblock %}

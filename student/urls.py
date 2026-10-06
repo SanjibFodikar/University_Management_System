@@ -12,5 +12,7 @@ urlpatterns = [
     path('visit_ca3_marks/',views.visit_ca3_marks,name="visit_ca3_marks"),
     path('student_visit_pca_marks/',views.student_visit_pca_marks,name="student_visit_pca_marks"),
     path('upload_photo_signature/',views.upload_photo_signature,name="upload_photo_signature"),
-    path('download_admit/',views.download_admit,name="download_admit")
+    path('download_admit/',views.download_admit,name="download_admit"),
+    path('semester_result/',views.semester_result,name="semester_result"),
+    path('student_profile/',views.student_profile,name="student_profile")
 ]

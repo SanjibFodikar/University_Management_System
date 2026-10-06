@@ -29,11 +29,41 @@ def admin_login(request):
     return render(request,"admin_login.html")
 
 # admin dashboard
+from django.utils import timezone
 
 @login_required
 def admin_dashboard(request):
-
-    return render(request,"admin_dashboard.html")
+    try:
+        colleges=admin_add_college.objects.all()
+        courses=AdminCourses.objects.all()
+        subjects=addSubject.objects.all()
+        students=AddStudent.objects.all()
+        teachers=AddTeacher.objects.all()
+        notices=AdminNotice.objects.all()
+        notifications=UniversityNotification.objects.all()
+        approved_students=AddStudent.objects.filter(is_active=True,college_verify=True,university_verify=True)
+        rejected_students=AddStudent.objects.filter(college_verify=False,university_verify=False)
+        pending_students=AddStudent.objects.filter(college_verify=True,university_verify=False)
+        today = timezone.localdate()
+        recent_students=AddStudent.objects.select_related('college_course','semester').filter(
+            admission_date=today
+        ).order_by('college_course__college_id')
+        context={}
+        context['colleges']=colleges
+        context['courses']=courses
+        context['subjects']=subjects
+        context['students']=students
+        context['teachers']=teachers
+        context['notices']=notices
+        context['notifications']=notifications
+        context['approved_students']=approved_students
+        context['rejected_students']=rejected_students
+        context['pending_students']=pending_students
+        context['recent_students']=recent_students
+        return render(request,"admin_dashboard.html",context)
+    except Exception as e:
+        print(e)
+    
 
 # admin add college
 # it is changeale fixed it currently
@@ -886,3 +916,103 @@ def get_course_semester(request,id):
         'semester__year'
     ).distinct()
     return JsonResponse(list(course_semester),safe=False)
+
+@csrf_exempt
+def final_result(request):
+
+    colleges = admin_add_college.objects.all()
+
+    if request.method == 'POST':
+        try:
+
+            data = json.loads(request.body)
+
+            college_id = data.get('college_id')
+            course_id = data.get('course_id')
+            semester_id = data.get('semester_id')
+
+            ca_marks = CAMarks.objects.select_related(
+                'subject_teacher',
+                'college_data',
+                'subject_teacher__subject'
+            ).filter(
+                college_data__college_course__college_id=college_id,
+                college_data__college_course__course_name_id=course_id,
+                college_data__semester_id=semester_id
+            )
+
+            pca_marks = PCA_Marks.objects.select_related(
+                'student',
+                'course',
+                'semester'
+            ).filter(
+                course__college_id=college_id,
+                course__course_name_id=course_id,
+                semester_id=semester_id
+            )
+
+            theory_marks = UniversityExamMarks.objects.select_related(
+                'student'
+            ).filter(
+                student__college_course__college_id=college_id,
+                student__college_course__course_name_id=course_id,
+                student__semester_id=semester_id
+            )
+
+            # CA data
+            ca_data = []
+
+            for ca in ca_marks:
+                ca_data.append({
+                    'student_id': ca.college_data.id,
+                    'student_name': ca.college_data.name,
+                    'roll_number': ca.college_data.roll_number,
+                    'registration_number': ca.college_data.registration_number,
+                    'year': ca.college_data.semester.year if ca.college_data.semester else '-',
+                    'semester': ca.college_data.semester.semester if ca.college_data.semester else '-',
+                    'subject_id': ca.subject_teacher.subject.id,
+                    'subject_name': ca.subject_teacher.subject.subject_name,
+                    'subject_type': ca.subject_teacher.subject.subject_type,
+                    'ca_type': ca.ca_type,
+                    'marks': float(ca.marks),
+                })
+
+            # PCA data
+            pca_data = []
+
+            for pca in pca_marks:
+                pca_data.append({
+                    'student_id': pca.student.id,
+                    'student_name': pca.student.name,
+                    'subject_marks': pca.subject_marks,
+                })
+
+            # Written data
+            written_data = []
+
+            for written in theory_marks:
+                written_data.append({
+                    'student_id': written.student.id,
+                    'student_name': written.student.name,
+                    'subjects_marks': written.subjects_marks,
+                })
+
+            return JsonResponse({
+                'status': 200,
+                'ca_marks': ca_data,
+                'pca_marks': pca_data,
+                'theory_marks': written_data
+            })
+
+        except Exception as e:
+
+            print(e)
+
+            return JsonResponse({
+                'status': 400,
+                'message': str(e)
+            }, status=400)
+
+    return render(request, "final_result.html", {
+        'colleges': colleges,
+    })

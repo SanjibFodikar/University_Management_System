@@ -8,6 +8,8 @@ from datetime import timedelta,datetime
 from django.utils import timezone
 import os
 from .models import *
+from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 
 def student_dashboard(request):
@@ -244,4 +246,443 @@ def download_admit(request):
         'student':student,
         'admit_card':admit_card,
         'photo_signature':photo_signature
+    })
+
+
+
+@login_required
+def semester_result(request):
+
+    # ==========================================
+    # 1. LOGGED-IN STUDENT
+    # ==========================================
+
+    user = request.user
+
+    student = AddStudent.objects.select_related(
+        'college_course',
+        'semester'
+    ).get(user=user)
+
+
+    # ==========================================
+    # 2. UNIVERSITY WRITTEN MARKS
+    # ==========================================
+
+    university_result = UniversityExamMarks.objects.filter(
+        student=student
+    ).first()
+
+
+    # ==========================================
+    # 3. CA MARKS
+    # ==========================================
+
+    ca_marks = CAMarks.objects.filter(
+        college_data=student
+    ).select_related(
+        'subject_teacher__subject'
+    )
+
+
+    # ==========================================
+    # 4. PCA MARKS
+    # ==========================================
+
+    pca_marks = PCA_Marks.objects.filter(
+        student=student,
+        course=student.college_course,
+        semester=student.semester
+    ).first()
+
+
+    # ==========================================
+    # 5. CREATE CA DICTIONARY
+    # ==========================================
+
+    ca_data = {}
+
+    for ca in ca_marks:
+
+        subject_id = str(
+            ca.subject_teacher.subject.id
+        )
+
+        if subject_id not in ca_data:
+            ca_data[subject_id] = {}
+
+        ca_data[subject_id][ca.ca_type] = float(
+            ca.marks
+        )
+
+
+    # ==========================================
+    # 6. CREATE PCA DICTIONARY
+    # ==========================================
+
+    pca_data = {}
+
+    if pca_marks:
+
+        subject_marks = pca_marks.subject_marks
+
+        # JSON is DICTIONARY
+        if isinstance(subject_marks, dict):
+
+            for subject_id, marks in subject_marks.items():
+
+                try:
+                    pca_data[str(subject_id)] = float(marks)
+
+                except (TypeError, ValueError):
+                    pca_data[str(subject_id)] = 0
+
+
+        # JSON is LIST
+        elif isinstance(subject_marks, list):
+
+            for item in subject_marks:
+
+                if not isinstance(item, dict):
+                    continue
+
+                subject_id = item.get(
+                    "subject_id",
+                    item.get("id")
+                )
+
+                marks = item.get(
+                    "marks",
+                    0
+                )
+
+                if subject_id is not None:
+
+                    try:
+                        pca_data[str(subject_id)] = float(
+                            marks
+                        )
+
+                    except (TypeError, ValueError):
+                        pca_data[str(subject_id)] = 0
+
+
+    # ==========================================
+    # 7. FINAL RESULT LIST
+    # ==========================================
+
+    final_results = []
+
+
+    # ==========================================
+    # 8. PROCESS UNIVERSITY SUBJECTS
+    # ==========================================
+
+    if university_result:
+
+        for subject in university_result.subjects_marks:
+
+            # ----------------------------------
+            # SUBJECT ID
+            # ----------------------------------
+
+            subject_id = str(
+                subject.get(
+                    "subject_id",
+                    subject.get("id")
+                )
+            )
+
+
+            # ----------------------------------
+            # SUBJECT INFORMATION
+            # ----------------------------------
+
+            subject_name = subject.get(
+                "subject_name",
+                "Unknown Subject"
+            )
+
+            subject_code = subject.get(
+                "subject_code",
+                ""
+            )
+
+            subject_type = subject.get(
+                "subject_type",
+                "Theory"
+            )
+
+
+            # ----------------------------------
+            # WRITTEN MARKS
+            # ----------------------------------
+
+            try:
+
+                written = float(
+                    subject.get("marks", 0)
+                )
+
+            except (TypeError, ValueError):
+
+                written = 0
+
+
+            # ==================================
+            # THEORY SUBJECT
+            # ==================================
+
+            if subject_type.lower() == "theory":
+
+                student_ca = ca_data.get(
+                    subject_id,
+                    {}
+                )
+
+                ca1 = student_ca.get("CA1", 0)
+                ca2 = student_ca.get("CA2", 0)
+                ca3 = student_ca.get("CA3", 0)
+
+
+                # CA Average
+                ca_average = (
+                    ca1 +
+                    ca2 +
+                    ca3
+                ) / 3
+
+
+                # Final Marks
+                final_marks = (
+                    5 +
+                    written +
+                    ca_average
+                )
+
+
+            # ==================================
+            # LAB SUBJECT
+            # ==================================
+
+            else:
+
+                pca = pca_data.get(
+                    subject_id,
+                    0
+                )
+
+
+                # Final Marks
+                final_marks = (
+                    5 +
+                    written +
+                    pca
+                )
+
+
+            # ==================================
+            # MAXIMUM 100
+            # ==================================
+
+            final_marks = min(
+                round(final_marks, 2),
+                100
+            )
+
+
+            # ==================================
+            # GRADE
+            # ==================================
+
+            if final_marks >= 90:
+
+                grade = "A+"
+
+            elif final_marks >= 80:
+
+                grade = "A"
+
+            elif final_marks >= 70:
+
+                grade = "B+"
+
+            elif final_marks >= 60:
+
+                grade = "B"
+
+            elif final_marks >= 50:
+
+                grade = "C"
+
+            elif final_marks >= 40:
+
+                grade = "D"
+
+            else:
+
+                grade = "F"
+
+
+            # ==================================
+            # ADD RESULT
+            # ==================================
+
+            final_results.append({
+
+                "subject_id": subject_id,
+
+                "subject_code": subject_code,
+
+                "subject_name": subject_name,
+
+                "subject_type": subject_type,
+
+                "final_marks": final_marks,
+
+                "grade": grade,
+
+            })
+
+
+    # ==========================================
+    # 9. OVERALL CALCULATION
+    # ==========================================
+
+    total_subjects = len(final_results)
+
+    total_marks = sum(
+        subject["final_marks"]
+        for subject in final_results
+    )
+
+
+    # ==========================================
+    # 10. OVERALL PERCENTAGE
+    # ==========================================
+
+    if total_subjects > 0:
+
+        percentage = (
+            total_marks /
+            (total_subjects * 100)
+        ) * 100
+
+        percentage = round(
+            percentage,
+            2
+        )
+
+    else:
+
+        percentage = 0
+
+
+    # ==========================================
+    # 11. CHECK ANY SUBJECT FAILED
+    # ==========================================
+
+    failed_subjects = [
+        subject
+        for subject in final_results
+        if subject["grade"] == "F"
+    ]
+
+
+    # ==========================================
+    # 12. OVERALL RESULT
+    # ==========================================
+
+    if failed_subjects:
+
+        overall_result = "FAIL"
+
+    else:
+
+        overall_result = "PASS"
+
+
+    # ==========================================
+    # 13. OVERALL GRADE
+    # ==========================================
+
+    if percentage >= 90:
+
+        overall_grade = "A+"
+
+    elif percentage >= 80:
+
+        overall_grade = "A"
+
+    elif percentage >= 70:
+
+        overall_grade = "B+"
+
+    elif percentage >= 60:
+
+        overall_grade = "B"
+
+    elif percentage >= 50:
+
+        overall_grade = "C"
+
+    elif percentage >= 40:
+
+        overall_grade = "D"
+
+    else:
+
+        overall_grade = "F"
+
+    photo_signature=Photo_Signature.objects.filter(
+            student__user=user
+        ).first()
+    
+   
+    # ==========================================
+    # 14. CONTEXT
+    # ==========================================
+
+    context = {
+
+        "student": student,
+
+        "final_results": final_results,
+
+        "total_subjects": total_subjects,
+
+        "total_marks": round(total_marks, 2),
+
+        "percentage": percentage,
+
+        "overall_grade": overall_grade,
+
+        "overall_result": overall_result,
+
+        "failed_subjects": failed_subjects,
+
+        "photo_signature": photo_signature
+
+    }
+
+
+    # ==========================================
+    # 15. RENDER
+    # ==========================================
+
+    
+    return render(
+        request,
+        "semester_result.html",
+        context
+    )
+
+
+def student_profile(request):
+    user=request.user
+    student=Photo_Signature.objects.select_related('college','student').filter(
+        student__user=user
+    ).first()
+    return render(request,"student_profile.html",{
+        'student':student
     })

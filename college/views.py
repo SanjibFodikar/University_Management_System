@@ -7,8 +7,7 @@ from datetime import date,datetime
 from django.http import JsonResponse
 from datetime import datetime
 # Create your views here.
-def college_nav(request):
-    return render(request,"college_nav.html")
+
 
 def college_login(request):
     # admin add college model comes from adminpanel model
@@ -33,9 +32,38 @@ def college_logout(request):
     messages.error(request,'you successfully logged out')
     return redirect('college_login')
 
+from django.db.models import Count
 # college dashboard
 def college_dashboard(request):
-    return render(request,"college_dashboard.html")
+    college_id=request.session.get('college_id')
+    students=AddStudent.objects.filter(college_course__college_id=college_id)
+    teachers=AddTeacher.objects.filter(department__college_id=college_id)
+    courses = CollegeCourses.objects.filter(
+        college_id=college_id
+    ).annotate(
+        student_count=Count('course_details')
+    )
+
+    max_student_count = max(
+        [course.student_count for course in courses],
+        default=0
+    )
+
+    for course in courses:
+        if max_student_count > 0:
+            course.student_percentage = round(
+                (course.student_count / max_student_count) * 100
+            )
+        else:
+            course.student_percentage = 0
+
+    subjects = addSubject.objects.filter(course__collegecourses__college_id=college_id)
+    return render(request,"college_dashboard.html",{
+        'students':students,
+        'teachers':teachers,
+        'courses':courses,
+        'subjects':subjects
+    })
 
 # college profile
 def college_profile(request):
@@ -1139,7 +1167,6 @@ def save_university_exam_marks(request):
                 'message':'Problem occurse , try again'
             },status=401)
 
-
 from django.views.decorators.csrf import csrf_exempt
 @csrf_exempt
 def manage_examination_marks(request):
@@ -1209,3 +1236,659 @@ def edit_examination_marks(request):
         "success": False,
         "message": "Invalid request"
     }, status=405)
+
+def get_grade(mark):
+
+    if mark is None:
+        return '-'
+
+    if mark > 90:
+        return 'O'
+
+    elif mark > 80:
+        return 'A+'
+
+    elif mark > 70:
+        return 'A'
+
+    elif mark > 60:
+        return 'B'
+
+    elif mark > 50:
+        return 'C'
+
+    elif mark > 40:
+        return 'D'
+
+    else:
+        return 'Fail'
+
+
+def college_final_result(request):
+
+    college_id = request.session.get('college_id')
+
+    # ==================================================
+    # COURSE + SEMESTER
+    # ==================================================
+
+    course_semester = (
+        AddStudent.objects
+        .select_related(
+            'college_course',
+            'semester'
+        )
+        .filter(
+            college_course__college_id=college_id
+        )
+        .distinct()
+    )
+
+    result_data = []
+
+    # ==================================================
+    # POST
+    # ==================================================
+
+    if request.method == 'POST':
+
+        course_id = request.POST.get('course')
+        semester_id = request.POST.get('semester')
+
+        # ==================================================
+        # CA MARKS
+        # ==================================================
+
+        ca_marks = CAMarks.objects.select_related(
+            'subject_teacher',
+            'college_data',
+            'subject_teacher__subject'
+        ).filter(
+            college_data__college_course__college_id=college_id,
+            college_data__college_course__course_name_id=course_id,
+            college_data__semester_id=semester_id
+        )
+
+        # ==================================================
+        # PCA MARKS
+        # ==================================================
+
+        pca_marks = PCA_Marks.objects.select_related(
+            'student',
+            'course',
+            'semester'
+        ).filter(
+            course__college_id=college_id,
+            course__course_name_id=course_id,
+            semester_id=semester_id
+        )
+
+        # ==================================================
+        # WRITTEN MARKS
+        # ==================================================
+
+        theory_marks = UniversityExamMarks.objects.select_related(
+            'student'
+        ).filter(
+            student__college_course__college_id=college_id,
+            student__college_course__course_name_id=course_id,
+            student__semester_id=semester_id
+        )
+
+        # ==================================================
+        # STUDENTS DICTIONARY
+        # ==================================================
+
+        students = {}
+
+        # ==================================================
+        # CA DATA
+        # ==================================================
+
+        for ca in ca_marks:
+
+            student = ca.college_data
+            subject = ca.subject_teacher.subject
+
+            student_id = student.id
+            subject_id = subject.id
+
+            # ----------------------------------------------
+            # CREATE STUDENT
+            # ----------------------------------------------
+
+            if student_id not in students:
+
+                students[student_id] = {
+
+                    'student_id': student_id,
+
+                    'student_name': student.name,
+
+                    'roll_number': student.roll_number,
+
+                    'registration_number':
+                        student.registration_number,
+
+                    'year':
+                        student.semester.year
+                        if student.semester
+                        else '-',
+
+                    'semester':
+                        student.semester.semester
+                        if student.semester
+                        else '-',
+
+                    'subjects': {}
+
+                }
+
+            # ----------------------------------------------
+            # CREATE SUBJECT
+            # ----------------------------------------------
+
+            if subject_id not in students[
+                student_id
+            ]['subjects']:
+
+                students[student_id]['subjects'][subject_id] = {
+
+                    'subject_name':
+                        subject.subject_name,
+
+                    'subject_type':
+                        subject.subject_type,
+
+                    'ca1': None,
+                    'ca2': None,
+                    'ca3': None,
+
+                    'pca': None,
+
+                    'written': None,
+
+                    'final': None,
+
+                    'ca1_grade': '-',
+                    'ca2_grade': '-',
+                    'ca3_grade': '-',
+
+                    'pca_grade': '-',
+
+                    'written_grade': '-',
+
+                    'final_grade': '-',
+
+                }
+
+            # ----------------------------------------------
+            # CA TYPE
+            # ----------------------------------------------
+
+            ca_type = str(
+                ca.ca_type
+            ).upper().strip()
+
+            marks = float(ca.marks)
+
+            if ca_type == 'CA1':
+
+                students[
+                    student_id
+                ]['subjects'][
+                    subject_id
+                ]['ca1'] = marks
+
+                students[
+                    student_id
+                ]['subjects'][
+                    subject_id
+                ]['ca1_grade'] = get_grade(marks)
+
+            elif ca_type == 'CA2':
+
+                students[
+                    student_id
+                ]['subjects'][
+                    subject_id
+                ]['ca2'] = marks
+
+                students[
+                    student_id
+                ]['subjects'][
+                    subject_id
+                ]['ca2_grade'] = get_grade(marks)
+
+            elif ca_type == 'CA3':
+
+                students[
+                    student_id
+                ]['subjects'][
+                    subject_id
+                ]['ca3'] = marks
+
+                students[
+                    student_id
+                ]['subjects'][
+                    subject_id
+                ]['ca3_grade'] = get_grade(marks)
+
+        # ==================================================
+        # PCA DATA
+        # ==================================================
+
+        for pca in pca_marks:
+
+            student = pca.student
+
+            student_id = student.id
+
+            # ----------------------------------------------
+            # CREATE STUDENT
+            # ----------------------------------------------
+
+            if student_id not in students:
+
+                students[student_id] = {
+
+                    'student_id': student_id,
+
+                    'student_name': student.name,
+
+                    'roll_number':
+                        student.roll_number,
+
+                    'registration_number':
+                        student.registration_number,
+
+                    'year':
+                        student.semester.year
+                        if student.semester
+                        else '-',
+
+                    'semester':
+                        student.semester.semester
+                        if student.semester
+                        else '-',
+
+                    'subjects': {}
+
+                }
+
+            # ----------------------------------------------
+            # PCA JSON
+            # ----------------------------------------------
+
+            for subject_id, marks in pca.subject_marks.items():
+
+                subject_id = int(subject_id)
+
+                marks = float(marks)
+
+                # ------------------------------------------
+                # SUBJECT EXISTS
+                # ------------------------------------------
+
+                if subject_id in students[
+                    student_id
+                ]['subjects']:
+
+                    subject = students[
+                        student_id
+                    ]['subjects'][subject_id]
+
+                    subject['pca'] = marks
+
+                    subject['pca_grade'] = get_grade(
+                        marks
+                    )
+
+                # ------------------------------------------
+                # SUBJECT DOES NOT EXIST
+                # ------------------------------------------
+
+                else:
+
+                    students[
+                        student_id
+                    ]['subjects'][subject_id] = {
+
+                        'subject_name': '-',
+
+                        'subject_type': 'lab',
+
+                        'ca1': None,
+                        'ca2': None,
+                        'ca3': None,
+
+                        'pca': marks,
+
+                        'written': None,
+
+                        'final': None,
+
+                        'ca1_grade': '-',
+                        'ca2_grade': '-',
+                        'ca3_grade': '-',
+
+                        'pca_grade':
+                            get_grade(marks),
+
+                        'written_grade': '-',
+
+                        'final_grade': '-',
+
+                    }
+
+        # ==================================================
+        # WRITTEN DATA
+        # ==================================================
+
+        for written in theory_marks:
+
+            student = written.student
+
+            student_id = student.id
+
+            # ----------------------------------------------
+            # CREATE STUDENT
+            # ----------------------------------------------
+
+            if student_id not in students:
+
+                students[student_id] = {
+
+                    'student_id': student_id,
+
+                    'student_name': student.name,
+
+                    'roll_number':
+                        student.roll_number,
+
+                    'registration_number':
+                        student.registration_number,
+
+                    'year':
+                        student.semester.year
+                        if student.semester
+                        else '-',
+
+                    'semester':
+                        student.semester.semester
+                        if student.semester
+                        else '-',
+
+                    'subjects': {}
+
+                }
+
+            # ----------------------------------------------
+            # SUBJECT MARKS JSON
+            # ----------------------------------------------
+
+            for subject_data in written.subjects_marks:
+
+                subject_id = int(
+                    subject_data['subject_id']
+                )
+
+                marks = float(
+                    subject_data['marks']
+                )
+
+                # ------------------------------------------
+                # CREATE SUBJECT
+                # ------------------------------------------
+
+                if subject_id not in students[
+                    student_id
+                ]['subjects']:
+
+                    students[
+                        student_id
+                    ]['subjects'][subject_id] = {
+
+                        'subject_name':
+                            subject_data['subject_name'],
+
+                        'subject_type':
+                            subject_data['subject_type'],
+
+                        'ca1': None,
+                        'ca2': None,
+                        'ca3': None,
+
+                        'pca': None,
+
+                        'written': None,
+
+                        'final': None,
+
+                        'ca1_grade': '-',
+                        'ca2_grade': '-',
+                        'ca3_grade': '-',
+
+                        'pca_grade': '-',
+
+                        'written_grade': '-',
+
+                        'final_grade': '-',
+
+                    }
+
+                # ------------------------------------------
+                # UPDATE SUBJECT
+                # ------------------------------------------
+
+                subject = students[
+                    student_id
+                ]['subjects'][subject_id]
+
+                subject['subject_name'] = (
+                    subject_data['subject_name']
+                )
+
+                subject['subject_type'] = (
+                    subject_data['subject_type']
+                )
+
+                subject['written'] = marks
+
+                subject['written_grade'] = get_grade(
+                    marks
+                )
+
+        # ==================================================
+        # CALCULATE FINAL
+        # ==================================================
+
+        for student in students.values():
+
+            total = 0
+
+            for subject in student['subjects'].values():
+
+                subject_type = str(
+                    subject['subject_type']
+                ).lower()
+
+                # ==========================================
+                # THEORY
+                # ==========================================
+
+                if subject_type == 'theory':
+
+                    # --------------------------------------
+                    # Missing CA = 0
+                    # --------------------------------------
+
+                    ca1 = (
+                        subject['ca1']
+                        if subject['ca1'] is not None
+                        else 0
+                    )
+
+                    ca2 = (
+                        subject['ca2']
+                        if subject['ca2'] is not None
+                        else 0
+                    )
+
+                    ca3 = (
+                        subject['ca3']
+                        if subject['ca3'] is not None
+                        else 0
+                    )
+
+                    # --------------------------------------
+                    # CA AVERAGE
+                    # --------------------------------------
+
+                    ca_average = (
+                        ca1 + ca2 + ca3
+                    ) / 3
+
+                    # --------------------------------------
+                    # Missing Written = 0
+                    # --------------------------------------
+
+                    written = (
+                        subject['written']
+                        if subject['written'] is not None
+                        else 0
+                    )
+
+                    # --------------------------------------
+                    # THEORY FINAL
+                    # --------------------------------------
+
+                    subject['final'] = (
+                        5
+                        + written
+                        + ca_average
+                    )
+
+                # ==========================================
+                # LAB
+                # ==========================================
+
+                else:
+
+                    # --------------------------------------
+                    # Missing PCA = 0
+                    # --------------------------------------
+
+                    pca = (
+                        subject['pca']
+                        if subject['pca'] is not None
+                        else 0
+                    )
+
+                    # --------------------------------------
+                    # Missing Written = 0
+                    # --------------------------------------
+
+                    written = (
+                        subject['written']
+                        if subject['written'] is not None
+                        else 0
+                    )
+
+                    # --------------------------------------
+                    # LAB FINAL
+                    # --------------------------------------
+
+                    subject['final'] = (
+                        5
+                        + written
+                        + pca
+                    )
+
+                # ==========================================
+                # FINAL GRADE
+                # ==========================================
+
+                subject['final_grade'] = get_grade(
+                    subject['final']
+                )
+
+                # ==========================================
+                # TOTAL
+                # ==========================================
+
+                total += subject['final']
+
+            # ==================================================
+            # PERCENTAGE
+            # ==================================================
+
+            subject_count = len(
+                student['subjects']
+            )
+
+            if subject_count > 0:
+
+                percentage = (
+                    total / subject_count
+                )
+
+            else:
+
+                percentage = 0
+
+            # ==================================================
+            # OVERALL GRADE
+            # ==================================================
+
+            student_failed = False
+
+            for subject in student['subjects'].values():
+
+              if subject['final'] is not None and subject['final'] < 40:
+
+                student_failed = True
+
+                break
+
+
+            if student_failed:
+
+                grade = 'XP'
+
+            else:
+
+                grade = get_grade(
+                percentage
+            )
+
+            # ==================================================
+            # SAVE RESULT
+            # ==================================================
+
+            student['total'] = round(
+                total,
+                2
+            )
+
+            student['percentage'] = round(
+                percentage,
+                2
+            )
+
+            student['grade'] = grade
+
+            result_data.append(student)
+
+    # ==================================================
+    # RENDER
+    # ==================================================
+
+    return render(
+        request,
+        "final_college_result.html",
+        {
+            'course_semester': course_semester,
+            'result_data': result_data,
+        }
+    )

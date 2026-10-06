@@ -1,0 +1,203 @@
+{% extends 'student_navbar.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <!-- Page Heading -->
+    <div class="mb-4">
+        <h3 class="fw-bold">Student Profile</h3>
+        <p class="text-muted mb-0">View your personal and academic information</p>
+    </div>
+
+    <!-- Profile Card -->
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body p-4">
+
+            <!-- Profile Header -->
+            <div class="row align-items-center mb-4">
+
+                <!-- Student Photo -->
+                <div class="col-md-3 text-center">
+
+                    {% if student.student_photo %}
+                        <img src="{{ student.student_photo.url }}"
+                             alt="Student Photo"
+                             class="rounded-circle border shadow-sm"
+                             style="width: 150px; height: 150px; object-fit: cover;">
+                    {% else %}
+                        <div class="rounded-circle border d-flex align-items-center justify-content-center mx-auto"
+                             style="width: 150px; height: 150px;">
+                            <i class="bi bi-person-fill fs-1 text-muted"></i>
+                        </div>
+                    {% endif %}
+
+                </div>
+
+                <!-- Student Name -->
+                <div class="col-md-6 mt-3 mt-md-0">
+
+                    <h3 class="fw-bold mb-2">
+                        {{ student.student.name }}
+                    </h3>
+
+                    <p class="mb-1">
+                        <strong>Roll Number:</strong>
+                        {{ student.student.roll_number }}
+                    </p>
+
+                    <p class="mb-0">
+                        <strong>Registration Number:</strong>
+                        {{ student.student.registration_number }}
+                    </p>
+
+                </div>
+
+                <!-- Signature -->
+                <div class="col-md-3 text-center mt-3 mt-md-0">
+
+                    <p class="fw-semibold mb-2">Student Signature</p>
+
+                    {% if student.student_signature %}
+                        <img src="{{ student.student_signature.url }}"
+                             alt="Student Signature"
+                             class="img-fluid"
+                             style="max-width: 180px; max-height: 70px;">
+                    {% else %}
+                        <p class="text-muted">No signature</p>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <hr>
+
+            <!-- Personal Information -->
+            <h5 class="fw-bold mb-3">
+                <i class="bi bi-person me-2"></i>
+                Personal Information
+            </h5>
+
+            <div class="row g-3 mb-4">
+
+                <div class="col-md-6">
+                    <div class="border rounded p-3">
+                        <small class="text-muted">Full Name</small>
+                        <div class="fw-semibold">
+                            {{ student.student.name }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="border rounded p-3">
+                        <small class="text-muted">Mobile Number</small>
+                        <div class="fw-semibold">
+                            {{ student.student.mobile }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="border rounded p-3">
+                        <small class="text-muted">Date of Birth</small>
+                        <div class="fw-semibold">
+                            {{ student.student.dob|date:"d M Y" }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="border rounded p-3">
+                        <small class="text-muted">Email </small>
+                        <div class="fw-semibold">
+                            {{ student.student.user.email}}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Academic Information -->
+            <h5 class="fw-bold mb-3">
+                <i class="bi bi-mortarboard me-2"></i>
+                Academic Information
+            </h5>
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <div class="border rounded p-3">
+                        <small class="text-muted">College Name</small>
+                        <div class="fw-semibold">
+                            {{ student.student.college_course.college.college_name }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="border rounded p-3">
+                        <small class="text-muted">Course</small>
+                        <div class="fw-semibold">
+                            {{ student.student.college_course }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="border rounded p-3">
+                        <small class="text-muted">Semester</small>
+                        <div class="fw-semibold">
+                            {{ student.student.semester }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="border rounded p-3">
+                        <small class="text-muted">Roll Number</small>
+                        <div class="fw-semibold">
+                            {{ student.student.roll_number }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="border rounded p-3">
+                        <small class="text-muted">Registration Number</small>
+                        <div class="fw-semibold">
+                            {{ student.student.registration_number }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="border rounded p-3">
+                        <small class="text-muted">Admission Date</small>
+                        <div class="fw-semibold">
+                            {{ student.student.admission_date|date:"d M Y" }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="border rounded p-3">
+                        <small class="text-muted">Course End Date</small>
+                        <div class="fw-semibold">
+                            {{ student.student.course_end_date|date:"d M Y" }}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+

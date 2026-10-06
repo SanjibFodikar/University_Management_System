@@ -54,5 +54,6 @@ urlpatterns = [
     path('admin_visit_teacher/',views.admin_visit_teacher,name="admin_visit_teacher"),
     path('getTeacher/<int:college_id>/',views.getTeacher,name="getTeacher"),
     path('admin_visit_writing_exam_result/',views.admin_visit_writing_exam_result,name="admin_visit_writing_exam_result"),
-    path('get_course_semester/<int:id>/',views.get_course_semester)
+    path('get_course_semester/<int:id>/',views.get_course_semester),
+    path('final_result/',views.final_result,name="final_result")
 ]

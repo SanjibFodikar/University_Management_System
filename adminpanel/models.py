@@ -210,3 +210,11 @@ class AdmitCardGenerate(models.Model):
     def __str__(self):
         return str(self.created_at)
 
+class FinalResult(models.Model):
+    ca_marks=models.ForeignKey('college.CAMarks',on_delete=models.CASCADE)
+    pca_marks=models.ForeignKey('college.PCA_Marks',on_delete=models.CASCADE)
+    written_marks=models.ForeignKey('college.UniversityExamMarks',on_delete=models.CASCADE)
+    create_at=models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.written_marks.student.name
+    

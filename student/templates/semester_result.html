@@ -1,0 +1,1101 @@
+{% extends 'student_navbar.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container py-4">
+
+<!-- =========================
+     RESULT HEADER
+========================== -->
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-body">
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+            <div>
+
+                <h4 class="fw-bold mb-1">
+                    <i class="bi bi-mortarboard-fill me-2"></i>
+                    Semester Result
+                </h4>
+
+                <p class="text-muted mb-0">
+                    Final Marks & Grade
+                </p>
+
+            </div>
+
+            <!-- Download Button -->
+
+            <button onclick="downloadResult()" class="btn btn-dark">
+
+                <i class="bi bi-download me-2"></i>
+                Download Result
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     STUDENT INFORMATION
+========================== -->
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-body">
+
+        <div class="row align-items-center">
+
+            <h2 class="text-center text-dark mb-2">
+                MAULANA ABUL KALAM AZAD UNIVERSITY OF TECHNOLOGY
+            </h2>
+
+            <hr>
+
+
+            <!-- =========================
+                 STUDENT PHOTO
+            ========================== -->
+
+            <div class="col-md-2 text-center mb-4 mb-md-0">
+
+                {% if photo_signature and photo_signature.student_photo %}
+
+                <img
+                    src="{{ photo_signature.student_photo.url }}"
+                    alt="Student Photo"
+                    class="img-fluid rounded border"
+                    style="
+                        width: 120px;
+                        height: 140px;
+                        object-fit: cover;
+                    "
+                >
+
+                {% else %}
+
+                <div
+                    class="border rounded d-flex align-items-center justify-content-center mx-auto"
+                    style="
+                        width: 120px;
+                        height: 140px;
+                    "
+                >
+
+                    <i class="bi bi-person fs-1 text-muted"></i>
+
+                </div>
+
+                {% endif %}
+
+                <small class="text-muted d-block mt-2">
+                    Student Photo
+                </small>
+
+            </div>
+
+
+            <!-- =========================
+                 STUDENT DETAILS
+            ========================== -->
+
+            <div class="col-md-8">
+
+                <div class="row">
+
+                    <!-- Student Name -->
+
+                    <div class="col-md-6 mb-3">
+
+                        <small class="text-muted">
+                            Student Name
+                        </small>
+
+                        <div class="fw-semibold">
+                            {{ student.name }}
+                        </div>
+
+                    </div>
+
+
+                    <!-- Roll Number -->
+
+                    <div class="col-md-6 mb-3">
+
+                        <small class="text-muted">
+                            Roll Number
+                        </small>
+
+                        <div class="fw-semibold">
+                            {{ student.roll_number }}
+                        </div>
+
+                    </div>
+
+
+                    <!-- Registration Number -->
+
+                    <div class="col-md-6 mb-3">
+
+                        <small class="text-muted">
+                            Registration Number
+                        </small>
+
+                        <div class="fw-semibold">
+                            {{ student.registration_number }}
+                        </div>
+
+                    </div>
+
+
+                    <!-- Course -->
+
+                    <div class="col-md-6 mb-3">
+
+                        <small class="text-muted">
+                            Course
+                        </small>
+
+                        <div class="fw-semibold">
+                            {{ student.college_course.course_name }}
+                        </div>
+
+                    </div>
+
+
+                    <!-- Semester -->
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Semester
+                        </small>
+
+                        <div class="fw-semibold">
+                            {{ student.semester }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 STUDENT SIGNATURE
+            ========================== -->
+
+            <div class="col-md-2 text-center">
+
+                {% if photo_signature and photo_signature.student_signature %}
+
+                <img
+                    src="{{ photo_signature.student_signature.url }}"
+                    alt="Student Signature"
+                    class="img-fluid"
+                    style="
+                        width: 150px;
+                        height: 70px;
+                        object-fit: contain;
+                    "
+                >
+
+                {% else %}
+
+                <div
+                    class="border rounded d-flex align-items-center justify-content-center mx-auto"
+                    style="
+                        width: 150px;
+                        height: 70px;
+                    "
+                >
+
+                    <span class="text-muted">
+                        No Signature
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+                <small class="text-muted d-block mt-2">
+                    Student Signature
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     FINAL RESULT TABLE
+========================== -->
+
+<div class="card border-0 shadow-sm" id="resultCard">
+
+    <div class="card-header bg-dark text-white">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-file-earmark-check me-2"></i>
+
+            Final Result
+
+        </h5>
+
+    </div>
+
+
+    <div class="card-body p-0">
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered text-center align-middle mb-0">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th width="8%">
+                            SL
+                        </th>
+
+                        <th class="text-start">
+                            Subject
+                        </th>
+
+                        <th width="18%">
+                            Subject Type
+                        </th>
+
+                        <th width="18%">
+                            Final Marks
+                        </th>
+
+                        <th width="18%">
+                            Grade
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for subject in final_results %}
+
+                    <tr>
+
+                        <!-- SL -->
+
+                        <td>
+                            {{ forloop.counter }}
+                        </td>
+
+
+                        <!-- Subject -->
+
+                        <td class="text-start fw-semibold">
+
+                            {{ subject.subject_name }}
+
+                            {% if subject.subject_code %}
+
+                            <small class="text-muted">
+                                ({{ subject.subject_code }})
+                            </small>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- Subject Type -->
+
+                        <td>
+                            {{ subject.subject_type }}
+                        </td>
+
+
+                        <!-- Final Marks -->
+
+                        <td class="fw-bold">
+
+                            {{ subject.final_marks }}
+
+                        </td>
+
+
+                        <!-- Grade -->
+
+                        <td>
+
+                            {% if subject.grade == "A+" %}
+
+                            <span class="badge bg-success px-3 py-2">
+                                A+
+                            </span>
+
+                            {% elif subject.grade == "A" %}
+
+                            <span class="badge bg-success px-3 py-2">
+                                A
+                            </span>
+
+                            {% elif subject.grade == "B+" %}
+
+                            <span class="badge bg-primary px-3 py-2">
+                                B+
+                            </span>
+
+                            {% elif subject.grade == "B" %}
+
+                            <span class="badge bg-primary px-3 py-2">
+                                B
+                            </span>
+
+                            {% elif subject.grade == "C" %}
+
+                            <span class="badge bg-warning text-dark px-3 py-2">
+                                C
+                            </span>
+
+                            {% elif subject.grade == "D" %}
+
+                            <span class="badge bg-warning text-dark px-3 py-2">
+                                D
+                            </span>
+
+                            {% else %}
+
+                            <span class="badge bg-danger px-3 py-2">
+                                F
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="5" class="py-5 text-muted">
+
+                            <i class="bi bi-info-circle fs-3 d-block mb-2"></i>
+
+                            Result is not available yet.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     OVERALL RESULT
+========================== -->
+
+{% if final_results %}
+
+<div class="card border-0 shadow-sm mt-4" id="overallResultCard">
+
+    <div class="card-header bg-dark text-white">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-bar-chart-fill me-2"></i>
+
+            Overall Result
+
+        </h5>
+
+    </div>
+
+
+    <div class="card-body">
+
+        <!-- =========================
+             RESULT STATISTICS
+        ========================== -->
+
+        <div class="row text-center">
+
+
+
+            <!-- =========================
+                 IF PASS
+            ========================== -->
+
+            {% if overall_result == "PASS" %}
+
+
+            <!-- Total Subjects -->
+
+            <div class="col-6 col-md-3 mb-3">
+
+                <div class="border rounded-3 p-3 h-100">
+
+                    <small class="text-muted d-block">
+                        Total Subjects
+                    </small>
+
+                    <h4 class="fw-bold mb-0 mt-2">
+                        {{ total_subjects }}
+                    </h4>
+
+                </div>
+
+            </div>
+
+
+            <!-- Total Marks -->
+
+            <div class="col-6 col-md-3 mb-3">
+
+                <div class="border rounded-3 p-3 h-100">
+
+                    <small class="text-muted d-block">
+                        Total Marks
+                    </small>
+
+                    <h4 class="fw-bold mb-0 mt-2">
+                        {{ total_marks }}
+                    </h4>
+
+                </div>
+
+            </div>
+
+
+                <!-- Percentage -->
+
+                <div class="col-6 col-md-3 mb-3">
+
+                    <div class="border rounded-3 p-3 h-100">
+
+                        <small class="text-muted d-block">
+                            Percentage
+                        </small>
+
+                        <h4 class="fw-bold mb-0 mt-2">
+                            {{ percentage }}%
+                        </h4>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Overall Grade -->
+
+                <div class="col-6 col-md-3 mb-3">
+
+                    <div class="border rounded-3 p-3 h-100">
+
+                        <small class="text-muted d-block">
+                            Overall Grade
+                        </small>
+
+                        <h4 class="fw-bold text-success mb-0 mt-2">
+                            {{ overall_grade }}
+                        </h4>
+
+                    </div>
+
+                </div>
+
+            {% else %}
+
+                <!-- =========================
+                     IF FAIL
+                ========================== -->
+            {% endif %}
+
+        </div>
+
+
+        <hr>
+
+
+        <!-- =========================
+             PASS / FAIL STATUS
+        ========================== -->
+
+        <div class="text-center">
+
+            {% if overall_result == "PASS" %}
+
+            <div class="alert alert-success mb-0">
+
+                <h5 class="fw-bold mb-1">
+
+                    <i class="bi bi-check-circle-fill me-2"></i>
+
+                    PASS
+
+                </h5>
+
+                <small>
+                    Congratulations! You have passed all subjects.
+                </small>
+
+            </div>
+
+            {% else %}
+
+            <div class="alert alert-danger mb-0">
+
+                <h5 class="fw-bold mb-2">
+
+                    <i class="bi bi-x-circle-fill me-2"></i>
+
+                    FAIL 
+
+                </h5>
+
+
+                <div>
+                    You have failed in the following subject(s):
+                </div>
+
+
+                <!-- Failed Subjects -->
+
+                <div class="mt-2">
+
+                    {% for subject in failed_subjects %}
+
+                    <span class="badge bg-danger me-1 mb-1 px-3 py-2">
+
+                        {{ subject.subject_name }}
+
+                    </span>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+
+<!-- =========================
+     RESULT NOTE
+========================== -->
+
+<div class="text-center mt-3">
+
+    <small class="text-muted">
+
+        <i class="bi bi-info-circle me-1"></i>
+
+        This result contains only final marks and grades.
+
+    </small>
+
+</div>
+
+</div>
+
+<!-- =========================
+     DOWNLOAD / PRINT SCRIPT
+========================== -->
+
+<script>
+
+function downloadResult() {
+
+    const result =
+        document.getElementById("resultCard");
+
+    const overallResult =
+        document.getElementById("overallResultCard");
+
+
+    const photo =
+        "{% if photo_signature and photo_signature.student_photo %}{{ photo_signature.student_photo.url }}{% endif %}";
+
+
+    const signature =
+        "{% if photo_signature and photo_signature.student_signature %}{{ photo_signature.student_signature.url }}{% endif %}";
+
+
+    const printWindow =
+        window.open(
+            '',
+            '',
+            'width=900,height=700'
+        );
+
+
+    printWindow.document.write(`
+
+        <html>
+
+        <head>
+
+            <title>
+                Semester Result - {{ student.name }}
+            </title>
+
+
+            <link
+                href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+                rel="stylesheet"
+            >
+
+
+            <style>
+
+                body {
+
+                    padding: 40px;
+
+                    font-family: Arial, sans-serif;
+
+                }
+
+
+                .result-title {
+
+                    text-align: center;
+
+                    margin-bottom: 25px;
+
+                }
+
+
+                .student-info {
+
+                    border: 1px solid #ddd;
+
+                    padding: 20px;
+
+                    margin-bottom: 25px;
+
+                }
+
+
+                .student-row {
+
+                    display: flex;
+
+                    align-items: center;
+
+                    justify-content: space-between;
+
+                }
+
+
+                .photo-section {
+
+                    width: 18%;
+
+                    text-align: center;
+
+                }
+
+
+                .details-section {
+
+                    width: 60%;
+
+                    padding-left: 20px;
+
+                }
+
+
+                .signature-section {
+
+                    width: 22%;
+
+                    text-align: center;
+
+                }
+
+
+                .student-photo {
+
+                    width: 110px;
+
+                    height: 130px;
+
+                    object-fit: cover;
+
+                    border: 1px solid #333;
+
+                    display: block;
+
+                    margin: auto;
+
+                }
+
+
+                .student-signature {
+
+                    width: 150px;
+
+                    height: 70px;
+
+                    object-fit: contain;
+
+                    display: block;
+
+                    margin: auto;
+
+                }
+
+
+                .label {
+
+                    font-size: 12px;
+
+                    color: #666;
+
+                    margin-top: 8px;
+
+                }
+
+
+                table {
+
+                    width: 100%;
+
+                    border-collapse: collapse;
+
+                }
+
+
+                th,
+                td {
+
+                    border: 1px solid #000 !important;
+
+                    padding: 10px;
+
+                }
+
+
+                th {
+
+                    background: #f2f2f2 !important;
+
+                }
+
+
+                .badge {
+
+                    border: 1px solid #333;
+
+                    padding: 5px 10px;
+
+                }
+
+
+                .alert {
+
+                    border: 1px solid #999;
+
+                    padding: 15px;
+
+                    margin-top: 20px;
+
+                }
+
+
+                @media print {
+
+                    body {
+
+                        padding: 20px;
+
+                    }
+
+                }
+
+            </style>
+
+    </head>
+
+
+    <body>
+
+
+        <!-- PRINT HEADER -->
+
+        <div class="result-title">
+
+            <strong>
+                MAULANA ABUL KALAM AZAD UNIVERSITY OF TECHNOLOGY
+            </strong>
+
+            <h2>
+                Semester Result
+            </h2>
+
+            <h5>
+                {{ student.name }}
+            </h5>
+
+            <p>
+
+                Roll:
+                {{ student.roll_number }}
+
+                &nbsp; | &nbsp;
+
+                Registration:
+                {{ student.registration_number }}
+
+            </p>
+
+            <p>
+
+                {{ student.college_course.course_name }}
+
+                &nbsp; | &nbsp;
+
+                {{ student.semester }}
+
+            </p>
+
+        </div>
+
+
+        <!-- =========================
+             STUDENT INFORMATION
+        ========================== -->
+
+        <div class="student-info">
+
+            <div class="student-row">
+
+
+                <!-- PHOTO -->
+
+                <div class="photo-section">
+
+                    ${
+                        photo
+                        ? `
+                            <img
+                                src="${photo}"
+                                class="student-photo"
+                                alt="Student Photo"
+                            >
+                          `
+                        : `
+                            <div>
+                                No Photo
+                            </div>
+                          `
+                    }
+
+                    <div class="label">
+                        Student Photo
+                    </div>
+
+                </div>
+
+
+                <!-- STUDENT DETAILS -->
+
+                <div class="details-section">
+
+                    <p>
+                        <strong>Name:</strong>
+                        {{ student.name }}
+                    </p>
+
+                    <p>
+                        <strong>Roll:</strong>
+                        {{ student.roll_number }}
+                    </p>
+
+                    <p>
+                        <strong>Registration:</strong>
+                        {{ student.registration_number }}
+                    </p>
+
+                    <p>
+                        <strong>Course:</strong>
+                        {{ student.college_course.course_name }}
+                    </p>
+
+                    <p>
+                        <strong>Semester:</strong>
+                        {{ student.semester }}
+                    </p>
+
+                </div>
+
+
+                <!-- SIGNATURE -->
+
+                <div class="signature-section">
+
+                    ${
+                        signature
+                        ? `
+                            <img
+                                src="${signature}"
+                                class="student-signature"
+                                alt="Student Signature"
+                            >
+                          `
+                        : `
+                            <div>
+                                No Signature
+                            </div>
+                          `
+                    }
+
+                    <div class="label">
+                        Student Signature
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             RESULT TABLE
+        ========================== -->
+
+        ${result.innerHTML}
+
+
+        <!-- =========================
+             OVERALL RESULT
+        ========================== -->
+
+        ${
+            overallResult
+            ? overallResult.innerHTML
+            : ''
+        }
+
+
+    </body>
+
+    </html>
+
+`);
+
+
+printWindow.document.close();
+
+
+/*
+   ==============================
+   WAIT FOR ALL IMAGES TO LOAD
+   ==============================
+*/
+
+const images =
+    printWindow.document.images;
+
+
+if (images.length === 0) {
+
+    printWindow.focus();
+
+    printWindow.print();
+
+    return;
+
+}
+
+
+let loadedImages = 0;
+
+
+function imageLoaded() {
+
+    loadedImages++;
+
+
+    if (loadedImages === images.length) {
+
+        setTimeout(function () {
+
+            printWindow.focus();
+
+            printWindow.print();
+
+        }, 300);
+
+    }
+
+}
+
+
+for (let i = 0; i < images.length; i++) {
+
+    if (images[i].complete) {
+
+        imageLoaded();
+
+    } else {
+
+        images[i].addEventListener(
+            "load",
+            imageLoaded
+        );
+
+        images[i].addEventListener(
+            "error",
+            imageLoaded
+        );
+
+    }
+
+}
+
+}
+
+</script>
+
+{% endblock %}

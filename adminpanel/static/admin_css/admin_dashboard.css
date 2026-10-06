@@ -1,0 +1,91 @@
+
+.card {
+    border: none;
+    border-radius: 18px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    position: relative;
+}
+
+
+
+/* Hover Effect */
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(79, 70, 229, 0.15);
+}
+
+/* Card Body */
+.card-body {
+    padding: 15px 15px !important;
+}
+
+/* Icon */
+.card-icon {
+    width: 65px;
+    height: 65px;
+    margin: 0 auto 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 18px;
+
+    background: linear-gradient(
+        135deg,
+        #eef2ff,
+        #e0e7ff
+    );
+
+    color: #4f46e5;
+
+    font-size: 28px;
+
+    transition: all 0.3s ease;
+}
+
+/* Icon Hover */
+.card:hover .card-icon {
+    background: linear-gradient(
+        135deg,
+        #4f46e5,
+        #6366f1
+    );
+    color: #ffffff;
+}
+
+/* Title */
+.card-title {
+    margin-top: 5px;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    color: #ffffff;
+
+    letter-spacing: 0.3px;
+}
+
+/* Count */
+.card-count {
+    margin-top: 5px;
+
+    font-size: 34px;
+    font-weight: 700;
+
+    color: #ffffff;
+}
+
+/* Number animation feeling */
+.card-count span {
+     color:#ffff;
+    transition: color 0.3s ease;
+}
+
+.card:hover .card-count span {
+    color:#ffff;
+    font-weight: bold;
+}
+

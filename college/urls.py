@@ -3,7 +3,7 @@ from . import views
 urlpatterns = [
     path('college_login/',views.college_login,name="college_login"),
     path('college_dashboard/',views.college_dashboard,name="college_dashboard"),
-    path('college_nav/',views.college_nav,name="college_nav"),
+    # path('college_nav/',views.college_nav,name="college_nav"),
     path('college_logout/',views.college_logout,name="college_logout"),
     path('college_profile/',views.college_profile,name="college_profile"),
     path('college_edit_profile',views.college_edit_profile,name="college_edit_profile"),
@@ -40,5 +40,6 @@ urlpatterns = [
     path('fetch_details_for_exam_marks/<int:course_id>/<int:semester_id>/',views.fetch_details_for_exam_marks,name="fetch_details_for_exam_marks"),
     path('save_university_exam_marks/',views.save_university_exam_marks,name="save_university_exam_marks"),
     path('manage_examination_marks/',views.manage_examination_marks,name="manage_examination_marks"),
-    path('edit_examination_marks/',views.edit_examination_marks,name="edit_examination_marks")
+    path('edit_examination_marks/',views.edit_examination_marks,name="edit_examination_marks"),
+    path('college_final_result/',views.college_final_result,name="college_final_result")
 ]

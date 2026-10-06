@@ -1,5 +1,435 @@
 {% extends 'college_nav.html' %}
 {% load static %}
 {% block content %}
- <h4 class="text-uppercase">welcome , {{ request.session.college_name }}</h4>
+
+<style>
+    .dashboard-card {
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .dashboard-card .card-body {
+        padding: 25px 20px;
+    }
+
+    .card-icon {
+        height: 55px;
+        width: 55px;
+        border-radius: 50%;
+        background-color: #ffffff;
+        color: #198754;
+        margin: 0 auto 15px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        font-size: 22px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+
+        transition: all 0.3s ease;
+    }
+
+    .dashboard-card:hover .card-icon {
+        transform: scale(1.1);
+    }
+
+    .card-title {
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        margin-bottom: 6px;
+    }
+
+    .card-count {
+        font-size: 32px;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+</style>
+
+<h4 class="text-uppercase fw-bold text-success">welcome , {{ request.session.college_name }}</h4>
+<div class="container-fluid mt-3">
+    <div class="row gy-3">
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card text-center text-white bg-success">
+                <div class="card-body">
+                    <div class="card-icon">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <div class="card-title ">
+                        Total Students
+                    </div>
+                    <div class="card-count">
+                        <span>{{students|length}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card text-center text-white bg-success">
+                <div class="card-body">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-user-tie"></i>
+                    </div>
+                    <div class="card-title ">
+                        Total Teachers
+                    </div>
+                    <div class="card-count">
+                        <span>{{teachers|length}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card text-center text-white bg-success">
+                <div class="card-body">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-book"></i>
+                    </div>
+                    <div class="card-title ">
+                        Total Courses
+                    </div>
+                    <div class="card-count">
+                        <span>{{courses|length}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+       {% for course in courses %}
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card text-center text-white bg-success">
+                <div class="card-body">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-book"></i>
+                    </div>
+                    <div class="card-title ">
+                        Student Under {{course.course_name}} Course
+                    </div>
+                    <div class="card-count">
+                        {{ course.student_count }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card text-center text-white bg-success">
+                <div class="card-body">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-book-open"></i>
+                    </div>
+                    <div class="card-title ">
+                        Total Subjects
+                    </div>
+                    <div class="card-count">
+                        <span>{{subjects|length}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- =====================================================
+     DASHBOARD LOWER SECTION
+===================================================== -->
+
+<div class="container-fluid mt-4">
+
+
+    <!-- =====================================================
+         FIRSt ROW
+    ====================================================== -->
+
+    <div class="row g-4 mt-1">
+
+
+        <!-- ================= COURSE OVERVIEW ================= -->
+        <div class="col-12 col-lg-6">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-white border-0">
+
+                    <h5 class="mb-0 fw-bold">
+                        <i class="fa-solid fa-chart-column me-2 text-success"></i>
+                        Course-wise Student Overview
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    {% for course in courses %}
+
+                    <div class="mb-4">
+
+                        <div class="d-flex justify-content-between mb-1">
+
+                            <span class="fw-semibold">
+                                {{ course.course_name }}
+                            </span>
+
+                            <span class="text-muted">
+                                {{ course.student_count }} Students
+                            </span>
+
+                        </div>
+
+                        <div class="progress" style="height: 8px;">
+
+                            <div
+                                class="progress-bar bg-success"
+                                role="progressbar"
+                                style="width: {{ course.student_percentage }}%;"
+                            >
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {% empty %}
+
+                    <p class="text-muted text-center mb-0">
+                        No course data available
+                    </p>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= QUICK ACTIONS ================= -->
+        <div class="col-12 col-lg-6">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-white border-0">
+
+                    <h5 class="mb-0 fw-bold">
+                        <i class="fa-solid fa-bolt me-2 text-success"></i>
+                        Quick Actions
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row g-3">
+
+                        <div class="col-6">
+
+                            <a href="{% url 'college_add_student' %}" class="btn btn-success w-100 py-3">
+
+                                <i class="fa-solid fa-user-plus d-block mb-2 fs-5"></i>
+
+                                Add Student
+
+                            </a>
+
+                        </div>
+
+
+                        <div class="col-6">
+
+                            <a href="{% url 'college_add_teacher' %}" class="btn btn-outline-success w-100 py-3">
+
+                                <i class="fa-solid fa-chalkboard-user d-block mb-2 fs-5"></i>
+
+                                Add Teacher
+
+                            </a>
+
+                        </div>
+
+
+                        <div class="col-6">
+
+                            <a href="{% url 'college_visit_subject' %}" class="btn btn-outline-success w-100 py-3">
+
+                                <i class="fa-solid fa-book-open d-block mb-2 fs-5"></i>
+
+                                Visit Subjects
+
+                            </a>
+
+                        </div>
+
+
+                        <div class="col-6">
+
+                            <a href="{% url 'college_add_course' %}" class="btn btn-outline-success w-100 py-3">
+                                <i class="fa-solid fa-book-medical d-block mb-2 fs-5"></i>
+                                Add Course
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         RECENT ACTIVITY
+    ====================================================== -->
+
+    <div class="row mt-4">
+
+        <div class="col-12">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-white border-0">
+
+                    <h5 class="mb-0 fw-bold">
+                        <i class="fa-solid fa-clock-rotate-left me-2 text-success"></i>
+                        Recent Activity
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="activity-item d-flex align-items-center gap-3 mb-3">
+
+                        <div class="activity-icon bg-success text-white">
+                            <i class="fa-solid fa-user-plus"></i>
+                        </div>
+
+                        <div>
+                            <div class="fw-semibold">
+                                Student Registration
+                            </div>
+
+                            <small class="text-muted">
+                                New student registration activity
+                            </small>
+                        </div>
+
+                    </div>
+
+
+                    <div class="activity-item d-flex align-items-center gap-3 mb-3">
+
+                        <div class="activity-icon bg-primary text-white">
+                            <i class="fa-solid fa-chalkboard-user"></i>
+                        </div>
+
+                        <div>
+                            <div class="fw-semibold">
+                                Teacher Activity
+                            </div>
+
+                            <small class="text-muted">
+                                Recent teacher activity
+                            </small>
+                        </div>
+
+                    </div>
+
+
+                    <div class="activity-item d-flex align-items-center gap-3">
+
+                        <div class="activity-icon bg-warning text-dark">
+                            <i class="fa-solid fa-pen"></i>
+                        </div>
+
+                        <div>
+                            <div class="fw-semibold">
+                                Marks Activity
+                            </div>
+
+                            <small class="text-muted">
+                                Recent marks submission
+                            </small>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     EXTRA CSS
+===================================================== -->
+
+<style>
+
+    .notice-icon {
+        min-width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: #e9f7ef;
+        color: #198754;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .activity-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .progress {
+        background-color: #e9ecef;
+        border-radius: 10px;
+    }
+
+    .progress-bar {
+        border-radius: 10px;
+    }
+
+    .table th {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .table td {
+        font-size: 14px;
+    }
+
+</style>
+
+
 {% endblock %}
