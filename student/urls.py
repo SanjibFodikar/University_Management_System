@@ -14,5 +14,6 @@ urlpatterns = [
     path('upload_photo_signature/',views.upload_photo_signature,name="upload_photo_signature"),
     path('download_admit/',views.download_admit,name="download_admit"),
     path('semester_result/',views.semester_result,name="semester_result"),
-    path('student_profile/',views.student_profile,name="student_profile")
+    path('student_profile/',views.student_profile,name="student_profile"),
+    path('change_password/',views.change_password,name="change_password")
 ]

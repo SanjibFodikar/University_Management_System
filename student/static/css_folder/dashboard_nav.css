@@ -1,4 +1,3 @@
-
 * {
     box-sizing: border-box;
 }
@@ -45,11 +44,11 @@ body {
 }
 
 .student-sidebar::-webkit-scrollbar-track {
-    background: rgba(255,255,255,0.05);
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .student-sidebar::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.30);
+    background: rgba(255, 255, 255, 0.30);
     border-radius: 10px;
 }
 
@@ -70,7 +69,7 @@ body {
 
     padding: 0 18px 0 22px;
 
-    border-bottom: 1px solid rgba(255,255,255,0.20);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.20);
 }
 
 
@@ -135,7 +134,7 @@ body {
 
 .sidebar-close:hover {
 
-    background: rgba(255,255,255,0.18);
+    background: rgba(255, 255, 255, 0.18);
 
     color: #ffffff;
 }
@@ -151,7 +150,7 @@ body {
 
     text-align: center;
 
-    border-bottom: 1px solid rgba(255,255,255,0.20);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.20);
 }
 
 .student-avatar {
@@ -190,7 +189,7 @@ body {
 
 .student-info small {
 
-    color: rgba(255,255,255,0.85);
+    color: rgba(255, 255, 255, 0.85);
 }
 
 
@@ -214,7 +213,7 @@ body {
 
     letter-spacing: 1.2px;
 
-    color: rgba(255,255,255,0.70);
+    color: rgba(255, 255, 255, 0.70);
 
     font-weight: 600;
 
@@ -250,7 +249,7 @@ body {
 
 /* Icons */
 
-.sidebar-menu .nav-link > i:first-child {
+.sidebar-menu .nav-link>i:first-child {
 
     width: 25px;
 
@@ -266,7 +265,7 @@ body {
 
 .sidebar-menu .nav-link:hover {
 
-    background: rgba(255,255,255,0.18);
+    background: rgba(255, 255, 255, 0.18);
 
     color: #ffffff;
 }
@@ -282,10 +281,10 @@ body {
 
     font-weight: 600;
 
-    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
 }
 
-.sidebar-menu .nav-link.active > i:first-child {
+.sidebar-menu .nav-link.active>i:first-child {
 
     color: #0756c9;
 }
@@ -321,7 +320,7 @@ body {
 
     margin-bottom: 6px;
 
-    border-left: 2px solid rgba(255,255,255,0.28);
+    border-left: 2px solid rgba(255, 255, 255, 0.28);
 }
 
 .sidebar-submenu .nav-link {
@@ -330,10 +329,10 @@ body {
 
     padding: 9px 10px;
 
-    color: rgba(255,255,255,0.94);
+    color: rgba(255, 255, 255, 0.94);
 }
 
-.sidebar-submenu .nav-link > i:first-child {
+.sidebar-submenu .nav-link>i:first-child {
 
     width: 18px;
 
@@ -341,12 +340,12 @@ body {
 
     margin-right: 5px;
 
-    color: rgba(255,255,255,0.85);
+    color: rgba(255, 255, 255, 0.85);
 }
 
 .sidebar-submenu .nav-link:hover {
 
-    background: rgba(255,255,255,0.18);
+    background: rgba(255, 255, 255, 0.18);
 
     color: #ffffff;
 }
@@ -362,7 +361,7 @@ body {
 
     padding-top: 10px;
 
-    border-top: 1px solid rgba(255,255,255,0.20);
+    border-top: 1px solid rgba(255, 255, 255, 0.20);
 }
 
 .logout-link {
@@ -370,7 +369,7 @@ body {
     color: #ffe2e2 !important;
 }
 
-.logout-link > i:first-child {
+.logout-link>i:first-child {
 
     color: #ffe2e2 !important;
 }
@@ -382,7 +381,7 @@ body {
     color: #ffffff !important;
 }
 
-.logout-link:hover > i:first-child {
+.logout-link:hover>i:first-child {
 
     color: #ffffff !important;
 }
@@ -410,7 +409,7 @@ body {
 
     background: #ffffff;
 
-    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
 
     display: flex;
 
@@ -617,7 +616,7 @@ body {
 
     inset: 0;
 
-    background: rgba(0,0,0,0.45);
+    background: rgba(0, 0, 0, 0.45);
 
     z-index: 1040;
 }
@@ -627,6 +626,39 @@ body {
     display: block;
 }
 
+.admit-card {
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.admit-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12) !important;
+}
+
+.card-icon {
+    width: 65px;
+    height: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    background: rgba(13, 110, 253, 0.1);
+    color: #0d6efd;
+    font-size: 30px;
+    transition: all 0.3s ease;
+}
+
+.admit-card:hover .card-icon {
+    background: #0d6efd;
+    color: white;
+    transform: scale(1.08);
+}
+
+.admit-card .btn {
+    border-radius: 8px;
+}
 
 /* =====================================================
    MOBILE
@@ -708,4 +740,3 @@ body {
     }
 
 }
-

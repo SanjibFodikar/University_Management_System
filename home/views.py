@@ -19,3 +19,9 @@ def visitNotice(request,id):
     return render(request,"visit_notice.html",{
         'notice':notice
     })
+
+def letter_notices(request):
+    return render(request,"letters_notices.html")
+
+def application_notices(request):
+    return render(request,"application_notices.html")

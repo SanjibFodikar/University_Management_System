@@ -686,3 +686,18 @@ def student_profile(request):
     return render(request,"student_profile.html",{
         'student':student
     })
+
+def change_password(request):
+    user=request.user
+    if request.method == 'POST':
+        current_password=request.POST.get('current_password')
+        new_password=request.POST.get('new_password')
+        student=AddStudent.objects.filter(user=user).first()
+        if student.user.check_password(current_password):
+            student.user.set_password(new_password)
+            student.user.save()
+            messages.success(request,"Password Changes Successfully")
+        else:
+            messages.error(request,"invalid password")
+            return redirect('change_password')
+    return render(request,"changepassword.html")
